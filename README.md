@@ -4,17 +4,17 @@ A Discord bot for the online virtual pet adopting website. With the bot you can 
 
 ### Features
 
-| Command | Description | Usage | Example |
-|-------------|-------------------------------------------------------------------------|-----------------------|---------------------------------------------------------------------------|
-| ,image | Displays only the pet image from the given link | ,image <Pet Link> | ,image [http://www.chickensmoothie.com/viewpet.php?id=54685939](http://www.chickensmoothie.com/viewpet.php?id=54685939) |
-| ,oekaki | Displays Oekaki drawing from the link | ,oekaki <Oekaki Link> | ,oekaki [http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993](http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993) |
-| ,pet | Displays information about the pet from the link | ,pet <Pet Link> | ,pet [http://www.chickensmoothie.com/viewpet.php?id=54685939](http://www.chickensmoothie.com/viewpet.php?id=54685939) |
-| ,pet2 | Displays a image of the pet and it's information | ,pet2 <Pet Link> | ,pet2 [http://www.chickensmoothie.com/viewpet.php?id=54685939](http://www.chickensmoothie.com/viewpet.php?id=54685939) |
-| ,time | Tells you how long before the pound opens | ,time | ,time |
-| ,remindme | Pings you after specified amount of time. Maximum reminding time is 24h | ,remindme <#h#m#s> | ,remindme 1h6m23s<br>,remindme 12m<br>,remindme 1h10s |
-| ,help | Displays the help message of all or a specific command. | ,help [Command] | ,help remindme |
-| ,support | PM's you the link to the CS Pound Development Server | ,support | ,support |
-| ,statistics | Displays CS Pound bot statistics | ,statistics | ,statistics |
+| Command       | Description                                                               | Example                                                                       |
+|-------------  |-------------------------------------------------------------------------  |---------------------------------------------------------------------------    |
+| ,image        | Displays only the pet image from the given link                           | ,image http://www.chickensmoothie.com/viewpet.php?id=54685939                 |
+| ,oekaki       | Displays Oekaki drawing from the link                                     | ,oekaki http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993     |
+| ,pet          | Displays information about the pet from the link                          | ,pet http://www.chickensmoothie.com/viewpet.php?id=54685939                   |
+| ,pet2         | Displays a image of the pet and it's information                          | ,pet2 http://www.chickensmoothie.com/viewpet.php?id=54685939                  |
+| ,time         | Tells you how long before the pound opens                                 | ,time                                                                         |
+| ,remindme     | Pings you after specified amount of time. Maximum reminding time is 24h   | ,remindme 1h6m23s<br>,remindme 12m<br>,remindme 1h10s                         |
+| ,help         | Displays the help message of all or a specific command.                   | ,help remindme                                                                |
+| ,support      | PM's you the link to the CS Pound Development Server                      | ,support                                                                      |
+| ,statistics   | Displays CS Pound bot statistics                                          | ,statistics                                                                   |
 
 ### Prerequitites
 
@@ -30,7 +30,7 @@ A Discord and Imgur account is also required.
 ### Running
 
 To start the bot run the following command:
-```
+```python
 python3 cs-pound.py
 ```
 
