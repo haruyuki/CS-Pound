@@ -1,0 +1,22 @@
+BEGIN PLURALISE(string, value, and_placement)
+    IF value == 0 THEN
+        RETURN ''
+    ELSE
+        temp = ''
+        IF and_placement == 'prefix' THEN
+            temp += ' and '
+        END IF
+        temp += STRING OF value + ' ' + string
+        IF value > 1 THEN
+            temp += 's'
+        END IF
+        IF and_placement == 'suffix' THEN
+            temp += ' and '
+        ELSE
+            IF and_placement == 'comma' THEN
+                temp += ', '
+            END IF
+        END IF
+        RETURN temp
+    END IF
+END

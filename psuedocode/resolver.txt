@@ -1,0 +1,32 @@
+BEGIN RESOLVER(day, hour, minute, second)
+    day_text = ''
+    hour_text = ''
+    minute_text = ''
+    second_text = ''
+
+    IF day != 0 AND (hour == 0 AND minute == 0) THEN
+        day_text = PLURALISE('day', day, 'suffix')
+    ELSE IF day != 0 AND (hour == 0 AND second == 0) THEN
+        day_text = PLURALISE('day', day, 'suffix')
+    ELSE IF day != 0 AND (minute == 0 AND second == 0) THEN
+        day_text = PLURALISE('day', day, 'suffix')
+    ELSE IF day != 0 AND (hour !=0 AND minute != 0 AND second != 0) THEN
+        day_text = PLURALISE('day', day, 'comma')
+    ELSE IF day != 0 AND (hour != 0 AND minute == 0) THEN
+        day_text = pluralise('day', day, 'comma')
+    ELSE IF day != 0 AND (hour != 0 AND second == 0) THEN
+        day_text = pluralise('day', day, 'comma')
+    ELSE IF day != 0 AND (minute != 0 AND second == 0) THEN
+        day_text = pluralise('day', day, 'comma')
+    ELSE IF day != 0 AND (hour == 0 and minute != 0) THEN
+        day_text = pluralise('day', day, 'comma')
+    ELSE IF day != 0 AND (hour == 0 and second != 0) THEN
+        day_text = pluralise('day', day, 'comma')
+    ELSE IF day != 0 AND (minute == 0 and second != 0) THEN
+        day_text = pluralise('day', day, 'comma')
+    END IF
+
+    IF minute == 0 AND second = 0 THEN
+        hour_text = PLURALISE('hour', hour)
+    ELSE IF minute == 0 
+END
