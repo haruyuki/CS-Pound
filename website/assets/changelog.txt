@@ -1,0 +1,96 @@
+Changelog:
+
+vMAJOR.MINOR.PATCH: DD/MM/YY
+- Renamed
+- Removed
+- Added
+- Changed
+- Improved
+- Aliased
+- Fixed
+* Issues
+
+v1.0.0: 29/01/18
+- Created CS Pound
+- Added ,help command
+- Added ,time command
+
+v1.1.0: 30/01/18
+- Added ,remindme command
+
+v1.2.0: 01/02/18
+- Added ,pet command
+- Added help pages of commands
+
+v1.2.1: 04/02/18
+- Added maxmimum limit of 24h to ,remindme
+- Fixed ,remindme crashing from large times
+
+v1.2.2: 06/02/18
+- Improved ,time response time
+- Fixed ,pet not working on pets with items
+
+v1.2.3:  07/02/18
+- Added future commands ,trade and ,oekaki
+- Added owner's name to ,pet title
+- Aliased ,pound to ,time
+- Fixed ,pet not working with PPS pets
+- Fixed capitalised letters not working with ,remindme
+
+v1.3.0: 20/02/18
+- Added ,pet2 command
+- Added messages if pet/pet2 links are invalid
+* ,pet2 does not work for pets with items
+* ,pet2 does not display foreign characters
+
+v1.4.0: 24/02/18
+- Added ,stats command
+- Fixed ,remindme not working with 'hr'
+
+v1.4.1: 25/02/18
+- Renamed ,stats to ,statistics
+- Changed 'CS Pound Memory Usage' from percentage to MB
+- Changed 'Server Memory Usage' to 'System Memory Usage'
+- Changed 'Server Uptime' to 'System Uptime'
+- Improved ,stats response time
+- Aliased ,rm to ,remindme
+- Aliased ,stats to ,statistics
+- Fixed ,stats 'Server Memory Usage' not working when host system is OSX
+- Fixed ,stats 'CS Pound Memory Usage' not working when host system is OSX
+- Fixed ,stats 'CS Pound Uptime' not working when host system is OSX
+
+v1.4.2: 03/03/18
+- Added ,help information for ,archive ,fair ,pet2 and ,support
+- Changed ,help layout
+- Fixed ,pet not displaying pet information
+
+v.1.5.0: 08/03/18
+- Added ,image command
+- Added ,support command
+- Changed ,help to send a PM
+- Aliased ,img to ,image
+- Fixed ,support not sending server link
+- Fixed ,pet not working for PPS pets (again)
+- Fixed ,pet2 layout breaking with PPS pets
+- Fixed CS Pound playing not showing up
+* Have yet to add ,image help information
+* Need to clarify how ,fair works
+
+v1.6.0: 20/03/18
+- Added ,oekaki command
+- Added message when 'Allow direct messages from server members' is turned off and user calls ,help or ,support
+- Improved ,stats bot uptime and system uptime format
+- Fixed ,help embed title showing 'Support' instead of 'Help'
+
+v1.6.1: 22/03/18
+- Removed commands in ,help that aren't implemented yet
+- Added note about not being able to remove Remindme's in Remindme's help page
+- Changed playing status to replace bot version to my Discord tag. You can still view the bot version in ,statistics
+
+v1.6.2 23/04/18
+- Removed website link in 'Playing' text (Now placed in ,help)
+- Removed ,pet2
+- Removed excess text
+- Changed ,help layout slightly
+- Changed ,image to include pet name, adopted, and rarity (Like what you would see in 'My Pets')
+- Improved ,time code
