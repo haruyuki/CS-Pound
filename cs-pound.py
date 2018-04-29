@@ -355,8 +355,8 @@ async def on_ready():  # When Client is loaded
 
 
 # -------------------- HELP COMMAND --------------------
-@client.command()
-async def help(args=''):  # Help Command
+@client.command(pass_context=True)
+async def help(ctx, args=''):  # Help Command
     embed = discord.Embed(colour=0x4ba139)  # Create empty embed
     # -------------------- CHICKENSMOOTHIE HELP --------------------
     if args == 'archive':  # If requested Archive command help
