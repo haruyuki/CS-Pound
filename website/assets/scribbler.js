@@ -1,12 +1,12 @@
 "use strict";
 function typeItOut () {
   if (i < txt.length) {
-    document.getElementsByClassName("demo")[0].innerHTML += txt.charAt(i);
+    document.getElementsByClassName("terminal")[0].innerHTML += txt.charAt(i);
     i++;
     setTimeout(typeItOut, 50);
   }
 }
-if (document.getElementsByClassName("demo").length > 0) {
+if (document.getElementsByClassName("terminal").length > 0) {
   var i = 0;
   var txt = `cat changelog.txt --latest
 v1.6.1: 22/03/18
