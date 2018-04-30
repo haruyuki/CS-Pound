@@ -1,0 +1,31 @@
+Changelog:
+
+v1.0.0:
+- Created bot
+- Added ,help command
+- Added ,time command
+
+v1.1.0:
+- Added ,remindme command
+
+v1.2.0:
+- Added ,pet command
+- Added help pages of commands
+
+v1.2.1:
+- Added maxmimum limit of 24h to ,remindme
+- Fixed ,remindme crashing from large times
+
+v1.2.2:
+- Improved ,time code
+- Fixed ,pet not working on pets with items
+
+v1.2.3:
+- Created alias ,pound to ,time
+- Added future commands ,trade and ,oekaki
+- Added owner's name to ,pet title
+- Fixed ,pet not working with PPS pets
+- Fixed capitalised letters not working with ,remindme
+
+v1.3.0:
+- Added ,pet2 command
