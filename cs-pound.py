@@ -38,7 +38,7 @@ https://trello.com/b/RAJhtsl8/cs-pound-development-board
 
 # -------------------- VARIABLES --------------------
 start_time = datetime.now()  # The time the script started running
-call = 'LIVE'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
+call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
 
 # -------------------- TOKENS --------------------
 def decryption_imgur(a):  # Decrypt Imgur Token
@@ -668,8 +668,10 @@ async def statistics():  # Stats command
     def converter(seconds):  # Convert seconds into days, hours, minutes and seconds
         d = datetime(1, 1, 1) + timedelta(seconds=int(seconds))  # Create tuple of date values
         return d.day-1, d.hour, d.minute, d.second
-    system_memory = str(psutil.virtual_memory()[2]) + '%'  # Get the available virtual memory (physical memory) of the system
-    bot_memory = str(round(psutil.Process(os.getpid()).memory_info()[0] / 1024**2, 2)) + ' MB'  # Get the memory usage of this python process
+    system_memory_mb = str(round(psutil.virtual_memory()[3] / 1000 / 1024, 2)) + ' MB'
+    system_memory_percent = str(psutil.virtual_memory()[2]) + '%'  # Get the available virtual memory (physical memory) of the system
+    bot_memory_mb = str(round(psutil.Process(os.getpid()).memory_info()[0] / 1024**2, 2)) + ' MB'  # Get the memory usage of this python process
+    bot_memory_percent = str(round(psutil.Process(os.getpid()).memory_percent(),2)) + '%'
     discord_py_version = discord.__version__  # Discord.py version
     server_count = str(len(client.servers))  # The number of servers this CS Pound is in
     member_count = str(len(set(client.get_all_members())))  # The number of users the CS Pound is connected to
@@ -680,8 +682,8 @@ async def statistics():  # Stats command
     system_uptime = resolver(system_uptime[0], system_uptime[1], system_uptime[2], system_uptime[3])
 
     embed = discord.Embed(title='Stats', description='', colour=0x4ba139)  # Create empty embed with the title 'Stats'
-    embed.add_field(name='System Memory Usage', value=system_memory, inline=False)  # Add system memory usage to embed
-    embed.add_field(name=client.user.name + ' Memory Usage', value=bot_memory, inline=False)  # Add bot memory usage to embed
+    embed.add_field(name='System Memory Usage', value=system_memory_percent + ' (' + system_memory_mb + ')', inline=False)  # Add system memory usage to embed
+    embed.add_field(name=client.user.name + ' Memory Usage', value=bot_memory_percent + ' (' + bot_memory_mb + ')', inline=False)  # Add bot memory usage to embed
     embed.add_field(name=client.user.name + ' Version', value=version, inline=False)  # Add bot version to embed
     embed.add_field(name='Discord.py Version', value=discord_py_version, inline=False)  # Add Discord.py version to embed
     embed.add_field(name='Server Count', value=server_count, inline=False)  # Add server count to embed
