@@ -52,7 +52,7 @@ python3 cs-pound.py
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
 
-## Acknowledgments
+## Acknowledgements
 
 * [Chicken Smoothie](http://www.chickensmoothie.com)
 * [discord.py](https://github.com/Rapptz/discord.py)
