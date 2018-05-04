@@ -40,6 +40,7 @@ https://trello.com/b/RAJhtsl8/cs-pound-development-board
 start_time = datetime.now()  # The time the script started running
 call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
 
+
 # -------------------- TOKENS --------------------
 def decryption_imgur(a):  # Decrypt Imgur Token
     a = list(a)  # Create list of encrypted token
@@ -56,13 +57,15 @@ def decryption_imgur(a):  # Decrypt Imgur Token
         i = '0x' + a[h]  # Add '0x' to each item for conversion from hexadecimal
         j = int(i, 16)  # Convert from hexadecimal to integer
         k = abs(int(j) - 256)  # Absolute value of converted integer minus 256
-        l = format(int(k), 'x')  # Convert integer back to hexadecimal
-        c.append(l)  # Append to 'c' list
+        m = format(int(k), 'x')  # Convert integer back to hexadecimal
+        c.append(m)  # Append to 'c' list
 
     return ''.join(map(str, c))  # Combine 'c' list into one string
 
+
 def decryption_discord(a):  # Decrypt Discord token
     pass
+
 
 tokens = [i.replace('\n', '') for i in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 CLIENT_ID = decryption_imgur(tokens[0])  # Imgur Client ID
@@ -289,14 +292,15 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
         hour_section = pluralise('hour', hour, 'com')  # Pluralise the hour section with a suffixed ',' placement
 
     minute_section = pluralise('minute', minute)  # Pluralise the minute section
-    
+
     if hour != 0 or minute != 0:  # If there are hour(s) or minute(s)
         second_section = pluralise('second', second, 'pre')  # Pluralise the second section with a prefixed 'and' placement
     else:  # If there are no hours or minutes
         second_section = pluralise('second', second)  # Pluralise the second section
     return day_section + hour_section + minute_section + second_section  # Return the formatted text
 
-def get_web_data(link, command_source): # Get web data from link
+
+def get_web_data(link, command_source):  # Get web data from link
     success = False  # Boolean for whether link is valid
     headers = {  # HTTP connection headers
         'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
@@ -329,6 +333,7 @@ def get_web_data(link, command_source): # Get web data from link
             return success, dom  # Return whether connection was successful and DOM data
         else:
             return success  # Return whether connection was successful
+
 
 # -------------------- DISCORD BOT SETTINGS --------------------
 client = Bot(description='CS Pound by Peko#7955', command_prefix=prefix, pm_help=None)
@@ -404,6 +409,7 @@ async def help(ctx, args=''):  # Help Command
         embed = discord.Embed(title='Help', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)
         await client.say(embed=embed)
 
+
 # -------------------- AUTOREMIND COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
 async def autoremind(args, time='10m'):  # Autoremind command
@@ -415,7 +421,7 @@ async def autoremind(args, time='10m'):  # Autoremind command
 
 # -------------------- IMG COMMAND --------------------
 @client.command(no_pm=True, aliases=['img'])  # Disable PM'ing the Bot
-async def image(link: str=''):  # Autoremind command
+async def image(link: str = ''):  # Autoremind command
     data = get_web_data(link, 'pet')
     if data[0]:
         petimg = data[1].xpath('//img[@id="petimg"]/@src')[0]  # Pet image link
@@ -432,15 +438,15 @@ async def image(link: str=''):  # Autoremind command
 
 # -------------------- OEKAKI COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
-async def oekaki(link: str=''):  # Oekaki command
+async def oekaki(link: str = ''):  # Oekaki command
     data = get_web_data(link, 'oekaki')
     if data[0]:
         base_link = 'http://www.chickensmoothie.com/Forum/'
-        
+
         oekaki_title = data[1].xpath('//h3[@class="first"]/a/text()')[0]
         image = data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]
-        #user_icon = base_link + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]
-        #titles = data[1].xpath('//table[@class="ok-drawing-info"]/tr/td[@class="label"]/text()')
+        # user_icon = base_link + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]
+        # titles = data[1].xpath('//table[@class="ok-drawing-info"]/tr/td[@class="label"]/text()')
         warning_title = 'Reminder!'
         warning_text = 'Copying another person\'s art without permission to reproduce their work is a form of art-theft! [Read the full art rules here.](http://www.chickensmoothie.com/Forum/viewtopic.php?f=10&t=30437)'
 
@@ -452,12 +458,12 @@ async def oekaki(link: str=''):  # Oekaki command
             artist_values = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')  # No Based on
 
         artist_text = '[' + artist_values[0] + '](' + base_link + artist_links[0][1:] + ') [' + artist_values[1] + '(' + base_link + artist_links[1][1:] + ')]'
-        
+
         embed = discord.Embed(title=oekaki_title, colour=0x4ba139, url=link)  # Create Discord embed
         embed.add_field(name='Artist', value=artist_text)
         embed.add_field(name=warning_title, value=warning_text)
 
-        #embed.add_field(name=titles[0], value=artist_text)
+        # embed.add_field(name=titles[0], value=artist_text)
 
         # TITLE dom.xpath('//div[@class="inner"]/h3/a/text()')
         # TITLE URL dom.xpath('//div[@class="inner"]/h3/a/@href') OR JUST ORIGINAL LINK PROVIDED
@@ -468,14 +474,15 @@ async def oekaki(link: str=''):  # Oekaki command
         # HOW MANY PEOPLE LIKE THIS dom.xpath('//span[@class="liked_people"]/text()')
 
         embed.set_image(url=image)
-        #embed.set_thumbnail(url=user_icon)
+        # embed.set_thumbnail(url=user_icon)
         await client.say(embed=embed)
     else:
         await client.say(embed=data[1])
 
+
 # -------------------- PET COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
-async def pet(link: str=''):  # Pet command
+async def pet(link: str = ''):  # Pet command
     data = get_web_data(link, 'pet')
     if data[0]:
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
@@ -534,7 +541,7 @@ async def pet(link: str=''):  # Pet command
 
 # -------------------- PET2 COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
-async def pet2(link: str=''):  # Pet2 command
+async def pet2(link: str = ''):  # Pet2 command
     data = get_web_data(link, 'pet')
     if data[0]:  # If connection is made
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
@@ -671,7 +678,7 @@ async def statistics():  # Stats command
     system_memory_mb = str(round(psutil.virtual_memory()[3] / 1000 / 1024, 2)) + ' MB'
     system_memory_percent = str(psutil.virtual_memory()[2]) + '%'  # Get the available virtual memory (physical memory) of the system
     bot_memory_mb = str(round(psutil.Process(os.getpid()).memory_info()[0] / 1024**2, 2)) + ' MB'  # Get the memory usage of this python process
-    bot_memory_percent = str(round(psutil.Process(os.getpid()).memory_percent(),2)) + '%'
+    bot_memory_percent = str(round(psutil.Process(os.getpid()).memory_percent(), 2)) + '%'
     discord_py_version = discord.__version__  # Discord.py version
     server_count = str(len(client.servers))  # The number of servers this CS Pound is in
     member_count = str(len(set(client.get_all_members())))  # The number of users the CS Pound is connected to
@@ -702,7 +709,6 @@ async def support():  # Support command
     except discord.errors.Forbidden:  # If PM can't be sent
         embed = discord.Embed(title='Support', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Add unable to send embed message to embed
     await client.say(embed=embed)  # Display the embed message
-
 
 
 # -------------------- TIME COMMAND --------------------
