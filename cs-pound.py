@@ -304,12 +304,15 @@ def get_web_data(link, command_source): # Get web data from link
         'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
         'From': 'jumpy12359@gmail.com'  # Contact email
     }
-    if link == '':  # If no link provided
+    if link == '' and command_source != 'pound':  # If no link provided
         return success, discord.Embed(title=command_source.capitalize(), description='You didn\'t provide a ' + command_source + ' link!', colour=0xff5252)  # Embed message of not providing link
     else:  # If arguments provided
         try:  # Checking link format
-            parameters = link.split('?')[1].split('&')  # Get the PHP $GET values
-            success = True  # Link is valid
+            if command_source != 'pound':
+                parameters = link.split('?')[1].split('&')  # Get the PHP $GET values
+                success = True  # Link is valid
+            else:
+                success = True
         except IndexError:  # If cannot get $GET value
             return success, discord.Embed(title=command_source.capitalize(), description='That is not a valid ' + command_source + ' link!', colour=0xff5252)  # Embed message of not valid link
         if success:  # If link exists and is valid
@@ -324,8 +327,7 @@ def get_web_data(link, command_source): # Get web data from link
                     temp = parameters[i].split('=')  # Split the $POST variables
                     data[temp[0]] = temp[1]  # Add dictionary item with $POST variable and value
             elif command_source == 'pound':  # If function is being called from the Pound command
-                pass
-
+                base_link = 'http://www.chickensmoothie.com/pound.php'
             response = requests.post(base_link, params=data)  # Request HTML page data
             dom = lxml.html.fromstring(response.text)  # Extract HTML from site
             return success, dom  # Return whether connection was successful and DOM data
@@ -423,8 +425,9 @@ async def autoremind(ctx, args=''):  # Autoremind command
             embed = discord.Embed(title='Auto Remind', description='You already have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
         else:
             user_nickname = ctx.message.author.name + '#' + ctx.message.author.discriminator
+            text = ctx.message.author.id + ' ' + user_nickname + ' ' + ctx.message.channel.id + ' 10' + '\n' # Write in the format 'USER_ID USER_NICK CHANNEL_ID REMIND_TIME'
             with open('autoremind.txt', 'a') as file:
-                file.write(ctx.message.author.id + ' ' + user_nickname + ' ' + '10' + '\n')  # Write in the format 'USER_ID USER_NICK REMIND_TIME'
+                file.write(text)
             await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
             embed = discord.Embed(title='Auto Remind', description='You have been added to the Auto Remind role.', colour=0x4ba139)
     elif args == 'off':
@@ -891,14 +894,17 @@ async def discordembedtest():
 
     await client.say(embed=embed)
 
-async def countdown():
+pound_opening = 0
+
+async def pound_countdown():
     await client.wait_until_ready()
-    counter = 0
     while not client.is_closed:
-        counter += 1
+        data = get_web_data('', 'pound')
+        if data[0]:
+            text = data[1].xpath('//h2/text()')[1]
         # await client.send_message(channel, counter)
         await asyncio.sleep(60)
 
-client.loop.create_task(countdown())
+client.loop.create_task(pound_countdown())
 '''
 client.run(token)  # Start bot
