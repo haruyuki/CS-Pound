@@ -14,6 +14,7 @@ import platform
 import psutil
 import pyimgur
 import requests
+import subprocess
 import time as pytime
 import urllib.request
 
@@ -407,21 +408,25 @@ async def help(ctx, args=''):  # Help Command
 # -------------------- AUTOREMIND COMMAND --------------------
 @client.command(pass_context=True, no_pm=True)  # Disable PM'ing the Bot
 async def autoremind(ctx, args=''):  # Autoremind command
+    grep_statement = 'grep -n \'' + ctx.message.author.id + '\' autoremind.txt | cut -f1 -d:'
     server_roles = ctx.message.server.roles
     server_roles_list = []
     for i in range(len(server_roles)):
         server_roles_list.append(str(server_roles[i]))
-    if 'AutoRemind' in server_roles_list:
+    if 'Auto Remind' in server_roles_list:
         pass
     else:
         await client.create_role(ctx.message.author.server, name='Auto Remind')
     if args == 'on':
-        with open('autoremind.txt', 'a') as file:
-            file.write(ctx.message.author.id + '\n')
-        await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
-        embed = discord.Embed(title='Auto Remind', description='You have been added to the AutoRemind role {0.mention}.'.format(ctx.message.author), colour=0x4ba139)
+        id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]
+        if id_exists != '':
+            embed = discord.Embed(title='Auto Remind', description='You are already in the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
+        else:
+            with open('autoremind.txt', 'a') as file:
+                file.write(ctx.message.author.id + '\n')
+            await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
+            embed = discord.Embed(title='Auto Remind', description='You have been added to the Auto Remind role {0.mention}.'.format(ctx.message.author), colour=0x4ba139)
     elif args == 'off':
-        grep_statement = 'grep -n \'' + ctx.message.author.id + '\' autoremind.txt | cut -f1 -d:'
         file_line = int(subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1])
         for line in fileinput.input('autoremind.txt', inplace=True):
             if fileinput.lineno() == file_line:
@@ -430,6 +435,8 @@ async def autoremind(ctx, args=''):  # Autoremind command
         embed = discord.Embed(title='Auto Remind', description='You have been removed from the AutoRemind role {0.mention}.'.format(ctx.message.author), colour=0xff5252)
     print(ctx.message.author.name)
     print(ctx.message.author.discriminator)
+    print(ctx.message.server)
+    print(ctx.message.author.server)
     # linecache.getline('autoremind.txt', 11)[:-1]
     await client.say(embed=embed)
     #after_message = '<@277398425044123649>'
