@@ -184,8 +184,8 @@ Note: Make sure to use the sharing trade link!'''  # Help of Trade command
 
 # -------------------- GENERAL HELP TEXT --------------------
 autoremind_help = '''\
-`,autoremind <on/off> <time>` - Turns on or off auto reminding. If turned on and time is not provided it will automatically default to 10 minutes
-*Examples:* `,autoremind off` `,autoremind on` `,autoremind on 15m`'''  # Help of Autoremind command
+`,autoremind <on/off>` - Turn on or off auto reminding before the pound opens. At the moment the bot pings you is fixed at 10 minutes before the pound opens. Later on more functionality will be added to customise the time before it pings.
+*Usage:* `,autoremind on` `,autoremind off`'''  # Help of Autoremind command
 
 remindme_help = '''\
 `,remindme <time>` - Pings you after specified amount of time. Maximum reminding time is 24h
