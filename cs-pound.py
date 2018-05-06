@@ -351,7 +351,7 @@ async def on_ready():  # When Client is loaded
     print('Current Discord.py Version: {}'.format(discord.__version__))
     print('--------')
     print('Use this link to invite {}:'.format(client.user.name))
-    print('https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&permissions=134144'.format(client.user.id))
+    print('https://discordapp.com/oauth2/authorize?client_id={}&scope=bot&permissions=268569600'.format(client.user.id))
     print('--------')
     print('You are running ' + client.user.name + ' v' + version)
     print('Created by Peko#7955')
