@@ -424,8 +424,7 @@ async def autoremind(ctx, args=''):  # Autoremind command
         if id_exists != '':
             embed = discord.Embed(title='Auto Remind', description='You already have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
         else:
-            user_nickname = ctx.message.author.name + '#' + ctx.message.author.discriminator
-            text = ctx.message.author.id + ' ' + user_nickname + ' ' + ctx.message.channel.id + ' 10' + '\n' # Write in the format 'USER_ID USER_NICK CHANNEL_ID REMIND_TIME'
+            text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' 10' + '\n' # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
             with open('autoremind.txt', 'a') as file:
                 file.write(text)
             await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
@@ -434,17 +433,11 @@ async def autoremind(ctx, args=''):  # Autoremind command
         if id_exists == '':
             embed = discord.Embed(title='Auto Remind', description='You don\'t have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
         else:
-            file_line = int(subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1])
-            for line in fileinput.input('autoremind.txt', inplace=True):
-                if fileinput.lineno() == file_line:
-                    continue
-                print(line, end='')
+            sed_statement = 'sed -i.bak ' + id_exists + 'd autoremind.txt'
+            subprocess.Popen(sed_statement, shell=True)
             await client.remove_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
             embed = discord.Embed(title='Auto Remind', description='You have been removed from the AutoRemind role.', colour=0x4ba139)
-    # linecache.getline('autoremind.txt', 11)[:-1]
     await client.say(embed=embed)
-    #after_message = '<@277398425044123649>'
-    #await client.say(after_message)
 
 
 # -------------------- IMG COMMAND --------------------
@@ -893,18 +886,54 @@ async def discordembedtest():
     embed.add_field(name="<:thonkang:219069250692841473>", value="are inline fields", inline=True)
 
     await client.say(embed=embed)
-
-pound_opening = 0
-
-async def pound_countdown():
-    await client.wait_until_ready()
-    while not client.is_closed:
-        data = get_web_data('', 'pound')
-        if data[0]:
-            text = data[1].xpath('//h2/text()')[1]
-        # await client.send_message(channel, counter)
-        await asyncio.sleep(60)
-
-client.loop.create_task(pound_countdown())
 '''
+
+@client.event
+async def compose_message():  # Function to compose and send mention messages to channels
+    cut_statement = 'cut -f2 -d\' \' autoremind.txt | sort -u'  # Grab all unique Discord channel ID's from autoremind.txt
+    channel_ids = subprocess.Popen(cut_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run cut statement
+    for i in range(len(channel_ids)):  # For each Discord channel ID
+        grep_statement = 'grep ' + channel_ids[i] + ' autoremind.txt | cut -f3 -d\' \''  # Grab all unique Discord user ID's with that channel ID
+        user_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
+        message = '10 minutes until pound opens! '
+        for j in range(len(user_ids)):  # For each Discord user
+            message += '<@' + user_ids[j] + '> '  # Message format for mentioning users <@USER_ID>
+        await client.send_message(client.get_channel(channel_ids[i]), content=message)  # Send message to Discord channel with mention message
+
+async def pound_countdown():  # Background task to countdown to when the pound opens
+    await client.wait_until_ready()  # Wait until client has loaded before starting background task
+    while not client.is_closed:  # While client is still running
+        data = get_web_data('', 'pound')  # Get pound data
+        if data[0]:  # If pound data is valid and contains content
+            text = data[1].xpath('//h2/text()')  # List all texts with H2 element
+            try:
+                text = text[1]  # Grab the pound opening time text
+                value = [int(s) for s in text.split() if s.isdigit()]  # Extract the numbers in the text
+                if len(value) == 1:  # If there is only one number
+                    value = value[0]
+                    if 'hour' in text:
+                        sleep_amount = (value - 1) * 60 * 60  # -1 hour and convert hours into seconds
+                    elif 'minute' in text:
+                        if value <= 10:
+                            await compose_message()  # Run compose message function
+                            sleep_amount = 7200  # 2 hours
+                        else:
+                            sleep_amount = (value - 10) * 60
+                    elif 'second' in text:
+                        pass
+                elif len(value) == 2:  # If there are two numbers
+                    countdown_time = (60 * value[0]) + value[1]
+                    if 'hour' and 'minute' in text:
+                        sleep_amount = (countdown_time - 10) * 60  # Remind in the last 10 minutes
+                    elif 'minute' and 'second' in text:
+                        sleep_amount = countdown_time - 60  # Remind in the last minute
+                elif len(value) == 0:  # If there are no times i.e. Pound recently closed or not opening anytime soon
+                    sleep_amount = 3600  # 1 hour
+            except IndexError:  # Pound is currently open
+                sleep_amount = 3600  # 1 hour
+        else:
+            sleep_amount = 11400  # 3 hours
+        await asyncio.sleep(sleep_amount)
+
+client.loop.create_task(pound_countdown())  # Run 'pound_countdown' background task
 client.run(token)  # Start bot
