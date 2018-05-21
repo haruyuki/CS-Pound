@@ -5,6 +5,7 @@ import discord
 from discord.ext.commands import Bot
 from discord.ext import commands
 import fileinput
+import hashlib
 import logging
 import lxml.html
 import math
@@ -420,16 +421,7 @@ async def autoremind(ctx, args=''):  # Autoremind command
         pass
     else:
         await client.create_role(ctx.message.server, name='Auto Remind')  # Create 'Auto Remind' role in server
-    if args == 'on':
-        if id_exists != '':
-            embed = discord.Embed(title='Auto Remind', description='You already have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
-        else:
-            text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' 10' + '\n' # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
-            with open('autoremind.txt', 'a') as file:
-                file.write(text)
-            await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
-            embed = discord.Embed(title='Auto Remind', description='You have been added to the Auto Remind role.', colour=0x4ba139)
-    elif args == 'off':
+    if args == 'off':
         if id_exists == '':
             embed = discord.Embed(title='Auto Remind', description='You don\'t have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
         else:
@@ -437,6 +429,20 @@ async def autoremind(ctx, args=''):  # Autoremind command
             subprocess.Popen(sed_statement, shell=True)
             await client.remove_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
             embed = discord.Embed(title='Auto Remind', description='You have been removed from the AutoRemind role.', colour=0x4ba139)
+    else:
+        try:
+            int(args)
+        except ValueError:
+            args = args[:-1]
+        if id_exists != '':
+            embed = discord.Embed(title='Auto Remind', description='You already have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
+        else:
+            text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n' # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
+            with open('autoremind.txt', 'a') as file:
+                file.write(text)
+            await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
+            message = 'You have been added to Auto Remind at ' + args + ' minutes.'
+            embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)
     await client.say(embed=embed)
 
 
@@ -888,52 +894,91 @@ async def discordembedtest():
     await client.say(embed=embed)
 '''
 
-@client.event
-async def compose_message():  # Function to compose and send mention messages to channels
-    cut_statement = 'cut -f2 -d\' \' autoremind.txt | sort -u'  # Grab all unique Discord channel ID's from autoremind.txt
-    channel_ids = subprocess.Popen(cut_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run cut statement
+
+async def compose_message(time):  # Function to compose and send mention messages to channels
+    grep_statement = 'grep \'[0-9]*\\s[0-9]*\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f2 -d\' \' | sort -u'
+    channel_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')
     for i in range(len(channel_ids)):  # For each Discord channel ID
-        grep_statement = 'grep ' + channel_ids[i] + ' autoremind.txt | cut -f3 -d\' \''  # Grab all unique Discord user ID's with that channel ID
+        grep_statement = 'grep \'[0-9]*\\s' + channel_ids[i] + '\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f3 -d\' \''  # Grab all unique Discord user ID's with that channel ID
         user_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
-        message = '10 minutes until pound opens! '
+        message = time + ' minute(s) until pound opens! '
         for j in range(len(user_ids)):  # For each Discord user
             message += '<@' + user_ids[j] + '> '  # Message format for mentioning users <@USER_ID>
         await client.send_message(client.get_channel(channel_ids[i]), content=message)  # Send message to Discord channel with mention message
 
+
+current_hash = ''
+autoremind_times = []
+async def minute_check(time):
+    global current_hash, autoremind_times
+    time = str(time)
+    new_hash = hashlib.md5(open('autoremind.txt').read().encode()).hexdigest()  # MD5 hash of autoremind.txt
+    if current_hash != new_hash:  # If file has been modified since last check
+        current_hash = new_hash
+        cut_statement = 'cut -f4 -d\' \' autoremind.txt | sort -u'  # Grab all unique reminding times from autoremind.txt
+        autoremind_times = subprocess.Popen(cut_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run cut statement
+    else:
+    if time in autoremind_times:
+        await compose_message(time)
+    else:
+
+
+cooldown = False
 async def pound_countdown():  # Background task to countdown to when the pound opens
+    global cooldown  # Use cooldown from global scope
     await client.wait_until_ready()  # Wait until client has loaded before starting background task
     while not client.is_closed:  # While client is still running
-        data = get_web_data('', 'pound')  # Get pound data
-        if data[0]:  # If pound data is valid and contains content
-            text = data[1].xpath('//h2/text()')  # List all texts with H2 element
-            try:
-                text = text[1]  # Grab the pound opening time text
-                value = [int(s) for s in text.split() if s.isdigit()]  # Extract the numbers in the text
-                if len(value) == 1:  # If there is only one number
-                    value = value[0]
-                    if 'hour' in text:
-                        sleep_amount = (value - 1) * 60 * 60  # -1 hour and convert hours into seconds
-                    elif 'minute' in text:
-                        if value <= 10:
-                            await compose_message()  # Run compose message function
-                            sleep_amount = 7200  # 2 hours
-                        else:
-                            sleep_amount = (value - 10) * 60
-                    elif 'second' in text:
-                        pass
-                elif len(value) == 2:  # If there are two numbers
-                    countdown_time = (60 * value[0]) + value[1]
-                    if 'hour' and 'minute' in text:
-                        sleep_amount = (countdown_time - 10) * 60  # Remind in the last 10 minutes
-                    elif 'minute' and 'second' in text:
-                        sleep_amount = countdown_time - 60  # Remind in the last minute
-                elif len(value) == 0:  # If there are no times i.e. Pound recently closed or not opening anytime soon
+        if not cooldown:  # If command is not on cooldown
+            data = get_web_data('', 'pound')  # Get pound data
+            if data[0]:  # If pound data is valid and contains content
+                text = data[1].xpath('//h2/text()')  # List all texts with H2 element
+                try:  # Try getting pound opening text
+                    text = text[1]  # Grab the pound opening time text
+                    value = [int(s) for s in text.split() if s.isdigit()]  # Extract the numbers in the text
+                    if len(value) == 1:  # If there is only one number
+                        value = value[0]
+                        if 'hour' in text:
+                            if value == 1:
+                                cooldown = True
+                                value = 60  # Start countdown from 60 minutes
+                                sleep_amount = 0
+                            else:
+                                sleep_amount = (value - 2) * 3600  # -1 hour and convert into seconds
+                        elif 'minute' in text:
+                            sleep_amount = 0
+                            cooldown = True
+                        elif 'second' in text:
+                            pass
+                    elif len(value) == 2:  # If there are two numbers
+                        if 'hour' and 'minute' in text:
+                            sleep_amount = value[1] * 60  # Get the minutes and convert to seconds
+                            value = 60
+                            text = 'minute'
+                            cooldown = True
+                        elif 'minute' and 'second' in text:
+                            pass
+                    elif len(value) == 0:  # If there are no times i.e. Pound recently closed or not opening anytime soon
+                        sleep_amount = 3600  # 1 hour
+                except IndexError:  # Pound is currently open
                     sleep_amount = 3600  # 1 hour
-            except IndexError:  # Pound is currently open
-                sleep_amount = 3600  # 1 hour
-        else:
-            sleep_amount = 11400  # 3 hours
+            else:  # If pound data isn't valid
+                sleep_amount = 11400  # 3 hours 10 minutes
+        else:  # If command is on cooldown
+            if 'minute' and 'second' in text:
+                cooldown = value[1]
+                value = 1
+            elif 'minute' in text:
+                if value != 0:
+                    await minute_check(value)
+                    value -= 1
+                    sleep_amount = 60
+                else:
+                    cooldown = False
+                    sleep_amount = 10800  # 3 hours
+            elif 'second' in text:
+                pass
         await asyncio.sleep(sleep_amount)
+
 
 client.loop.create_task(pound_countdown())  # Run 'pound_countdown' background task
 client.run(token)  # Start bot
