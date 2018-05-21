@@ -6,6 +6,7 @@ A Discord bot for the online virtual pet adopting website. With the bot you can 
 
 | Command       | Description                                                               | Example                                                                       |
 |-------------  |-------------------------------------------------------------------------  |---------------------------------------------------------------------------    |
+| ,autoremind   | Setup an autoreminder for when the pound opens                            | ,autoremind 5m                                                                |
 | ,image        | Displays only the pet image from the given link                           | ,image http://www.chickensmoothie.com/viewpet.php?id=54685939                 |
 | ,oekaki       | Displays Oekaki drawing from the link                                     | ,oekaki http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993     |
 | ,pet          | Displays information about the pet from the link                          | ,pet http://www.chickensmoothie.com/viewpet.php?id=54685939                   |
@@ -30,7 +31,7 @@ A [Discord](https://discordapp.com) and [Imgur](https://imgur.com) account is al
 ### Running
 
 To start the bot run the following command:
-```python
+```bash
 python3 cs-pound.py
 ```
 
