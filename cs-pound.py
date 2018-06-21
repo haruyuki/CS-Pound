@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import discord
 from discord.ext.commands import Bot
 from discord.ext import commands
-import fileinput
 import hashlib
 import logging
 import lxml.html
@@ -67,7 +66,7 @@ def decryption_imgur(a):  # Decrypt Imgur Token
 def decryption_discord(a):  # Decrypt Discord token
     pass
 
-tokens = [i.replace('\n', '') for i in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
+tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 CLIENT_ID = decryption_imgur(tokens[0])  # Imgur Client ID
 CLIENT_SECRET = decryption_imgur(tokens[1])  # Imgur Secret ID
 
@@ -75,7 +74,7 @@ CLIENT_SECRET = decryption_imgur(tokens[1])  # Imgur Secret ID
 if call == 'LIVE':  # If being used for production
     token = tokens[2]  # Discord CS Pound Secret Token
     prefix = ','  # Prefix to call CS Pound Discord Bot
-    version = '1.6.1'  # CS Pound Discord Bot version
+    version = '1.7.1'  # CS Pound Discord Bot version
 else:  # If used for testing
     token = tokens[3]  # Discord CS Pound DEV Secret Token
     prefix = '.'  # Prefix to call CS Pound DEV Discord Bot
@@ -301,12 +300,13 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
 
 def get_web_data(link, command_source): # Get web data from link
     success = False  # Boolean for whether link is valid
-    headers = {  # HTTP connection headers
+    headers = {  # HTTP request headers
         'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
         'From': 'jumpy12359@gmail.com'  # Contact email
     }
     if link == '' and command_source != 'pound':  # If no link provided
-        return success, discord.Embed(title=command_source.capitalize(), description='You didn\'t provide a ' + command_source + ' link!', colour=0xff5252)  # Embed message of not providing link
+        description = 'You didn\'t provide a ' + command_source + ' link!'
+        return success, discord.Embed(title=command_source.capitalize(), description=description, colour=0xff5252)  # Embed message of not providing link
     else:  # If arguments provided
         try:  # Checking link format
             if command_source != 'pound':
@@ -324,8 +324,8 @@ def get_web_data(link, command_source): # Get web data from link
                 data[parameters[0]] = parameters[1]  # Add dictionary item with $POST variable and value
             elif command_source == 'oekaki':  # If function is being called from the Oekaki command
                 base_link = 'http://www.chickensmoothie.com/Forum/viewtopic.php'
-                for i in range(len(parameters)):  # For each parameter
-                    temp = parameters[i].split('=')  # Split the $POST variables
+                for param in range(len(parameters)):  # For each parameter
+                    temp = parameters[param].split('=')  # Split the $POST variables
                     data[temp[0]] = temp[1]  # Add dictionary item with $POST variable and value
             elif command_source == 'pound':  # If function is being called from the Pound command
                 base_link = 'http://www.chickensmoothie.com/pound.php'
@@ -357,6 +357,7 @@ async def on_ready():  # When Client is loaded
     print('You are running ' + client.user.name + ' v' + version)
     print('Created by Peko#7955')
     await client.change_presence(game=discord.Game(name=',help | By: Peko#7955'), status=discord.Status.online)  # Change Playing Discord bot is playing
+    
 
 # -------------------- HELP COMMAND --------------------
 @client.command(pass_context=True)
@@ -438,7 +439,7 @@ async def autoremind(ctx, args=''):  # Autoremind command
             embed = discord.Embed(title='Auto Remind', description='You already have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
         else:
             text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n' # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
-            with open('autoremind.txt', 'a') as file:
+            with open('autoremind.txt', 'a+') as file:
                 file.write(text)
             await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
             message = 'You have been added to Auto Remind at ' + args + ' minutes.'
@@ -753,8 +754,8 @@ async def time():  # Time command
     except IndexError:  # If text doesn't exist
         output = 'Pound is currently open!'
 
-    embed = discord.Embed(title='Time', description=output, colour=0x4ba139)
-    await client.say(embed=embed)
+    embed = discord.Embed(title='Time', description=output, colour=0x4ba139)  # Create embed with title 'Time' and pound information
+    await client.say(embed=embed)  # Display the embed message
 
 
 # -------------------- TRADE COMMAND --------------------
@@ -901,7 +902,10 @@ async def compose_message(time):  # Function to compose and send mention message
     for i in range(len(channel_ids)):  # For each Discord channel ID
         grep_statement = 'grep \'[0-9]*\\s' + channel_ids[i] + '\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f3 -d\' \''  # Grab all unique Discord user ID's with that channel ID
         user_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
-        message = time + ' minute(s) until pound opens! '
+        if time == '1':  # If there is only one minute left
+            message = time + ' minute until pound opens! '
+        else:  # If there is more than 1 minute left
+            message = time + ' minutes until pound opens! '
         for j in range(len(user_ids)):  # For each Discord user
             message += '<@' + user_ids[j] + '> '  # Message format for mentioning users <@USER_ID>
         await client.send_message(client.get_channel(channel_ids[i]), content=message)  # Send message to Discord channel with mention message
@@ -978,7 +982,6 @@ async def pound_countdown():  # Background task to countdown to when the pound o
             elif 'second' in text:
                 pass
         await asyncio.sleep(sleep_amount)
-
 
 client.loop.create_task(pound_countdown())  # Run 'pound_countdown' background task
 client.run(token)  # Start bot
