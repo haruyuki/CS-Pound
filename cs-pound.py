@@ -1,4 +1,5 @@
 # -------------------- IMPORTS --------------------
+import aiohttp
 import asyncio
 from datetime import datetime, timedelta
 import discord
@@ -13,7 +14,6 @@ from PIL import Image, ImageFont, ImageDraw
 import platform
 import psutil
 import pyimgur
-import requests
 import subprocess
 import time as pytime
 import urllib.request
@@ -41,6 +41,7 @@ https://trello.com/b/RAJhtsl8/cs-pound-development-board
 # -------------------- VARIABLES --------------------
 start_time = datetime.now()  # The time the script started running
 call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
+
 
 # -------------------- TOKENS --------------------
 def decryption_imgur(a):  # Decrypt Imgur Token
@@ -298,7 +299,7 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
         second_section = pluralise('second', second)  # Pluralise the second section
     return day_section + hour_section + minute_section + second_section  # Return the formatted text
 
-def get_web_data(link, command_source): # Get web data from link
+async def get_web_data(link, command_source): # Get web data from link
     success = False  # Boolean for whether link is valid
     headers = {  # HTTP request headers
         'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
@@ -329,8 +330,11 @@ def get_web_data(link, command_source): # Get web data from link
                     data[temp[0]] = temp[1]  # Add dictionary item with $POST variable and value
             elif command_source == 'pound':  # If function is being called from the Pound command
                 base_link = 'http://www.chickensmoothie.com/pound.php'
-            response = requests.post(base_link, params=data)  # Request HTML page data
-            dom = lxml.html.fromstring(response.text)  # Extract HTML from site
+            async with aiohttp.ClientSession() as session:
+                async with session.post(base_link, data=data, headers=headers) as response:
+                    connection = await response.text()  # Request HTML page data
+                    dom = lxml.html.fromstring(connection)  # Extract HTML from site
+                session.close()
             return success, dom  # Return whether connection was successful and DOM data
         else:
             return success  # Return whether connection was successful
@@ -450,7 +454,7 @@ async def autoremind(ctx, args=''):  # Autoremind command
 # -------------------- IMG COMMAND --------------------
 @client.command(no_pm=True, aliases=['img'])  # Disable PM'ing the Bot
 async def image(link: str=''):  # Autoremind command
-    data = get_web_data(link, 'pet')
+    data = await get_web_data(link, 'pet')
     if data[0]:
         petimg = data[1].xpath('//img[@id="petimg"]/@src')[0]  # Pet image link
         if 'trans' in petimg:  # If pet image is transparent (i.e. Pet has items)
@@ -467,7 +471,7 @@ async def image(link: str=''):  # Autoremind command
 # -------------------- OEKAKI COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
 async def oekaki(link: str=''):  # Oekaki command
-    data = get_web_data(link, 'oekaki')
+    data = await get_web_data(link, 'oekaki')
     if data[0]:
         base_link = 'http://www.chickensmoothie.com/Forum/'
         
@@ -510,7 +514,7 @@ async def oekaki(link: str=''):  # Oekaki command
 # -------------------- PET COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
 async def pet(link: str=''):  # Pet command
-    data = get_web_data(link, 'pet')
+    data = await get_web_data(link, 'pet')
     if data[0]:
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
         values = data[1].xpath('//td[@class="r"]')  # Values of pet information
@@ -569,7 +573,7 @@ async def pet(link: str=''):  # Pet command
 # -------------------- PET2 COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
 async def pet2(link: str=''):  # Pet2 command
-    data = get_web_data(link, 'pet')
+    data = await get_web_data(link, 'pet')
     if data[0]:  # If connection is made
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
         values = data[1].xpath('//td[@class="r"]')  # Values of pet information
@@ -738,13 +742,14 @@ async def support():  # Support command
     await client.say(embed=embed)  # Display the embed message
 
 
-
 # -------------------- TIME COMMAND --------------------
 @client.command(no_pm=True, aliases=['pound'])  # Disable PM'ing the Bot
 async def time():  # Time command
-    connection = urllib.request.urlopen('http://www.chickensmoothie.com/pound.php')  # Connect to ChickenSmoothie Pound webpage
-    dom = lxml.html.fromstring(connection.read())  # Extract HTML from site
-    text = dom.xpath('//h2/text()')  # Get text of h2 elements
+    async with aiohttp.ClientSession() as session:  # Create an async HTTP session
+        async with session.get('http://www.chickensmoothie.com/pound.php') as response:  # Getting HTTP response asynchronously
+            connection = await response.text()  # Get the HTML from the response
+            dom = lxml.html.fromstring(connection)  # Create DOM Tree from the HTML
+            text = dom.xpath('//h2/text()')  # Get the pound opening text
 
     try:
         if ':)' in text[1]:  # If :) in text
@@ -933,7 +938,9 @@ async def pound_countdown():  # Background task to countdown to when the pound o
     await client.wait_until_ready()  # Wait until client has loaded before starting background task
     while not client.is_closed:  # While client is still running
         if not cooldown:  # If command is not on cooldown
-            data = get_web_data('', 'pound')  # Get pound data
+            pound_logger.info('Command not on cooldown.')
+            data = await get_web_data('', 'pound')  # Get pound data
+            pound_logger.info('Pound web data received.')
             if data[0]:  # If pound data is valid and contains content
                 text = data[1].xpath('//h2/text()')  # List all texts with H2 element
                 try:  # Try getting pound opening text

@@ -23,7 +23,7 @@ Though only tested on Python 3.5.2 and 3.6.5, it should work with any version of
 
 The libraries [discord.py](https://github.com/Rapptz/discord.py), [lxml](http://lxml.de), [Pillow](http://python-pillow.org), [psutil](https://github.com/giampaolo/psutil), [PyImgur](https://github.com/Damgaard/PyImgur) and [Requests](http://docs.python-requests.org/en/master/) are required to run the Python script. These can be installed through Python PIP by running:
 ```bash
-pip3 install discord lxml pillow psutil pyimgur requests
+pip3 install discord lxml pillow psutil pyimgur subprocess
 ```
 
 A [Discord](https://discordapp.com) and [Imgur](https://imgur.com) account is also required.
