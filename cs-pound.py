@@ -39,6 +39,9 @@ https://trello.com/b/RAJhtsl8/cs-pound-development-board
 start_time = datetime.now()  # The time the script started running
 call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
+cooldown = False  # Cooldown of Auto Remind
+current_hash = ''  # Current hash of autoremind.txt
+autoremind_times = []  # Unique Auto Remind times
 
 # -------------------- DISCORD --------------------
 if call == 'LIVE':  # If being used for production
@@ -261,14 +264,15 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
         hour_section = pluralise('hour', hour, 'com')  # Pluralise the hour section with a suffixed ',' placement
 
     minute_section = pluralise('minute', minute)  # Pluralise the minute section
-    
+
     if hour != 0 or minute != 0:  # If there are hour(s) or minute(s)
         second_section = pluralise('second', second, 'pre')  # Pluralise the second section with a prefixed 'and' placement
     else:  # If there are no hours or minutes
         second_section = pluralise('second', second)  # Pluralise the second section
     return day_section + hour_section + minute_section + second_section  # Return the formatted text
 
-async def get_web_data(link, command_source): # Get web data from link
+
+async def get_web_data(link, command_source):  # Get web data from link
     success = False  # Boolean for whether link is valid
     headers = {  # HTTP request headers
         'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
@@ -303,7 +307,6 @@ async def get_web_data(link, command_source): # Get web data from link
                 async with session.post(base_link, data=data, headers=headers) as response:
                     connection = await response.text()  # Request HTML page data
                     dom = lxml.html.fromstring(connection)  # Extract HTML from site
-                session.close()
             return success, dom  # Return whether connection was successful and DOM data
         else:
             return success  # Return whether connection was successful
@@ -330,7 +333,7 @@ async def on_ready():  # When Client is loaded
     print('You are running ' + client.user.name + ' v' + version)
     print('Created by Peko#7955')
     await client.change_presence(game=discord.Game(name=',help | By: Peko#7955'), status=discord.Status.online)  # Change Playing Discord bot is playing
-    
+
 
 # -------------------- HELP COMMAND --------------------
 @client.command(pass_context=True)
@@ -382,6 +385,7 @@ async def help(ctx, args=''):  # Help Command
         embed = discord.Embed(title='Help', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)
         await client.say(embed=embed)
 
+
 # -------------------- AUTOREMIND COMMAND --------------------
 @client.command(pass_context=True, no_pm=True)  # Disable PM'ing the Bot
 async def autoremind(ctx, args=''):  # Autoremind command
@@ -423,7 +427,7 @@ async def autoremind(ctx, args=''):  # Autoremind command
             if id_exists != '':
                 embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)
             else:
-                text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n' # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
+                text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n'  # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
                 with open('autoremind.txt', 'a+') as file:
                     file.write(text)
 
@@ -440,7 +444,7 @@ async def autoremind(ctx, args=''):  # Autoremind command
 
 # -------------------- IMAGE COMMAND --------------------
 @client.command(no_pm=True, aliases=['img'], pass_context=True)  # Disable PM'ing the Bot
-async def image(ctx, link: str=''):  # Autoremind command
+async def image(ctx, link: str = ''):  # Autoremind command
     data = await get_web_data(link, 'pet')
     if data[0]:  # If data is valid
         information = {}
@@ -464,7 +468,7 @@ async def image(ctx, link: str=''):  # Autoremind command
             no_name = True
         else:  # If they add up
             no_name = False
-        
+
         if no_name:  # If pet has no name
             case1 = 'Pet\'s name:'
             case2 = 'Adopted:'
@@ -551,11 +555,11 @@ async def image(ctx, link: str=''):  # Autoremind command
 
 # -------------------- OEKAKI COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
-async def oekaki(link: str=''):  # Oekaki command
+async def oekaki(link: str = ''):  # Oekaki command
     data = await get_web_data(link, 'oekaki')
     if data[0]:
         base_link = 'http://www.chickensmoothie.com/Forum/'
-        
+
         oekaki_title = data[1].xpath('//h3[@class="first"]/a/text()')[0]
         image = 'https://www.chickensmoothie.com' + data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]
         user_icon = base_link[:-1] + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]
@@ -585,7 +589,7 @@ async def oekaki(link: str=''):  # Oekaki command
 
 # -------------------- PET COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
-async def pet(link: str=''):  # Pet command
+async def pet(link: str = ''):  # Pet command
     data = await get_web_data(link, 'pet')
     if data[0]:
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
@@ -673,7 +677,7 @@ async def statistics():  # Stats command
     system_memory_mb = str(round(psutil.virtual_memory()[3] / 1000 / 1024, 2)) + ' MB'
     system_memory_percent = str(psutil.virtual_memory()[2]) + '%'  # Get the available virtual memory (physical memory) of the system
     bot_memory_mb = str(round(psutil.Process(os.getpid()).memory_info()[0] / 1024**2, 2)) + ' MB'  # Get the memory usage of this python process
-    bot_memory_percent = str(round(psutil.Process(os.getpid()).memory_percent(),2)) + '%'
+    bot_memory_percent = str(round(psutil.Process(os.getpid()).memory_percent(), 2)) + '%'
     discord_py_version = discord.__version__  # Discord.py version
     server_count = str(len(client.servers))  # The number of servers this CS Pound is in
     member_count = str(len(set(client.get_all_members())))  # The number of users the CS Pound is connected to
@@ -843,6 +847,7 @@ async def trade(link: str):  # Trade command
 
     embed = discord.Embed(title='Trade', description='This command is still under development!', colour=0xff5252)
     await client.say(embed=embed)
+
 
 '''
 # -------------------- EMBED TEST COMMAND --------------------
