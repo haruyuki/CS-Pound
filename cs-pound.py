@@ -14,15 +14,11 @@ import os
 from PIL import Image, ImageFont, ImageDraw
 import platform
 import psutil
-import pyimgur
 import subprocess
 import time as pytime
 import urllib.request
 
 '''
-Imgur Album
-https://imgur.com/a/BiVzx
-
 ChickenSmoothie PHP Links
 http://static.chickensmoothie.com/archive/image.php?k=<LONG PET ID>&bg=<HEX COLOUR>
 http://static.chickensmoothie.com/pic.php?k=<LONG PET ID>
@@ -42,43 +38,15 @@ https://trello.com/b/RAJhtsl8/cs-pound-development-board
 # -------------------- VARIABLES --------------------
 start_time = datetime.now()  # The time the script started running
 call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
-
-
-# -------------------- TOKENS --------------------
-def decryption_imgur(a):  # Decrypt Imgur Token
-    a = list(a)  # Create list of encrypted token
-    b = '0123456789abcdef'  # String of hexadecimal characters
-    c = []  # List of unencrypted token characters
-    d = []  # Temporary list
-    for e in range(len(a)):  # For each character in 'a' list
-        f = b[(b.find(a[e]) + 6) % 16]  # Move character forward by 6
-        d.append(f)  # Append to 'd' list
-
-    a = ''.join(map(str, d))  # Combine 'd' list into one string
-    a = [a[g:g+2] for g in range(0, len(a), 2)]  # Split into every 2nd character
-    for h in range(len(a)):  # For each item in 'a' list
-        i = '0x' + a[h]  # Add '0x' to each item for conversion from hexadecimal
-        j = int(i, 16)  # Convert from hexadecimal to integer
-        k = abs(int(j) - 256)  # Absolute value of converted integer minus 256
-        l = format(int(k), 'x')  # Convert integer back to hexadecimal
-        c.append(l)  # Append to 'c' list
-
-    return ''.join(map(str, c))  # Combine 'c' list into one string
-
-def decryption_discord(a):  # Decrypt Discord token
-    pass
-
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
-CLIENT_ID = decryption_imgur(tokens[0])  # Imgur Client ID
-CLIENT_SECRET = decryption_imgur(tokens[1])  # Imgur Secret ID
 
 # -------------------- DISCORD --------------------
 if call == 'LIVE':  # If being used for production
-    token = tokens[2]  # Discord CS Pound Secret Token
+    token = tokens[0]  # Discord CS Pound Secret Token
     prefix = ','  # Prefix to call CS Pound Discord Bot
     version = '1.7.1'  # CS Pound Discord Bot version
 else:  # If used for testing
-    token = tokens[3]  # Discord CS Pound DEV Secret Token
+    token = tokens[1]  # Discord CS Pound DEV Secret Token
     prefix = '.'  # Prefix to call CS Pound DEV Discord Bot
     reminder = 0
     version = 'DEV'  # CS Pound DEV Discord Bot version
