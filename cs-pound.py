@@ -975,8 +975,17 @@ async def pound_countdown():  # Background task to countdown to when the pound o
             else:  # If pound data isn't valid
                 sleep_amount = 11400  # 3 hours 10 minutes
         else:  # If command is on cooldown
-            if 'minute' and 'second' in text:
-                cooldown = value[1]
+            if 'hour' in text:
+            	if value != 0:
+            		await minute_check(value)
+            		value -= 1
+            		sleep_amount = 60
+            	else:
+            		cooldown = False
+            		sleep_amount = 10800
+            elif 'minute' and 'second' in text:
+                pound_logger.info('Minute and second in text')
+                sleep_amount = value[1]
                 value = 1
             elif 'minute' in text:
                 if value != 0:
