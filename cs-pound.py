@@ -476,11 +476,10 @@ async def oekaki(link: str=''):  # Oekaki command
         base_link = 'http://www.chickensmoothie.com/Forum/'
         
         oekaki_title = data[1].xpath('//h3[@class="first"]/a/text()')[0]
-        image = data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]
-        #user_icon = base_link + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]
-        #titles = data[1].xpath('//table[@class="ok-drawing-info"]/tr/td[@class="label"]/text()')
-        warning_title = 'Reminder!'
-        warning_text = 'Copying another person\'s art without permission to reproduce their work is a form of art-theft! [Read the full art rules here.](http://www.chickensmoothie.com/Forum/viewtopic.php?f=10&t=30437)'
+        image = 'https://www.chickensmoothie.com' + data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]
+        user_icon = base_link[:-1] + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]
+        titles = data[1].xpath('//table[@class="ok-drawing-info"]/tr/td[@class="label"]/text()')
+        warning_text = 'Reminder!! Copying another person\'s art without permission to reproduce their work is a form of art-theft!'
 
         if data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')[0] == 'Click to view':
             artist_links = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[1].xpath('td')[1].xpath('a/@href')
@@ -490,26 +489,18 @@ async def oekaki(link: str=''):  # Oekaki command
             artist_values = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')  # No Based on
 
         artist_text = '[' + artist_values[0] + '](' + base_link + artist_links[0][1:] + ') [' + artist_values[1] + '(' + base_link + artist_links[1][1:] + ')]'
-        
+
         embed = discord.Embed(title=oekaki_title, colour=0x4ba139, url=link)  # Create Discord embed
         embed.add_field(name='Artist', value=artist_text)
-        embed.add_field(name=warning_title, value=warning_text)
-
-        #embed.add_field(name=titles[0], value=artist_text)
-
-        # TITLE dom.xpath('//div[@class="inner"]/h3/a/text()')
-        # TITLE URL dom.xpath('//div[@class="inner"]/h3/a/@href') OR JUST ORIGINAL LINK PROVIDED
-
-        # ALL TITLES AND VALUES dom.xpath('//table[@class="ok-drawing-info"]/tr/td/text()')
-        # Could split x[0], x[1] AND x[2], x[3] AND x[4], x[5]
-
-        # HOW MANY PEOPLE LIKE THIS dom.xpath('//span[@class="liked_people"]/text()')
-
+        embed.set_footer(text=warning_text, icon_url="https://vignette.wikia.nocookie.net/pufflescp/images/6/68/Red_Warning_Triangle.png/revision/latest?cb=20160718024653&format=original")
+        embed.add_field(name=titles[0], value=artist_text)
         embed.set_image(url=image)
-        #embed.set_thumbnail(url=user_icon)
+        embed.set_thumbnail(url=user_icon)
+
         await client.say(embed=embed)
     else:
         await client.say(embed=data[1])
+
 
 # -------------------- PET COMMAND --------------------
 @client.command(no_pm=True)  # Disable PM'ing the Bot
