@@ -416,40 +416,50 @@ async def help(ctx, args=''):  # Help Command
 # -------------------- AUTOREMIND COMMAND --------------------
 @client.command(pass_context=True, no_pm=True)  # Disable PM'ing the Bot
 async def autoremind(ctx, args=''):  # Autoremind command
-    grep_statement = 'grep -n \'' + ctx.message.author.id + '\' autoremind.txt | cut -f1 -d:'
-    id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]
-    server_roles = ctx.message.server.roles
-    server_roles_list = []
-    for i in range(len(server_roles)):  # Create a list of roles in server
-        server_roles_list.append(str(server_roles[i]))
-    if 'Auto Remind' in server_roles_list:  # Checks if role already exists in server
-        pass
-    else:
-        await client.create_role(ctx.message.server, name='Auto Remind')  # Create 'Auto Remind' role in server
-    if args == 'off':
-        if id_exists == '':
-            embed = discord.Embed(title='Auto Remind', description='You don\'t have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
-        else:
-            sed_statement = 'sed -i.bak ' + id_exists + 'd autoremind.txt'
-            subprocess.Popen(sed_statement, shell=True)
-            await client.remove_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
-            embed = discord.Embed(title='Auto Remind', description='You have been removed from the AutoRemind role.', colour=0x4ba139)
-    else:
-        try:
-            int(args)
-        except ValueError:
-            args = args[:-1]
-        if id_exists != '':
-            embed = discord.Embed(title='Auto Remind', description='You already have the Auto Remind role {0.mention}!'.format(ctx.message.author), colour=0xff5252)
-        else:
-            text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n' # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
-            with open('autoremind.txt', 'a+') as file:
-                file.write(text)
-            await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
-            message = 'You have been added to Auto Remind at ' + args + ' minutes.'
-            embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)
-    await client.say(embed=embed)
+    grep_statement = 'grep -n \'' + ctx.message.author.id + '\' autoremind.txt | cut -f1 -d:'  # Get line number of ID
+    id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]  # Get output of grep statement
+    server_roles = ctx.message.server.roles  # List of roles in server
+    for role in server_roles:  # For each role in the server
+        print(role.name)
+        if role.name == "CS Pound":  # If 'CS Pound' role exists
+            permission = role.permissions.manage_roles  # Check whether role has 'Manage Roles' permission and set boolean value
+            break  # Break out of for loop
+    else:  # If role doesn't exist
+        permission = False
+    print(permission)
 
+    if permission:  # If bot has permission to 'Manage Roles'
+        server_roles = ctx.message.server.roles  # List of roles in server
+        for role in server_roles:  # Checks if role already exists in server
+            if role.name == "Auto Remind":  # If role exists
+                break  # Break out of for loop
+        else:  # If role doesn't exist
+            await client.create_role(ctx.message.server, name='Auto Remind')  # Create 'Auto Remind' role in server
+
+    if args == 'off':  # If user wants to turn off Auto Remind
+        if id_exists == '':  # If user doesn't exist in database
+            embed = discord.Embed(title='Auto Remind', description='You don\'t have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)  # Create embed
+        else:  # If user exists
+            sed_statement = 'sed -i.bak ' + id_exists + 'd autoremind.txt'  # sed statement
+            subprocess.Popen(sed_statement, shell=True)  # Run sed statement
+            if permission:  # If bot has permission to 'Manage Roles'
+                await client.remove_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))  # Remove role from user
+                embed = discord.Embed(title='Auto Remind', description='You have been removed from the Auto Remind role.', colour=0x4ba139)  # Create embed
+            else:  # If bot doesn't have permission to 'Manage Roles'
+                embed = discord.Embed(title='Auto Remind', description='You have been removed from the Auto Remind.', colour=0x4ba139)  # Create embed
+
+    else:  # If user is setting an Auto Remind
+        args = args[:-1]  # Remove the minute marker
+        if args.isdigit():  # If the input is a digit
+            if id_exists != '':
+                embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)
+            else:
+                text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n' # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
+                with open('autoremind.txt', 'a+') as file:
+                    file.write(text)
+
+                if permission:
+                    await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
 
 # -------------------- IMG COMMAND --------------------
 @client.command(no_pm=True, aliases=['img'])  # Disable PM'ing the Bot
