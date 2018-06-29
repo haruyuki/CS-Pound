@@ -6,6 +6,7 @@ import discord
 from discord.ext.commands import Bot
 from discord.ext import commands
 import hashlib
+import io
 import logging
 import lxml.html
 import math
@@ -461,20 +462,122 @@ async def autoremind(ctx, args=''):  # Autoremind command
                 if permission:
                     await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
 
-# -------------------- IMG COMMAND --------------------
-@client.command(no_pm=True, aliases=['img'])  # Disable PM'ing the Bot
-async def image(link: str=''):  # Autoremind command
-    data = await get_web_data(link, 'pet')
-    if data[0]:
-        petimg = data[1].xpath('//img[@id="petimg"]/@src')[0]  # Pet image link
-        if 'trans' in petimg:  # If pet image is transparent (i.e. Pet has items)
-            petimg = 'http://www.chickensmoothie.com' + petimg  # Pet image link
-        owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
+                message = 'Will ping you ' + args + ' minutes before the pound opens!'
+                embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)
+        else:  # If the input isn't a digit
+            embed = discord.Embed(title='Auto Remind', description='That is not a valid time!', colour=0xff5252)  # Create embed
 
-        embed = discord.Embed(title=owner_name + '\'s Pet', colour=0x4ba139)  # Create Discord embed
-        embed.set_image(url=petimg)  # Set image
-        await client.say(embed=embed)
-    else:
+    await client.say(embed=embed)
+
+
+# -------------------- IMAGE COMMAND --------------------
+@client.command(no_pm=True, aliases=['img'], pass_context=True)  # Disable PM'ing the Bot
+async def image(ctx, link: str=''):  # Autoremind command
+    data = await get_web_data(link, 'pet')
+    if data[0]:  # If data is valid
+        information = {}
+        owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
+        titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
+        values = data[1].xpath('//td[@class="r"]')  # Values of pet information
+
+        pet_image = data[1].xpath('//img[@id="petimg"]/@src')[0]  # Pet image link
+        if 'trans' in pet_image:  # If pet image is transparent (i.e. Pet has items)
+            pet_image = 'http://www.chickensmoothie.com' + pet_image  # Pet image link
+            transparent = True
+        else:
+            transparent = False
+
+        if titles[0] == 'PPS':  # If pet is PPS
+            pps = True
+        else:  # If pet is not PPS
+            pps = False
+
+        if len(titles) + len(values) < 16:  # If the amount of titles and values don't add up
+            no_name = True
+        else:  # If they add up
+            no_name = False
+        
+        if no_name:  # If pet has no name
+            case1 = 'Pet\'s name:'
+            case2 = 'Adopted:'
+            case3 = 1
+            case4 = 1
+            if pps:  # If pet has no name and is PPS
+                case1 = 'Pet\'s name:'
+                case2 = 'Pet ID:'
+                case3 = 2
+                case4 = 1
+        elif pps:  # If pet has a name and is PPS
+            case1 = 'Pet ID:'
+            case2 = 'Pet\'s name:'
+            case3 = 2
+            case4 = 1
+        else:  # If pet has a name but is not PPS
+            case1 = 'Pet\'s name:'
+            case2 = 'Adopted:'
+            case3 = 1
+            case4 = 1
+
+        temp = len(titles) - 1 if pps else len(titles)
+        for i in range(temp):  # For each title in titles
+            if titles[i] == (case1):
+                information['Name'] = values[i].xpath('text()')[0]
+            elif titles[i] == (case2):
+                information['Adopted'] = values[i].xpath('text()')[0]
+            elif titles[i] == ('Growth:' if pps else 'Rarity:'):
+                information['Rarity'] = 'rarities/' + values[i].xpath('img/@src')[0][12:]  # Link to rarity image
+
+        if titles[case3] == 'Pet ID:':
+            filename = values[case4].xpath('text()')[0]
+        else:
+            filename = 'pet'
+
+        async with aiohttp.ClientSession() as session:  # Create an async HTTP session
+            async with session.get(pet_image) as response:  # Getting HTTP response asynchronously
+                connection = await response.read()  # Read the response content
+                pet_image = io.BytesIO(connection)  # Convert the image into bytes
+
+        image_files = [pet_image, information['Rarity']]
+        font = ImageFont.truetype('Verdana.ttf', 12)  # Verdana font size 15
+
+        images = map(Image.open, image_files)  # Map the image files
+        widths, heights = zip(*(i.size for i in images))  # Tuple of widths and heights of both images
+        images = list(map(Image.open, image_files))  # List of image file name
+
+        temp_draw = ImageDraw.Draw(Image.new('RGBA', (0, 0)))  # Temporary drawing canvas to calculate text sizes
+        max_width = max(widths)  # Max width of images
+        total_height = sum(heights) + (15 * len(information))  # Total height of images
+        current_width = 0
+        for key, value in information.items():  # For each item in information
+            temp_width = temp_draw.textsize(value, font=font)[0]  # Width of text
+            if current_width < temp_width:  # If current width is less than width of texts
+                current_width = temp_width
+                max_width = temp_width * 2
+
+        image = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
+        d = ImageDraw.Draw(image)
+
+        y_offset = 0  # Offset for vertically stacking images
+        if transparent:
+            image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
+        else:
+            image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
+        y_offset += images[0].size[1]  # Add height of image + 10 to offset
+        for key, value in information.items():  # For each title in titles
+            if key == 'Rarity':
+                image.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
+            else:
+                d.text((math.floor(((max_width - math.floor(d.textsize(value, font=font)[0]))/2)), y_offset), value, fill=(0, 0, 0), font=font)  # Paste text at 'i' at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset)
+            y_offset += 15  # Add offset of 30
+
+        output_buffer = io.BytesIO()
+        image.save(output_buffer, 'png')
+        output_buffer.seek(0)
+
+        filename += '.png'
+
+        await client.send_file(ctx.message.channel, fp=output_buffer, filename=filename)
+    else:  # If data is invalid
         await client.say(embed=data[1])
 
 
@@ -567,114 +670,6 @@ async def pet(link: str=''):  # Pet command
             else:  # Any other 'i'
                 embed.add_field(name=titles[i], value=value_list[i], inline=True)  # Add field with inline
         await client.say(embed=embed)
-    else:
-        await client.say(embed=data[1])
-
-
-# -------------------- PET2 COMMAND --------------------
-@client.command(no_pm=True)  # Disable PM'ing the Bot
-async def pet2(link: str=''):  # Pet2 command
-    data = await get_web_data(link, 'pet')
-    if data[0]:  # If connection is made
-        titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
-        values = data[1].xpath('//td[@class="r"]')  # Values of pet information
-        tables = len(values)
-        given = True  # Pet has been given by another user
-        value_list = []
-
-        petimg = data[1].xpath('//img[@id="petimg"]/@src')[0]  # Pet image link
-        if 'trans' in petimg:  # If pet image is transparent (i.e. Pet has items)
-            petimg = 'http://www.chickensmoothie.com' + petimg  # Pet image link
-        owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
-        owner_link = 'http://www.chickensmoothie.com/' + data[1].xpath('//td[@class="r"]/a/@href')[0]  # Link to user profile
-        image_name = petimg.replace('http://static.chickensmoothie.com/pic.php?k=', '').replace('&bg=e0f6b2', '')  # Pet ID
-        store_location = 'pets/' + image_name + '.jpg'  # Storage location of pet image files
-        if image_name + '.jpg' not in os.listdir('pets/'):  # If image doesn't already exist in pet/
-            urllib.request.urlretrieve(petimg, store_location)  # Download image and save to pets/
-
-        if titles[0] == 'PPS':  # If pet is PPS
-            value_list.append('This pet has "PPS". What\'s that?')  # Append PPS text
-            value_list.append(owner_name)  # Append user name
-            pps = True
-        else:
-            value_list.append(owner_name)  # Append user name
-            pps = False
-
-        for i in range(tables):  # For each value in values
-            if i == 0:  # If 'i' is at first value (PPS or Owner name)
-                pass  # Pass as first value has already been set
-            elif tables - i == 2 or tables - i == 1:  # If 'i' is at second last or last value
-                if titles[i] == ('Age:' if pps else 'Growth:') or not given:  # If text of titles at 'i' is 'Age:' if pet is PPS otherwise 'Growth:' or pet not given
-                    given = False
-                    if tables - i == 2:  # If 'i' is second last value (i.e. Growth)
-                        value_list.append(values[i].xpath('text()')[0])  # Append growth of pet
-                    elif tables - i == 1:  # If 'i' is last value (i.e. Rarity)
-                        value_list.append('')  # Append nothing as it will be an image
-                        specified_rarity = 'rarities/' + values[i].xpath('img/@src')[0][12:]  # Link to rarity image
-                elif titles[i] == ('Growth:' if pps else 'Rarity:') or given:  # If text of titles at 'i' is 'Growth:' is pet is PPS otherwise 'Rarity:' or pet is given
-                    given = True
-                    if tables - i == 2:  # If 'i' is second last value (i.e. Rarity)
-                        value_list.append('')  # Append nothing as it will be an image
-                        specified_rarity = 'rarities/' + values[i].xpath('img/@src')[0][12:]  # Link to rarity image
-                    elif tables - i == 1:  # If 'i' is last value (i.e. Given by)
-                        titles[i] = titles[i].replace('\t', '').replace('\n', '')  # Remove extra formatting
-                        given_by = data[1].xpath('//td[@class="r"]/a/text()')[1]
-                        value_list.append(data[1].xpath('//td[@class="r"]/a/text()')[1])  # Name of given user
-            else:  # Any other 'i'
-                value_list.append(values[i].xpath('text()')[0])  # Append text
-
-        image_files = [store_location, specified_rarity]  # Images list
-
-        title_font = ImageFont.truetype('Verdana Bold.ttf', 15)  # Verdana Bold font size 15
-        value_font = ImageFont.truetype('Verdana.ttf', 15)  # Verdana font size 15
-
-        images = map(Image.open, image_files)  # Map the image files
-        widths, heights = zip(*(i.size for i in images))  # Tuple of widths and heights of both images
-        images = list(map(Image.open, image_files))  # List of image file name
-
-        temp_draw = ImageDraw.Draw(Image.new('RGBA', (0, 0)))  # Temporary drawing canvas to calculate text sizes
-
-        max_width = max(widths)  # Max width of images
-        total_height = sum(heights) + (30 * len(titles))  # Total height of images
-        current_width = 0
-        for i in range(len(titles)):  # For each title in titles
-            temp_width = temp_draw.textsize(titles[i], font=title_font)[0] + temp_draw.textsize(value_list[i], font=value_font)[0] + 10  # Width of text
-            if current_width < temp_width:  # If current width is less than width of texts
-                current_width = temp_width
-                max_width = temp_width * 2
-
-        image = Image.new('RGBA', (max_width, total_height))  # Create image of max_width x total_height
-        d = ImageDraw.Draw(image)
-
-        y_offset = 0  # Offset for vertically stacking images
-        image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
-        y_offset += images[0].size[1] + 10  # Add height of image + 10 to offset
-        for i in range(len(titles)):  # For each title in titles
-            d.text((math.floor(((max_width - math.floor(d.textsize(titles[i], font=title_font)[0]))/2) - math.floor((d.textsize(titles[i], font=title_font)[0]/2))) - 5, y_offset), titles[i], fill=(0, 0, 0), font=title_font)  # Paste text at 'i' at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset)
-            if titles[i] == 'Rarity:':  # If text at 'i' is 'Rarity:'
-                image.paste(images[1], (math.floor(((max_width - math.floor(d.textsize(titles[i], font=title_font)[0]))/2) + math.floor((d.textsize(titles[i], font=title_font)[0]/2))) + 5, y_offset))  # Paste second image at ((MAX_WIDTH - (TEXT_WIDTH / 2) + (TEXT_WIDTH / 2) + 5, y_offset)
-                y_offset += 5  # Add offset of 5
-            elif titles[i] == 'Owner:' or 'Given to' in titles[i] or titles[i] == 'PPS':  # If title at 'i' is 'Owner' or 'Given to' or 'PPS'
-                d.text((math.floor(((max_width - math.floor(d.textsize(value_list[i], font=value_font)[0]))/2) + math.floor((d.textsize(value_list[i], font=value_font)[0]/2))) + 5, y_offset), value_list[i], fill=(0, 0, 255), font=value_font)
-            else:  # If any other 'i'
-                d.text((math.floor(((max_width - math.floor(d.textsize(value_list[i], font=value_font)[0]))/2) + math.floor((d.textsize(value_list[i], font=value_font)[0]/2))) + 5, y_offset), value_list[i], fill=(0, 0, 0), font=value_font)
-            y_offset += 30  # Add offset of 30
-
-        pixels = image.load()  # Load image pixel data
-        for y in range(image.size[1]):  # For each y pixel in image height
-            for x in range(image.size[0]):  # For each x pixel in image width
-                if pixels[x, y][3] < 5:    # If pixel alpha value is < 5
-                    pixels[x, y] = (225, 246, 179, 255)
-
-        image.save('pet.png', 'PNG')  # Save image as pet.png
-
-        im = pyimgur.Imgur(CLIENT_ID, client_secret=CLIENT_SECRET, access_token='fc5c0ffccff4387cef948df004edb1411575eaac', refresh_token='54b539be920b6327b31537ea7ad2514093a5c661')  # Connect to Imgur
-        uploaded_image = im.upload_image(path='pet.png', title=owner_name + '\'s Pet', description=image_name, album='BiVzx')  # Upload image
-
-        embed = discord.Embed(title=owner_name + '\'s Pet', colour=0x4ba139)  # Create Discord embed
-        embed.set_image(url=uploaded_image.link)  # Set image as uploaded Imgur image link
-        await client.say(embed=embed)
-        os.system('rm pet.png')  # Delete pet.png
     else:
         await client.say(embed=data[1])
 
