@@ -42,6 +42,7 @@ call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 cooldown = False  # Cooldown of Auto Remind
 help_hash = ''  # Current hash of help.json
+help_list = {}
 autoremind_hash = ''  # Current hash of autoremind.txt
 autoremind_times = []  # Unique Auto Remind times
 
@@ -238,7 +239,7 @@ async def get_web_data(link, command_source):  # Get web data from link
 
 
 def process_help(command):  # Get the help text from help.json
-    global help_hash
+    global help_hash, help_list
 
     def monospace(string):  # Returns string in Discord monospace format
         return '`' + string + '`'  # `string`
