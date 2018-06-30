@@ -41,7 +41,7 @@ start_time = datetime.now()  # The time the script started running
 call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 cooldown = False  # Cooldown of Auto Remind
-help_hash = ''
+help_hash = ''  # Current hash of help.json
 autoremind_hash = ''  # Current hash of autoremind.txt
 autoremind_times = []  # Unique Auto Remind times
 
@@ -61,7 +61,7 @@ warning_help = '''\
 CS Pound website (Where you also get the invite link)
 http://tailstar.us
 
--'''
+-'''  # Title help
 
 chickensmoothie_help2 = '''\
 `,archive <query>` - Search the ChickenSmoothie archives (Under Development)
@@ -89,14 +89,14 @@ chickensmoothie_help = '''\
 
 `,time` - Tells you how long until the pound opens
 
-_'''
+_'''  # Chicken Smoothie related commands help
 
 general_help = '''\
 `,autoremind <on/off> <time>` - Turns on or off global auto reminding (Under Development)
 
 `,remindme <time>` - Pings you after specified amount of time
 
-_'''
+_'''  # General commands help
 
 informational_help = '''\
 `,help` - Displays this message
@@ -104,7 +104,7 @@ informational_help = '''\
 `,support` - PM's you the link to the CS Pound Development Server
 
 `,statistics` - Displays bot statistics
-'''
+'''  # Informational commands help
 
 
 # -------------------- FUNCTIONS --------------------
@@ -144,7 +144,7 @@ def time_extractor(time):  # Convert given time into seconds
         finaltotal = 0
     else:  # If values in hours, minutes or seconds
         finaltotal = int((htotal * 60 * 60) + (mtotal * 60) + stotal)  # Total time in seconds
-    return finaltotal, htotal, mtotal, stotal
+    return finaltotal, htotal, mtotal, stotal  # Return a tuple
 
 
 def resolver(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
@@ -205,35 +205,35 @@ async def get_web_data(link, command_source):  # Get web data from link
     }
     if link == '' and command_source != 'pound':  # If no link provided
         description = 'You didn\'t provide a ' + command_source + ' link!'
-        return success, discord.Embed(title=command_source.capitalize(), description=description, colour=0xff5252)  # Embed message of not providing link
+        return success, discord.Embed(title=command_source.capitalize(), description=description, colour=0xff5252)  # Create embed
     else:  # If arguments provided
         try:  # Checking link format
-            if command_source != 'pound':
+            if command_source != 'pound':  # If command source does not come from ,time
                 parameters = link.split('?')[1].split('&')  # Get the PHP $GET values
                 success = True  # Link is valid
-            else:
+            else:  # If command source comes from ,time
                 success = True
         except IndexError:  # If cannot get $GET value
-            return success, discord.Embed(title=command_source.capitalize(), description='That is not a valid ' + command_source + ' link!', colour=0xff5252)  # Embed message of not valid link
+            return success, discord.Embed(title=command_source.capitalize(), description='That is not a valid ' + command_source + ' link!', colour=0xff5252)  # Create embed
         if success:  # If link exists and is valid
             data = {}  # PHP $POST parameters
             if command_source == 'pet':  # If function is being called from the Pet command
-                base_link = 'http://www.chickensmoothie.com/viewpet.php'  # Base PHP link for Pet Command
+                base_link = 'http://www.chickensmoothie.com/viewpet.php'  # Base PHP link for Pet command
                 parameters = parameters[0].split('=')  # Split the $POST variable
                 data[parameters[0]] = parameters[1]  # Add dictionary item with $POST variable and value
             elif command_source == 'oekaki':  # If function is being called from the Oekaki command
-                base_link = 'http://www.chickensmoothie.com/Forum/viewtopic.php'
+                base_link = 'http://www.chickensmoothie.com/Forum/viewtopic.php'  # Base PHP link for Oekaki command
                 for param in range(len(parameters)):  # For each parameter
                     temp = parameters[param].split('=')  # Split the $POST variables
                     data[temp[0]] = temp[1]  # Add dictionary item with $POST variable and value
             elif command_source == 'pound':  # If function is being called from the Pound command
-                base_link = 'http://www.chickensmoothie.com/pound.php'
-            async with aiohttp.ClientSession() as session:
-                async with session.post(base_link, data=data, headers=headers) as response:
+                base_link = 'http://www.chickensmoothie.com/pound.php'  # Base PHP link for Time command
+            async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+                async with session.post(base_link, data=data, headers=headers) as response:  # POST the variables to the base php link
                     connection = await response.text()  # Request HTML page data
                     dom = lxml.html.fromstring(connection)  # Extract HTML from site
             return success, dom  # Return whether connection was successful and DOM data
-        else:
+        else:  # If link is not valid
             return success  # Return whether connection was successful
 
 
@@ -264,8 +264,8 @@ def process_help(command):  # Get the help text from help.json
 
 
 # -------------------- DISCORD BOT SETTINGS --------------------
-client = Bot(description='CS Pound by Peko#7955', command_prefix=prefix, pm_help=None)
-client.remove_command('help')  # Remove default command help to add custom help
+client = Bot(description='CS Pound by Peko#7955', command_prefix=prefix, pm_help=None)  # Set the bot description and prefix
+client.remove_command('help')  # Remove default help command to add custom help
 logger = logging.getLogger('discord')  # Create logger
 logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
 handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')  # Set logging file
@@ -284,7 +284,7 @@ async def on_ready():  # When Client is loaded
     print('--------')
     print('You are running ' + client.user.name + ' v' + version)
     print('Created by Peko#7955')
-    await client.change_presence(game=discord.Game(name=',help | By: Peko#7955'), status=discord.Status.online)  # Change Playing Discord bot is playing
+    await client.change_presence(game=discord.Game(name=',help | By: Peko#7955'), status=discord.Status.online)  # Change Playing status to ,help | By: Peko#7955
 
 
 # -------------------- HELP COMMAND --------------------
@@ -317,32 +317,32 @@ async def help(ctx, args=''):  # Help Command
     elif args == 'help':  # If included 'help' argument
         embed.add_field(name='**Help**', value=process_help(args))  # Embed Help help information
     elif args == 'support':
-        embed.add_field(name='**Support**', value=process_help(args))
+        embed.add_field(name='**Support**', value=process_help(args))  # Embed Support help information
     elif args == 'statistics':
-        embed.add_field(name='**Statistics**', value=process_help(args))
+        embed.add_field(name='**Statistics**', value=process_help(args))  # Embed Statistics help information
 
-    else:  # If provided no arguments
+    else:  # If provided no arguments or requested a help topic that doesn't exist
         embed.add_field(name=":pencil: __**To know about command usage or examples, use: ,help <command>**__", value=warning_help)  # add Warning help information to embed
-        embed.add_field(name=':dog: __**ChickenSmoothie Commands**__', value=chickensmoothie_help)  # Embed title
-        embed.add_field(name=':file_folder: __**General Commands**__', value=general_help)
-        embed.add_field(name=':wrench: __**Informational Commands**__', value=informational_help)
+        embed.add_field(name=':dog: __**ChickenSmoothie Commands**__', value=chickensmoothie_help)  # Embed Chicken Smoothie related commands
+        embed.add_field(name=':file_folder: __**General Commands**__', value=general_help)  # Embed General commands
+        embed.add_field(name=':wrench: __**Informational Commands**__', value=informational_help)  # Embed informational commands
     try:
-        await client.whisper(embed=embed)
-        if ctx.message.channel.is_private:
-            embed = discord.Embed()
-        else:
-            embed = discord.Embed(title='Help', description='A PM has been sent to you!', colour=0x4ba139)
-            await client.say(embed=embed)
-    except discord.errors.Forbidden:
-        embed = discord.Embed(title='Help', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)
-        await client.say(embed=embed)
+        await client.whisper(embed=embed)  # PM the embed to the user
+        if ctx.message.channel.is_private:  # If the user is calling command from PM
+            embed = discord.Embed()  # Replace with new empty embed
+        else:  # If the user is calling command from a channel
+            embed = discord.Embed(title='Help', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
+            await client.say(embed=embed)  # Send embed
+    except discord.errors.Forbidden:  # If cannot send PM to user
+        embed = discord.Embed(title='Help', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Create embed
+        await client.say(embed=embed)  # Send embed
 
 
 # -------------------- AUTOREMIND COMMAND --------------------
-@client.command(pass_context=True, no_pm=True)  # Disable PM'ing the Bot
-async def autoremind(ctx, args=''):  # Autoremind command
+@client.command(pass_context=True, no_pm=True)  # Disallow using this command in PM's
+async def autoremind(ctx, args=''):  # Auto Remind command
     grep_statement = 'grep -n \'' + ctx.message.author.id + '\' autoremind.txt | cut -f1 -d:'  # Get line number of ID
-    id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]  # Get output of grep statement
+    id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]  # Run grep statement
     server_roles = ctx.message.server.roles  # List of roles in server
     for role in server_roles:  # For each role in the server
         if role.name == "CS Pound":  # If 'CS Pound' role exists
@@ -373,41 +373,41 @@ async def autoremind(ctx, args=''):  # Autoremind command
 
     else:  # If user is setting an Auto Remind
         valid = False
-        if args == '':
+        if args == '':  # If no arguments provided
             embed = discord.Embed(title='Auto Remind', description='You didn\'t input a time!', colour=0xff5252)  # Create embed
         elif args.isdigit():  # If the input is a digit
             valid = True
         else:  # If the input isn't a digit
             args = args[:-1]  # Remove the minute marker
-            if args.isdigit():
+            if args.isdigit():  # If the input is a digit now
                 valid = True
-            else:
+            else:  # If input is still not digit
                 embed = discord.Embed(title='Auto Remind', description='That is not a valid time!', colour=0xff5252)  # Create embed
 
-        if valid:
-            if int(args) > 60:
+        if valid:  # If inputted time was valid
+            if int(args) > 60:  # If time is bigger than 60 minutes
                 embed = discord.Embed(title='Auto Remind', description='That time is too far!', colour=0xff5252)  # Create embed
-            else:
-                if id_exists != '':
-                    embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)
-                else:
+            else:  # If time is less than 60 minutes
+                if id_exists != '':  # If user has already set an Auto Remind
+                    embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)  # Create embed
+                else:  # If user doesn't have an Auto Remind setup
                     text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n'  # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
-                    with open('autoremind.txt', 'a+') as file:
-                        file.write(text)
+                    with open('autoremind.txt', 'a+') as file:  # Open autoremind.txt
+                        file.write(text)  # Write the text
 
-                    if permission:
-                        await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
+                    if permission:  # If bot has 'Manage Roles' permission
+                        await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))  # Add user to Auto Remind role
 
                     message = 'Will ping you ' + args + ' minutes before the pound opens!'
-                    embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)
+                    embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)  # Create embed
 
-    await client.say(embed=embed)
+    await client.say(embed=embed)  # Send embed
 
 
 # -------------------- IMAGE COMMAND --------------------
-@client.command(no_pm=True, aliases=['img'], pass_context=True)  # Disable PM'ing the Bot
+@client.command(no_pm=True, aliases=['img'], pass_context=True)  # Disallow using this command in PM's
 async def image(ctx, link: str = ''):  # Autoremind command
-    data = await get_web_data(link, 'pet')
+    data = await get_web_data(link, 'pet')  # Get pet data
     if data[0]:  # If data is valid
         information = {}
         owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
@@ -452,24 +452,24 @@ async def image(ctx, link: str = ''):  # Autoremind command
             case3 = 1
             case4 = 1
 
-        temp = len(titles) - 1 if pps else len(titles)
+        temp = len(titles) - 1 if pps else len(titles)  # Is pet is PPS, remove one title, else all titles
         for i in range(temp):  # For each title in titles
             if titles[i] == (case1):
-                information['Name'] = values[i].xpath('text()')[0]
+                information['Name'] = values[i].xpath('text()')[0]  # Add pet name to information dictionary
             elif titles[i] == (case2):
-                information['Adopted'] = values[i].xpath('text()')[0]
-            elif titles[i] == ('Growth:' if pps else 'Rarity:'):
-                information['Rarity'] = 'rarities/' + values[i].xpath('img/@src')[0][12:]  # Link to rarity image
+                information['Adopted'] = values[i].xpath('text()')[0]  # Add pet adoption date to information dictionary
+            elif titles[i] == ('Growth:' if pps else 'Rarity:'):  # If pet is PPS, if titles[i] matches 'Growth:', otherwise if not PPS, if titles[i] matches with 'Rarity:'
+                information['Rarity'] = 'rarities/' + values[i].xpath('img/@src')[0][12:]  # Local link to rarity image
 
         if titles[case3] == 'Pet ID:':
-            filename = values[case4].xpath('text()')[0]
-        else:
+            filename = values[case4].xpath('text()')[0]  # Get pet ID
+        else:  # If ID cannot be found
             filename = 'pet'
 
-        async with aiohttp.ClientSession() as session:  # Create an async HTTP session
-            async with session.get(pet_image) as response:  # Getting HTTP response asynchronously
+        async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+            async with session.get(pet_image) as response:  # GET HTTP response of pet image link
                 connection = await response.read()  # Read the response content
-                pet_image = io.BytesIO(connection)  # Convert the image into bytes
+                pet_image = io.BytesIO(connection)  # Convert the content into bytes
 
         image_files = [pet_image, information['Rarity']]
         font = ImageFont.truetype('Verdana.ttf', 12)  # Verdana font size 15
@@ -489,74 +489,72 @@ async def image(ctx, link: str = ''):  # Autoremind command
                 max_width = temp_width * 2
 
         image = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
-        d = ImageDraw.Draw(image)
+        pil_image = ImageDraw.Draw(image)  # Draw the image to PIL
 
         y_offset = 0  # Offset for vertically stacking images
-        if transparent:
-            image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
-        else:
+        if transparent:  # If pet has items
+            image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[0]
+        else:  # If pet doesn't have items
             image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
         y_offset += images[0].size[1]  # Add height of image + 10 to offset
         for key, value in information.items():  # For each title in titles
-            if key == 'Rarity':
-                image.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
-            else:
-                d.text((math.floor(((max_width - math.floor(d.textsize(value, font=font)[0]))/2)), y_offset), value, fill=(0, 0, 0), font=font)  # Paste text at 'i' at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset)
+            if key == 'Rarity':  # If key is 'Rarity'
+                image.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
+            else:  # If any other key
+                pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(value, font=font)[0]))/2)), y_offset), value, fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
             y_offset += 15  # Add offset of 30
 
-        output_buffer = io.BytesIO()
-        image.save(output_buffer, 'png')
-        output_buffer.seek(0)
+        output_buffer = io.BytesIO()  # Convert the PIL output into bytes
+        image.save(output_buffer, 'png')  # Save the bytes as a PNG format
+        output_buffer.seek(0)  # Move the 'cursor' back to the start
 
-        filename += '.png'
+        filename += '.png'  # Set filename as (Pet ID).png
 
-        await client.send_file(ctx.message.channel, fp=output_buffer, filename=filename)
+        await client.send_file(ctx.message.channel, fp=output_buffer, filename=filename)  # Upload the file to the channel where message came from
     else:  # If data is invalid
-        await client.say(embed=data[1])
+        await client.say(embed=data[1])  # Send embed
 
 
 # -------------------- OEKAKI COMMAND --------------------
-@client.command(no_pm=True)  # Disable PM'ing the Bot
+@client.command(no_pm=True)  # Disallow using this command in PM's
 async def oekaki(link: str = ''):  # Oekaki command
-    data = await get_web_data(link, 'oekaki')
-    if data[0]:
+    data = await get_web_data(link, 'oekaki')  # Get Oekaki data
+    if data[0]:  # If data is valid
         base_link = 'http://www.chickensmoothie.com/Forum/'
 
-        oekaki_title = data[1].xpath('//h3[@class="first"]/a/text()')[0]
-        image = 'https://www.chickensmoothie.com' + data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]
-        user_icon = base_link[:-1] + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]
-        titles = data[1].xpath('//table[@class="ok-drawing-info"]/tr/td[@class="label"]/text()')
-        warning_text = 'Reminder!! Copying another person\'s art without permission to reproduce their work is a form of art-theft!'
+        oekaki_title = data[1].xpath('//h3[@class="first"]/a/text()')[0]  # Title of drawing
+        image = 'https://www.chickensmoothie.com' + data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]  # Image of drawing
+        user_icon = base_link[:-1] + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]  # The profile picture of the artist
+        titles = data[1].xpath('//table[@class="ok-drawing-info"]/tr/td[@class="label"]/text()')  # Get titles of drawing information
+        warning_text = 'Reminder!! Copying another person\'s art without permission to reproduce their work is a form of art-theft!'  # General warning text regarding Oekaki art
 
-        if data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')[0] == 'Click to view':
-            artist_links = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[1].xpath('td')[1].xpath('a/@href')
-            artist_values = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[1].xpath('td')[1].xpath('a/text()')  # Is Based on
-        else:
-            artist_links = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/@href')
-            artist_values = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')  # No Based on
+        if data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')[0] == 'Click to view':  # If drawing is based off another drawing
+            artist_links = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[1].xpath('td')[1].xpath('a/@href')  # Drawing information titles
+            artist_values = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[1].xpath('td')[1].xpath('a/text()')  # Drawing information values
+        else:  # If drawing is not based off another drawing
+            artist_links = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/@href')  # Drawing information titles
+            artist_values = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')  # Drawing information values
 
-        artist_text = '[' + artist_values[0] + '](' + base_link + artist_links[0][1:] + ') [' + artist_values[1] + '(' + base_link + artist_links[1][1:] + ')]'
+        artist_text = '[' + artist_values[0] + '](' + base_link + artist_links[0][1:] + ') [' + artist_values[1] + '(' + base_link + artist_links[1][1:] + ')]'  # [Artist Name](Link to Artist) [gallery](Link to Artist gallery) | Formats to Artist Name [gallery]
 
-        embed = discord.Embed(title=oekaki_title, colour=0x4ba139, url=link)  # Create Discord embed
-        embed.add_field(name='Artist', value=artist_text)
-        embed.set_footer(text=warning_text, icon_url="https://vignette.wikia.nocookie.net/pufflescp/images/6/68/Red_Warning_Triangle.png/revision/latest?cb=20160718024653&format=original")
-        embed.add_field(name=titles[0], value=artist_text)
-        embed.set_image(url=image)
-        embed.set_thumbnail(url=user_icon)
+        embed = discord.Embed(title=oekaki_title, colour=0x4ba139, url=link)  # Create embed
+        embed.add_field(name='Artist', value=artist_text)  # Add Artist field
+        embed.set_footer(text=warning_text, icon_url="https://vignette.wikia.nocookie.net/pufflescp/images/6/68/Red_Warning_Triangle.png/revision/latest?cb=20160718024653&format=original")  # Add warning text to footer
+        embed.set_image(url=image)  # Add drawing to embed
+        embed.set_thumbnail(url=user_icon)  # Set thumbnail as user profile picture
 
-        await client.say(embed=embed)
-    else:
-        await client.say(embed=data[1])
+        await client.say(embed=embed)  # Send embed
+    else:  # If data is not valid
+        await client.say(embed=data[1])  # Send embed
 
 
 # -------------------- PET COMMAND --------------------
-@client.command(no_pm=True)  # Disable PM'ing the Bot
+@client.command(no_pm=True)  # Disallow using this command in PM's
 async def pet(link: str = ''):  # Pet command
-    data = await get_web_data(link, 'pet')
-    if data[0]:
+    data = await get_web_data(link, 'pet')  # Get pet data
+    if data[0]:  # If data is valid
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
         values = data[1].xpath('//td[@class="r"]')  # Values of pet information
-        tables = len(titles)
         given = True  # Pet has been given by another user
         value_list = []
 
@@ -568,13 +566,14 @@ async def pet(link: str = ''):  # Pet command
 
         if titles[0] == 'PPS':  # If pet is PPS
             value_list.append('[This pet has "PPS". What\'s that?](http://www.chickensmoothie.com/help/pets#pps)')  # Append PPS value
-            value_list.append('[' + owner_name + '](' + owner_link + ')')  # Append user value
+            value_list.append('[' + owner_name + '](' + owner_link + ')')  # [Owner Name](Link to Owner) | Formats to Owner Name
             pps = True
         else:  # If pet is not PPS
-            value_list.append('[' + owner_name + '](' + owner_link + ')')  # Append user value
+            value_list.append('[' + owner_name + '](' + owner_link + ')')  # [Owner Name](Link to Owner) | Formats to Owner Name
             pps = False
 
-        temp = tables - 1 if pps else tables
+        tables = len(titles)  # Number of rows
+        temp = tables - 1 if pps else tables  # -1 Rows if pet is PPS
         for i in range(temp):  # For each title in titles
             if i == 0:  # If 'i' is at first value (PPS or Owner name)
                 pass  # Pass as first value has already been set
@@ -595,7 +594,7 @@ async def pet(link: str = ''):  # Pet command
             else:  # Any other 'i'
                 value_list.append(values[i].xpath('text()')[0])  # Append text
 
-        embed = discord.Embed(title=owner_name + '\'s Pet', colour=0x4ba139)  # Create Discord embed
+        embed = discord.Embed(title=owner_name + '\'s Pet', colour=0x4ba139)  # Create embed
         embed.set_image(url=petimg)  # Set image
 
         for i in range(tables):  # For each title in titles
@@ -603,53 +602,50 @@ async def pet(link: str = ''):  # Pet command
                 embed.add_field(name=titles[i], value=value_list[i], inline=False)  # Add field with no inline
             else:  # Any other 'i'
                 embed.add_field(name=titles[i], value=value_list[i], inline=True)  # Add field with inline
-        await client.say(embed=embed)
-    else:
-        await client.say(embed=data[1])
+        await client.say(embed=embed)  # Send embed
+    else:  # If data is not valid
+        await client.say(embed=data[1])  # Send embed
 
 
 # -------------------- REMINDME COMMAND --------------------
-@client.command(pass_context=True, aliases=['rm'])  # Pass information of sending user
-async def remindme(ctx, amount: str):  # Remindme command
-    if ctx.message.server is None:  # If message source does not come from a server (i.e. PM)
-        pass
-    else:  # If message comes from server
-        finaltotal = time_extractor(amount)  # Get formatted times
-        if finaltotal[0] == 0:  # If no time specified
-            embed = discord.Embed(title='Remind Me', description='That is not a valid time!', colour=0xff5252)  # Add invalid time message to embed
-            await client.say(embed=embed)
-        elif finaltotal[0] > 86400:  # If time is longer than 24 hours
-            embed = discord.Embed(title='Remind Me', description='That time is too long!', colour=0xff5252)
-            await client.say(embed=embed)
-        else:  # If time is valid
-            before_message = 'A reminder has been set for {0.mention} in '.format(ctx.message.author) + resolver(0, finaltotal[1], finaltotal[2], finaltotal[3]) + '.'
-            embed = discord.Embed(title='Remind Me', description=before_message, colour=0x4ba139)
-            await client.say(embed=embed)
-            after_message = 'Reminder for {0.mention}!'.format(ctx.message.author)
-            await asyncio.sleep(finaltotal[0])
-            await client.say(after_message)
+@client.command(pass_context=True, aliases=['rm'], no_pm=True)  # Disallow using this command in PM's
+async def remindme(ctx, amount: str):  # Remind Me command
+    finaltotal = time_extractor(amount)  # Get formatted times
+    if finaltotal[0] == 0:  # If no time specified
+        embed = discord.Embed(title='Remind Me', description='That is not a valid time!', colour=0xff5252)  # Create embed
+        await client.say(embed=embed)  # Send embed
+    elif finaltotal[0] > 86400:  # If time is longer than 24 hours
+        embed = discord.Embed(title='Remind Me', description='That time is too long!', colour=0xff5252)  # Create embed
+        await client.say(embed=embed)  # Send embed 
+    else:  # If time is valid
+        before_message = 'A reminder has been set for {0.mention} in '.format(ctx.message.author) + resolver(0, finaltotal[1], finaltotal[2], finaltotal[3]) + '.'  # A reminder has been set for USER in X hours, Y minutes, and Z seconds.
+        embed = discord.Embed(title='Remind Me', description=before_message, colour=0x4ba139)   # Create embed
+        await client.say(embed=embed)  # Send embed
+        after_message = 'Reminder for {0.mention}!'.format(ctx.message.author)  # Reminder for USER!
+        await asyncio.sleep(finaltotal[0])  # Sleep for set time
+        await client.say(after_message)  # Send message
 
 
 # -------------------- STATS COMMAND --------------------
-@client.command(no_pm=True, aliases=['stats'])  # Disable PM'ing the Bot
-async def statistics():  # Stats command
+@client.command(no_pm=True, aliases=['stats'])  # Disallow using this command in PM's
+async def statistics():  # Statistics command
     def converter(seconds):  # Convert seconds into days, hours, minutes and seconds
         d = datetime(1, 1, 1) + timedelta(seconds=int(seconds))  # Create tuple of date values
-        return d.day-1, d.hour, d.minute, d.second
-    system_memory_mb = str(round(psutil.virtual_memory()[3] / 1000 / 1024, 2)) + ' MB'
-    system_memory_percent = str(psutil.virtual_memory()[2]) + '%'  # Get the available virtual memory (physical memory) of the system
-    bot_memory_mb = str(round(psutil.Process(os.getpid()).memory_info()[0] / 1024**2, 2)) + ' MB'  # Get the memory usage of this python process
-    bot_memory_percent = str(round(psutil.Process(os.getpid()).memory_percent(), 2)) + '%'
+        return d.day-1, d.hour, d.minute, d.second  # Return tuple of date values
+    system_memory_mb = str(round(psutil.virtual_memory()[3] / 1000 / 1024, 2)) + ' MB'  # Get the used virtual memory (physical memory) of the system | X MB
+    system_memory_percent = str(psutil.virtual_memory()[2]) + '%'  # Get the available virtual memory (physical memory) of the system | X%
+    bot_memory_mb = str(round(psutil.Process(os.getpid()).memory_info()[0] / 1024**2, 2)) + ' MB'  # Get the memory usage of the bot (i.e. This script) | X MB
+    bot_memory_percent = str(round(psutil.Process(os.getpid()).memory_percent(), 2)) + '%'  # Get used memory percentage of the bot (i.e. This script) | X%
     discord_py_version = discord.__version__  # Discord.py version
     server_count = str(len(client.servers))  # The number of servers this CS Pound is in
-    member_count = str(len(set(client.get_all_members())))  # The number of users the CS Pound is connected to
-    bot_uptime = converter((datetime.now() - start_time).total_seconds())
-    system_uptime = converter(round(pytime.time() - psutil.boot_time()))
+    member_count = str(len(set(client.get_all_members())))  # The number of unique users the CS Pound is connected to
+    bot_uptime = converter((datetime.now() - start_time).total_seconds())  # The time the bot (script) has been running
+    system_uptime = converter(round(pytime.time() - psutil.boot_time()))  # The time the system has been running
 
-    bot_uptime = resolver(bot_uptime[0], bot_uptime[1], bot_uptime[2], bot_uptime[3])
-    system_uptime = resolver(system_uptime[0], system_uptime[1], system_uptime[2], system_uptime[3])
+    bot_uptime = resolver(bot_uptime[0], bot_uptime[1], bot_uptime[2], bot_uptime[3])  # Pretty format the bot uptime
+    system_uptime = resolver(system_uptime[0], system_uptime[1], system_uptime[2], system_uptime[3])  # Pretty format the system uptime
 
-    embed = discord.Embed(title='Stats', description='', colour=0x4ba139)  # Create empty embed with the title 'Stats'
+    embed = discord.Embed(title='Stats', description='', colour=0x4ba139)  # Create empty embed
     embed.add_field(name='System Memory Usage', value=system_memory_percent + ' (' + system_memory_mb + ')', inline=False)  # Add system memory usage to embed
     embed.add_field(name=client.user.name + ' Memory Usage', value=bot_memory_percent + ' (' + bot_memory_mb + ')', inline=False)  # Add bot memory usage to embed
     embed.add_field(name=client.user.name + ' Version', value=version, inline=False)  # Add bot version to embed
@@ -658,28 +654,28 @@ async def statistics():  # Stats command
     embed.add_field(name='Member Count', value=member_count, inline=False)  # Add member count to embed
     embed.add_field(name=client.user.name + ' Uptime', value=bot_uptime, inline=False)  # Add bot uptime to embed
     embed.add_field(name='System Uptime', value=system_uptime, inline=False)  # Add system uptime to embed
-    await client.say(embed=embed)  # Display the embed message
+    await client.say(embed=embed)  # Send embed
 
 
 # -------------------- SUPPORT COMMAND --------------------
 @client.command()
 async def support():  # Support command
-    try:  # Test if PM can be sent
-        await client.whisper('https://discord.gg/PbzHqm9')  # Discord link to the CS-Pound Development Server
-        embed = discord.Embed(title='Support', description='A PM has been sent to you!', colour=0x4ba139)  # Add success messsage to embed
-    except discord.errors.Forbidden:  # If PM can't be sent
-        embed = discord.Embed(title='Support', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Add unable to send embed message to embed
-    await client.say(embed=embed)  # Display the embed message
+    try:
+        await client.whisper('https://discord.gg/PbzHqm9')  # PM Discord link to the CS-Pound Development Server to user
+        embed = discord.Embed(title='Support', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
+    except discord.errors.Forbidden:  # If cannot send PM to user
+        embed = discord.Embed(title='Support', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Create embed
+    await client.say(embed=embed)  # Send embed
 
 
 # -------------------- TIME COMMAND --------------------
-@client.command(no_pm=True, aliases=['pound'])  # Disable PM'ing the Bot
+@client.command(no_pm=True, aliases=['pound'])  # Disallow using this command in PM's
 async def time():  # Time command
-    async with aiohttp.ClientSession() as session:  # Create an async HTTP session
-        async with session.get('http://www.chickensmoothie.com/pound.php') as response:  # Getting HTTP response asynchronously
-            connection = await response.text()  # Get the HTML from the response
-            dom = lxml.html.fromstring(connection)  # Create DOM Tree from the HTML
-            text = dom.xpath('//h2/text()')  # Get the pound opening text
+    async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+        async with session.get('http://www.chickensmoothie.com/pound.php') as response:  # GET HTTP response of pound page
+            connection = await response.text()  # Request HTML page data
+            dom = lxml.html.fromstring(connection)  # Extract HTML from site
+            text = dom.xpath('//h2/text()')  # Pound opening text
 
     try:
         if ':)' in text[1]:  # If :) in text
@@ -689,12 +685,12 @@ async def time():  # Time command
     except IndexError:  # If text doesn't exist
         output = 'Pound is currently open!'
 
-    embed = discord.Embed(title='Time', description=output, colour=0x4ba139)  # Create embed with title 'Time' and pound information
-    await client.say(embed=embed)  # Display the embed message
+    embed = discord.Embed(title='Time', description=output, colour=0x4ba139)  # Create embed
+    await client.say(embed=embed)  # Send embed
 
 
 # -------------------- TRADE COMMAND --------------------
-@client.command(no_pm=True)  # Disable PM'ing the Bot
+@client.command(no_pm=True)  # Disallow using this command in PM's
 async def trade(link: str):  # Trade command
     # -------------------- SINGLE --------------------
     # CS for CS - NOT POSSIBLE
@@ -807,8 +803,8 @@ async def trade(link: str):  # Trade command
     # Pets & Items & CS for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70863369&userid=916377&signature=lrtsp_22iSyFqgEtN8vNJQ
     # Pets & Items & CS for Pets - http://www.chickensmoothie.com/trades/viewtrade.php?id=70685767&userid=860480&signature=MLvj4HtA1Fzt6TscnWkxKw
 
-    embed = discord.Embed(title='Trade', description='This command is still under development!', colour=0xff5252)
-    await client.say(embed=embed)
+    embed = discord.Embed(title='Trade', description='This command is still under development!', colour=0xff5252)  # Create embed
+    await client.say(embed=embed)  # Send embed
 
 
 '''
@@ -833,8 +829,8 @@ async def discordembedtest():
 
 
 async def compose_message(time):  # Function to compose and send mention messages to channels
-    grep_statement = 'grep \'[0-9]*\\s[0-9]*\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f2 -d\' \' | sort -u'
-    channel_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')
+    grep_statement = 'grep \'[0-9]*\\s[0-9]*\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f2 -d\' \' | sort -u'  # Get channels with Auto Remind set at 'time'
+    channel_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
     for i in range(len(channel_ids)):  # For each Discord channel ID
         grep_statement = 'grep \'[0-9]*\\s' + channel_ids[i] + '\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f3 -d\' \''  # Grab all unique Discord user ID's with that channel ID
         user_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
@@ -843,11 +839,11 @@ async def compose_message(time):  # Function to compose and send mention message
         else:  # If there is more than 1 minute left
             message = time + ' minutes until pound opens! '
         for j in range(len(user_ids)):  # For each Discord user
-            message += '<@' + user_ids[j] + '> '  # Message format for mentioning users <@USER_ID>
+            message += '<@' + user_ids[j] + '> '  # Message format for mentioning users | <@USER_ID>
         await client.send_message(client.get_channel(channel_ids[i]), content=message)  # Send message to Discord channel with mention message
 
 
-async def minute_check(time):
+async def minute_check(time):  # Function to check if any user has Auto Remind setup at 'time'
     global autoremind_hash, autoremind_times
     time = str(time)
     new_hash = hashlib.md5(open('autoremind.txt').read().encode()).hexdigest()  # MD5 hash of autoremind.txt
@@ -856,8 +852,8 @@ async def minute_check(time):
         cut_statement = 'cut -f4 -d\' \' autoremind.txt | sort -u'  # Grab all unique reminding times from autoremind.txt
         autoremind_times = subprocess.Popen(cut_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run cut statement
     else:
-    if time in autoremind_times:
-        await compose_message(time)
+    if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
+        await compose_message(time)  # Run compose message
     else:
 
 
@@ -876,17 +872,17 @@ async def pound_countdown():  # Background task to countdown to when the pound o
                     value = [int(s) for s in text.split() if s.isdigit()]  # Extract the numbers in the text
                     if len(value) == 1:  # If there is only one number
                         value = value[0]
-                        if 'hour' in text:
-                            if value == 1:
+                        if 'hour' in text:  # If hour in pound opening time
+                            if value == 1:  # If there is one hour left
                                 cooldown = True
                                 value = 60  # Start countdown from 60 minutes
                                 sleep_amount = 0
-                            else:
+                            else:  # If there is more than one hour
                                 sleep_amount = (value - 2) * 3600  # -1 hour and convert into seconds
-                        elif 'minute' in text:
+                        elif 'minute' in text:  # If minute in pound opening time
                             sleep_amount = 0
                             cooldown = True
-                        elif 'second' in text:
+                        elif 'second' in text:  # If second in pound opening time
                             pass
                     elif len(value) == 2:  # If there are two numbers
                         if 'hour' and 'minute' in text:
@@ -903,29 +899,29 @@ async def pound_countdown():  # Background task to countdown to when the pound o
             else:  # If pound data isn't valid
                 sleep_amount = 11400  # 3 hours 10 minutes
         else:  # If command is on cooldown
-            if 'hour' in text:
-                if value != 0:
-                    await minute_check(value)
-                    value -= 1
-                    sleep_amount = 60
-                else:
+            if 'hour' in text:  # If hour in text
+                if value != 0:  # If minutes left is not zero
+                    await minute_check(value)  # Run minute check
+                    value -= 1  # Remove one minute
+                    sleep_amount = 60  # 1 minute
+                else:  # If time ran out (i.e. Pound is now open)
                     cooldown = False
-                    sleep_amount = 10800
-            elif 'minute' and 'second' in text:
+                    sleep_amount = 10800  # 3 hours
+            elif 'minute' and 'second' in text:  # If minute and second in text
                 pound_logger.info('Minute and second in text')
                 sleep_amount = value[1]
                 value = 1
-            elif 'minute' in text:
-                if value != 0:
-                    await minute_check(value)
-                    value -= 1
-                    sleep_amount = 60
-                else:
+            elif 'minute' in text:  # If minute in text
+                if value != 0:  # If minutes left is not zero
+                    await minute_check(value)  # Run minute check
+                    value -= 1  #  Remove one minute
+                    sleep_amount = 60  # 1 minute
+                else:  # If time ran out (i.e. Pound is now open)
                     cooldown = False
                     sleep_amount = 10800  # 3 hours
-            elif 'second' in text:
+            elif 'second' in text:  # If second in text
                 pass
-        await asyncio.sleep(sleep_amount)
+        await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
 
 client.loop.create_task(pound_countdown())  # Run 'pound_countdown' background task
 client.run(token)  # Start bot
