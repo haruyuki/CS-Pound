@@ -496,12 +496,20 @@ async def image(ctx, link: str = ''):  # Autoremind command
         else:  # If pet doesn't have items
             image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
         y_offset += images[0].size[1]  # Add height of image + 10 to offset
-        for key, value in information.items():  # For each title in titles
-            if key == 'Rarity':  # If key is 'Rarity'
-                image.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
-            else:  # If any other key
-                pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(value, font=font)[0]))/2)), y_offset), value, fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
-            y_offset += 15  # Add offset of 30
+
+        try:
+            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Name'], font=font)[0]))/2)), y_offset), information['Name'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            y_offset += 15  # Add offset of 15
+        except KeyError:
+            pass
+
+        try:
+            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Adopted'], font=font)[0]))/2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            y_offset += 15  # Add offset of 15
+        except KeyError:
+            pass
+
+        image.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
 
         output_buffer = io.BytesIO()  # Convert the PIL output into bytes
         image.save(output_buffer, 'png')  # Save the bytes as a PNG format
