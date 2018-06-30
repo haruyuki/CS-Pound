@@ -7,6 +7,7 @@ from discord.ext.commands import Bot
 from discord.ext import commands
 import hashlib
 import io
+import json
 import logging
 import lxml.html
 import math
@@ -40,14 +41,15 @@ start_time = datetime.now()  # The time the script started running
 call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 cooldown = False  # Cooldown of Auto Remind
-current_hash = ''  # Current hash of autoremind.txt
+help_hash = ''
+autoremind_hash = ''  # Current hash of autoremind.txt
 autoremind_times = []  # Unique Auto Remind times
 
 # -------------------- DISCORD --------------------
 if call == 'LIVE':  # If being used for production
     token = tokens[0]  # Discord CS Pound Secret Token
     prefix = ','  # Prefix to call CS Pound Discord Bot
-    version = '1.7.1'  # CS Pound Discord Bot version
+    version = '1.8'  # CS Pound Discord Bot version
 else:  # If used for testing
     token = tokens[1]  # Discord CS Pound DEV Secret Token
     prefix = '.'  # Prefix to call CS Pound DEV Discord Bot
@@ -72,8 +74,6 @@ chickensmoothie_help2 = '''\
 
 `,pet <link>` - Displays pet information
 
-`,pet2 <link>` - Displays pet screenshot
-
 `,time` - Tells you how long until the pound opens
 
 `,trade <link>` - Displays trade information (Under Development)
@@ -87,20 +87,13 @@ chickensmoothie_help = '''\
 
 `,pet <link>` - Displays pet information
 
-`,pet2 <link>` - Displays pet screenshot
-
 `,time` - Tells you how long until the pound opens
 
 _'''
 
-general_help2 = '''\
+general_help = '''\
 `,autoremind <on/off> <time>` - Turns on or off global auto reminding (Under Development)
 
-`,remindme <time>` - Pings you after specified amount of time
-
-_'''
-
-general_help = '''\
 `,remindme <time>` - Pings you after specified amount of time
 
 _'''
@@ -112,74 +105,6 @@ informational_help = '''\
 
 `,statistics` - Displays bot statistics
 '''
-
-# -------------------- CHICKENSMOOTHIE HELP TEXT --------------------
-archive_help = '''\
-`,archive <year> <month/event> <species/artist>` - Displays all pets within the specified query. Species/artist is optional, if not provided, displays all pets in that query.
-*Examples:* `,archive 2012 august cat` `,archive 2008 special-releases` `,archive 2011 kwanzaa sorren-fey`
-
-Note: This command usage may change at any time as I\'m still figuring out how I should set this up'''  # Help of Archive command
-
-fair_help = '''\
-`,fair <trade link>` - Determines whether a trade is fair using general trading rules from http://www.chickensmoothie.com/Forum/viewtopic.php?f=20&t=2066303
-*Example:* `,fair http://www.chickensmoothie.com/trades/viewtrade.php?id=69636615&userid=841634&signature=rkVfZpJ8QINKNRs6sdnbrA`
-'''  # Help of Fair command
-
-image_help = '''\
-`,image <link>` - Displays only the pet image from the given link
-*Example:* `,image http://www.chickensmoothie.com/viewpet.php?id=54685939`
-*Aliases:* `,img`'''  # Help of Image command
-
-oekaki_help = '''\
-`,oekaki <link>` - Displays Oekaki drawing from the link
-*Example:* `,oekaki http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993`'''  # Help of Oekaki command
-
-pet_help = '''\
-`,pet <link>` - Displays information about the pet from the link
-*Example:* `,pet http://www.chickensmoothie.com/viewpet.php?id=54685939`'''  # Help of Pet command
-
-pet2_help = '''\
-`,pet2 <link>` - Displays a image of the pet and it's information
-*Example:* `,pet2 http://www.chickensmoothie.com/viewpet.php?id=54685939`'''  # Help of Pet2 command
-
-time_help = '''\
-`,time` - Tells you how long before the pound opens
-*Usage:* `,time`
-*Aliases:* `,pound`
-
-Note: Message Might not display properly if pound just closed'''  # Help of Time command
-
-trade_help = '''\
-`,trade <link>` - Displays trade information. A maximum 8 pets will be displayed on each side
-*Example:* `,trade http://www.chickensmoothie.com/trades/viewtrade.php?id=70508878&userid=841634&signature=dEs5tySl0Mmp8usx4CGbhw`
-
-Note: Make sure to use the sharing trade link!'''  # Help of Trade command
-
-# -------------------- GENERAL HELP TEXT --------------------
-autoremind_help = '''\
-`,autoremind <on/off>` - Turn on or off auto reminding before the pound opens. At the moment the bot pings you is fixed at 10 minutes before the pound opens. Later on more functionality will be added to customise the time before it pings.
-*Usage:* `,autoremind on` `,autoremind off`'''  # Help of Autoremind command
-
-remindme_help = '''\
-`,remindme <time>` - Pings you after specified amount of time. Maximum reminding time is 24h
-*Examples:* `,remindme 1h6m23s` `,remindme 12m` `,remindme 1h10s`
-*Aliases:* `,rm`
-
-Note: At this current moment there is no way to remove set remindme\'s, so make sure you\'ve typed it right before sending!'''  # Help of Remindme command
-
-# -------------------- INFORMATIONAL HELP TEXT --------------------
-help_help = '''\
-`,help` - Displays the help message
-*Usage:* `,help`'''  # Help of Help command
-
-support_help = '''\
-`,support` - PM's you the link to the CS Pound Development Server
-*Usage:* `,support`'''  # Help of Support command
-
-statistics_help = '''\
-`,stats` - Displays CS Pound bot statistics
-*Usage:* `,statistics`
-*Aliases:* `,stats`'''  # Help of Stats command
 
 
 # -------------------- FUNCTIONS --------------------
@@ -311,6 +236,33 @@ async def get_web_data(link, command_source):  # Get web data from link
         else:
             return success  # Return whether connection was successful
 
+
+def process_help(command):  # Get the help text from help.json
+    global help_hash
+
+    def monospace(string):  # Returns string in Discord monospace format
+        return '`' + string + '`'  # `string`
+
+    def italic(string):  # Returns string in Discord italics format
+        return '*' + string + '*'  # *string*
+
+    new_help_hash = hashlib.md5(open('help.json').read().encode()).hexdigest()  # MD5 hash of help.json
+    if help_hash != new_help_hash:  # If help.json has been changed
+        help_hash = new_help_hash  # Set hash to the new changes
+        with open('help.json') as f:  # Open help.json
+            help_list = json.load(f)  # Load the JSON data
+
+    command_information = help_list[command]  # Get the command information of the command
+    message = monospace(command_information['usage']) + ' - ' + command_information['description']  # `usage` - description
+    if command_information['examples']:  # If there are examples for the command
+        message += '\n' + italic('Examples:') + ' ' + ', '.join([monospace(value) for key, value in command_information['examples'].items()])  # *Examples:* `example1`, `example2`, `example3`
+    
+    if command_information['aliases']:  # If there are aliases for the command
+        message += '\n' + italic('Aliases:') + ' ' + ', '.join([monospace(value) for key, value in command_information['aliases'].items()])  # *Aliases:* `alias1`, `alias2`, `alias3`
+    
+    return message
+
+
 # -------------------- DISCORD BOT SETTINGS --------------------
 client = Bot(description='CS Pound by Peko#7955', command_prefix=prefix, pm_help=None)
 client.remove_command('help')  # Remove default command help to add custom help
@@ -341,33 +293,33 @@ async def help(ctx, args=''):  # Help Command
     embed = discord.Embed(colour=0x4ba139)  # Create empty embed
     # -------------------- CHICKENSMOOTHIE HELP --------------------
     if args == 'archive':  # If requested Archive command help
-        embed.add_field(name='**Archive**', value=archive_help)  # Add Archive help information to embed
+        embed.add_field(name='**Archive**', value=process_help(args))  # Add Archive help information to embed
     elif args == 'fair':  # If requested Fair command help
-        embed.add_field(name='**Fair', value=fair_help)  # Add Fair help information to embed
+        embed.add_field(name='**Fair', value=process_help(args))  # Add Fair help information to embed
     elif args == 'oekaki':  # If requested Oekaki command help
-        embed.add_field(name='**Oekaki**', value=oekaki_help)  # Add Oekaki help information to embed
+        embed.add_field(name='**Oekaki**', value=process_help(args))  # Add Oekaki help information to embed
     elif args == 'pet':  # If included 'pet' argument
-        embed.add_field(name='**Pet**', value=pet_help)  # Embed Pet help information
+        embed.add_field(name='**Pet**', value=process_help(args))  # Embed Pet help information
     elif args == 'pet2':  # If included 'pet2' argument
-        embed.add_field(name='**Pet2**', value=pet2_help)  # Embed Pet2 help information
+        embed.add_field(name='**Pet2**', value=process_help(args))  # Embed Pet2 help information
     elif args == 'time':  # If included 'time' argument
-        embed.add_field(name='**Time**', value=time_help)  # Embed Time help information
+        embed.add_field(name='**Time**', value=process_help(args))  # Embed Time help information
     elif args == 'trade':  # If included 'trade' argument
-        embed.add_field(name='**Trade**', value=trade_help)  # Embed Trade help information
+        embed.add_field(name='**Trade**', value=process_help(args))  # Embed Trade help information
 
     # -------------------- GENERAL HELP --------------------
     elif args == 'autoremind':  # If included 'autoremind' argument
-        embed.add_field(name='**Auto Remind**', value=autoremind_help)  # Embed Auto Remind help information
+        embed.add_field(name='**Auto Remind**', value=process_help(args))  # Embed Auto Remind help information
     elif args == 'remindme':  # If included 'remineme' argument
-        embed.add_field(name='**Remind Me**', value=remindme_help)  # Embed Remind Me help information
+        embed.add_field(name='**Remind Me**', value=process_help(args))  # Embed Remind Me help information
 
     # -------------------- INFORMATIONAL HELP --------------------
     elif args == 'help':  # If included 'help' argument
-        embed.add_field(name='**Help**', value=help_help)  # Embed Help help information
+        embed.add_field(name='**Help**', value=process_help(args))  # Embed Help help information
     elif args == 'support':
-        embed.add_field(name='**Support**', value=support_help)
+        embed.add_field(name='**Support**', value=process_help(args))
     elif args == 'statistics':
-        embed.add_field(name='**Statistics**', value=statistics_help)
+        embed.add_field(name='**Statistics**', value=process_help(args))
 
     else:  # If provided no arguments
         embed.add_field(name=":pencil: __**To know about command usage or examples, use: ,help <command>**__", value=warning_help)  # add Warning help information to embed
@@ -895,14 +847,12 @@ async def compose_message(time):  # Function to compose and send mention message
         await client.send_message(client.get_channel(channel_ids[i]), content=message)  # Send message to Discord channel with mention message
 
 
-current_hash = ''
-autoremind_times = []
 async def minute_check(time):
-    global current_hash, autoremind_times
+    global autoremind_hash, autoremind_times
     time = str(time)
     new_hash = hashlib.md5(open('autoremind.txt').read().encode()).hexdigest()  # MD5 hash of autoremind.txt
-    if current_hash != new_hash:  # If file has been modified since last check
-        current_hash = new_hash
+    if autoremind_hash != new_hash:  # If file has been modified since last check
+        autoremind_hash = new_hash
         cut_statement = 'cut -f4 -d\' \' autoremind.txt | sort -u'  # Grab all unique reminding times from autoremind.txt
         autoremind_times = subprocess.Popen(cut_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run cut statement
     else:
@@ -911,7 +861,6 @@ async def minute_check(time):
     else:
 
 
-cooldown = False
 async def pound_countdown():  # Background task to countdown to when the pound opens
     global cooldown  # Use cooldown from global scope
     await client.wait_until_ready()  # Wait until client has loaded before starting background task
@@ -955,13 +904,13 @@ async def pound_countdown():  # Background task to countdown to when the pound o
                 sleep_amount = 11400  # 3 hours 10 minutes
         else:  # If command is on cooldown
             if 'hour' in text:
-            	if value != 0:
-            		await minute_check(value)
-            		value -= 1
-            		sleep_amount = 60
-            	else:
-            		cooldown = False
-            		sleep_amount = 10800
+                if value != 0:
+                    await minute_check(value)
+                    value -= 1
+                    sleep_amount = 60
+                else:
+                    cooldown = False
+                    sleep_amount = 10800
             elif 'minute' and 'second' in text:
                 pound_logger.info('Minute and second in text')
                 sleep_amount = value[1]
