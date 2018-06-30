@@ -393,13 +393,11 @@ async def autoremind(ctx, args=''):  # Autoremind command
     id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]  # Get output of grep statement
     server_roles = ctx.message.server.roles  # List of roles in server
     for role in server_roles:  # For each role in the server
-        print(role.name)
         if role.name == "CS Pound":  # If 'CS Pound' role exists
             permission = role.permissions.manage_roles  # Check whether role has 'Manage Roles' permission and set boolean value
             break  # Break out of for loop
     else:  # If role doesn't exist
         permission = False
-    print(permission)
 
     if permission:  # If bot has permission to 'Manage Roles'
         server_roles = ctx.message.server.roles  # List of roles in server
@@ -422,22 +420,34 @@ async def autoremind(ctx, args=''):  # Autoremind command
                 embed = discord.Embed(title='Auto Remind', description='You have been removed from the Auto Remind.', colour=0x4ba139)  # Create embed
 
     else:  # If user is setting an Auto Remind
-        args = args[:-1]  # Remove the minute marker
-        if args.isdigit():  # If the input is a digit
-            if id_exists != '':
-                embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)
-            else:
-                text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n'  # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
-                with open('autoremind.txt', 'a+') as file:
-                    file.write(text)
-
-                if permission:
-                    await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
-
-                message = 'Will ping you ' + args + ' minutes before the pound opens!'
-                embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)
+        valid = False
+        if args == '':
+            embed = discord.Embed(title='Auto Remind', description='You didn\'t input a time!', colour=0xff5252)  # Create embed
+        elif args.isdigit():  # If the input is a digit
+            valid = True
         else:  # If the input isn't a digit
-            embed = discord.Embed(title='Auto Remind', description='That is not a valid time!', colour=0xff5252)  # Create embed
+            args = args[:-1]  # Remove the minute marker
+            if args.isdigit():
+                valid = True
+            else:
+                embed = discord.Embed(title='Auto Remind', description='That is not a valid time!', colour=0xff5252)  # Create embed
+
+        if valid:
+            if int(args) > 60:
+                embed = discord.Embed(title='Auto Remind', description='That time is too far!', colour=0xff5252)  # Create embed
+            else:
+                if id_exists != '':
+                    embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)
+                else:
+                    text = ctx.message.server.id + ' ' + ctx.message.channel.id + ' ' + ctx.message.author.id + ' ' + args + '\n'  # Write in the format 'SERVER_ID CHANNEL_ID USER_ID REMIND_TIME'
+                    with open('autoremind.txt', 'a+') as file:
+                        file.write(text)
+
+                    if permission:
+                        await client.add_roles(ctx.message.author, discord.utils.get(server_roles, name='Auto Remind'))
+
+                    message = 'Will ping you ' + args + ' minutes before the pound opens!'
+                    embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)
 
     await client.say(embed=embed)
 
