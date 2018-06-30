@@ -93,7 +93,7 @@ chickensmoothie_help = '''\
 _'''  # Chicken Smoothie related commands help
 
 general_help = '''\
-`,autoremind <on/off> <time>` - Turns on or off global auto reminding (Under Development)
+`,autoremind <on/off> <time>` - Turns on or off global auto reminding
 
 `,remindme <time>` - Pings you after specified amount of time
 
@@ -301,8 +301,6 @@ async def help(ctx, args=''):  # Help Command
         embed.add_field(name='**Oekaki**', value=process_help(args))  # Add Oekaki help information to embed
     elif args == 'pet':  # If included 'pet' argument
         embed.add_field(name='**Pet**', value=process_help(args))  # Embed Pet help information
-    elif args == 'pet2':  # If included 'pet2' argument
-        embed.add_field(name='**Pet2**', value=process_help(args))  # Embed Pet2 help information
     elif args == 'time':  # If included 'time' argument
         embed.add_field(name='**Time**', value=process_help(args))  # Embed Time help information
     elif args == 'trade':  # If included 'trade' argument
