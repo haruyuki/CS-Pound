@@ -19,43 +19,16 @@ import subprocess
 import time as pytime
 import urllib.request
 
-'''
-ChickenSmoothie PHP Links
-http://static.chickensmoothie.com/archive/image.php?k=<LONG PET ID>&bg=<HEX COLOUR>
-http://static.chickensmoothie.com/pic.php?k=<LONG PET ID>
-http://www.chickensmoothie.com/viewpet.php?id=<PET ID>
-http://www.chickensmoothie.com/archive/<YEAR>/<EVENT>/<ANIMAL>
-http://www.chickensmoothie.com/archive/<YEAR>/<EVENT>/Artist-<ARTIST NAME>
-http://www.chickensmoothie.com/trades/viewtrade.php?id=<TRADE ID>&userid=<USER ID>signature=<RANDOM SIGNATURE>
-http://www.chickensmoothie.com/Forum/memberlist.php?mode=viewprofile&u=<USER ID>
-http://static.chickensmoothie.com/item/<ITEM TYPE ID>&p=<ITEM ID>.jpg
-http://www.chickensmoothie.com/pet/<PET ID>&trans=1.jpg
-http://www.chickensmoothie.com/oekaki/image/image.php?id=<OEKAKI ID>&size=<SMALL/MEDIUM/LARGE>&format=auto&rev=1513122186
-
-Development Board
-https://trello.com/b/RAJhtsl8/cs-pound-development-board
-'''
-
 # -------------------- VARIABLES --------------------
 start_time = datetime.now()  # The time the script started running
-call = 'DEV'  # Whether the bot is currently in 'DEV' or 'LIVE' mode
+prefix = ','  # Prefix to call CS Pound Discord Bot
+version = '1.8'  # CS Pound Discord Bot version
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 cooldown = False  # Cooldown of Auto Remind
 help_hash = ''  # Current hash of help.json
 help_list = {}
 autoremind_hash = ''  # Current hash of autoremind.txt
 autoremind_times = []  # Unique Auto Remind times
-
-# -------------------- DISCORD --------------------
-if call == 'LIVE':  # If being used for production
-    token = tokens[0]  # Discord CS Pound Secret Token
-    prefix = ','  # Prefix to call CS Pound Discord Bot
-    version = '1.8'  # CS Pound Discord Bot version
-else:  # If used for testing
-    token = tokens[1]  # Discord CS Pound DEV Secret Token
-    prefix = '.'  # Prefix to call CS Pound DEV Discord Bot
-    reminder = 0
-    version = 'DEV'  # CS Pound DEV Discord Bot version
 
 # -------------------- HELP TEXT --------------------
 warning_help = '''\
@@ -257,10 +230,10 @@ def process_help(command):  # Get the help text from help.json
     message = monospace(command_information['usage']) + ' - ' + command_information['description']  # `usage` - description
     if command_information['examples']:  # If there are examples for the command
         message += '\n' + italic('Examples:') + ' ' + ', '.join([monospace(value) for key, value in command_information['examples'].items()])  # *Examples:* `example1`, `example2`, `example3`
-    
+
     if command_information['aliases']:  # If there are aliases for the command
         message += '\n' + italic('Aliases:') + ' ' + ', '.join([monospace(value) for key, value in command_information['aliases'].items()])  # *Aliases:* `alias1`, `alias2`, `alias3`
-    
+
     return message
 
 
@@ -623,7 +596,7 @@ async def remindme(ctx, amount: str):  # Remind Me command
         await client.say(embed=embed)  # Send embed
     elif finaltotal[0] > 86400:  # If time is longer than 24 hours
         embed = discord.Embed(title='Remind Me', description='That time is too long!', colour=0xff5252)  # Create embed
-        await client.say(embed=embed)  # Send embed 
+        await client.say(embed=embed)  # Send embed
     else:  # If time is valid
         before_message = 'A reminder has been set for {0.mention} in '.format(ctx.message.author) + resolver(0, finaltotal[1], finaltotal[2], finaltotal[3]) + '.'  # A reminder has been set for USER in X hours, Y minutes, and Z seconds.
         embed = discord.Embed(title='Remind Me', description=before_message, colour=0x4ba139)   # Create embed
@@ -696,145 +669,6 @@ async def time():  # Time command
     await client.say(embed=embed)  # Send embed
 
 
-# -------------------- TRADE COMMAND --------------------
-@client.command(no_pm=True)  # Disallow using this command in PM's
-async def trade(link: str):  # Trade command
-    # -------------------- SINGLE --------------------
-    # CS for CS - NOT POSSIBLE
-    # CS for Item -
-    # CS for Items -
-    # CS for Nothing - http://www.chickensmoothie.com/trades/viewtrade.php?id=59757406&userid=841634&signature=pUx-1Cu5mIrMmid1Pma3Hg
-    # CS for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70918155&userid=637563&signature=eBWgqHuAoANFvtQ5K4uStw
-    # CS for Pets - http://www.chickensmoothie.com/trades/viewtrade.php?id=70593080&userid=860480&signature=9NHDwxASVbGUEGVFkLxz4Q
-
-    # Item for Item - http://www.chickensmoothie.com/trades/viewtrade.php?id=70677823&userid=785388&signature=GqqEKyNntwu1HHJpZ9ZYZw
-    # Item for Items -
-    # Item for Nothing -
-    # Item for Pet -
-    # Item for Pets -
-
-    # Items for Items -
-    # Items for Nothing - http://www.chickensmoothie.com/trades/viewtrade.php?id=70682077&userid=774240&signature=GkAYl_h3Ckh4oW4btErBLQ
-    # Items for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70647510&userid=752234&signature=LUv9AageFFlJoBqdWcgdGw
-    # Items for Pets - http://www.chickensmoothie.com/trades/viewtrade.php?id=70636452&userid=841634&signature=hVN5UG3C-A67wNu97w9Yjg
-
-    # Pet for Nothing - http://www.chickensmoothie.com/trades/viewtrade.php?id=70508510&userid=841634&signature=eM2zskjOK_JJ8ib1k590TA
-    # Pet for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70825942&userid=841634&signature=ww70aosoToHU0UIi0t9Axg
-    # Pet for Pets - http://www.chickensmoothie.com/trades/viewtrade.php?id=70981341&userid=680104&signature=8KXjvplmOEkB5hlBU2JooQ
-
-    # Pets for Nothing - http://www.chickensmoothie.com/trades/viewtrade.php?id=70709592&userid=841634&signature=8XyEtMg95aNJaK8o4FzbDA
-
-    # -------------------- DOUBLE --------------------
-    # Pet & CS for CS - NOT LIKELY
-    # Pet & CS for Item -
-    # Pet & CS for Items -
-    # Pet & CS for Nothing -
-    # Pet & CS for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70709033&userid=850489&signature=fLCQUHEjiFIsb9K3G55TKw
-    # Pet & CS for Pets -
-
-    # Pet & Item for CS -
-    # Pet & Item for Item -
-    # Pet & Item for Items -
-    # Pet & Item for Nothing -
-    # Pet & Item for Pet -
-    # Pet & Item for Pets -
-
-    # Pet & Items for CS -
-    # Pet & Items for Item -
-    # Pet & Items for Items -
-    # Pet & Items for Nothing -
-    # Pet & Items for Pet -
-    # Pet & Items for Pets - http://www.chickensmoothie.com/trades/viewtrade.php?id=70656174&userid=841634&signature=KEDJPnRWztNyu2zjQzv8Ig
-
-    # Pets & CS for CS - NOT LIKELY
-    # Pets & CS for Item -
-    # Pets & CS for Items -
-    # Pets & CS for Nothing - http://www.chickensmoothie.com/trades/viewtrade.php?id=70647444&userid=841634&signature=_Xrq30ZlTjPFDm4O2pue6Q
-    # Pets & CS for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70862085&userid=916377&signature=bIzCc1ONVtrEE6FcNdaoIA
-    # Pets & CS for Pets - http://www.chickensmoothie.com/trades/viewtrade.php?id=70602251&userid=860480&signature=gXvTHcHUwasU-y9KMcoWfw
-
-    # Pets & Item for CS -
-    # Pets & Item for Item -
-    # Pets & Item for Items -
-    # Pets & Item for Nothing -
-    # Pets & Item for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70710482&userid=716769&signature=5-vWlkNnUOSwqgN8SiLSLg
-    # Pets & Item for Pets -
-
-    # Pets & Items for CS - http://www.chickensmoothie.com/trades/viewtrade.php?id=70497300&userid=841634&signature=Cb6wsO2LD85mJTzef2LGrQ
-    # Pets & Items for Item - http://www.chickensmoothie.com/trades/viewtrade.php?id=70689635&userid=369413&signature=2be6oDbNrqONGyXLf9mWHg
-    # Pets & Items for Items -
-    # Pets & Items for Nothing - http://www.chickensmoothie.com/trades/viewtrade.php?id=69538685&userid=841634&signature=dmcf3rGMDHfHWa217U-taw
-    # Pets & Items for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70632848&userid=167347&signature=8IC6-eCUI5ksPorFoen0PQ
-    # Pets & Items for Pets -
-
-    # Item & CS for CS - NOT LIKELY
-    # Item & CS for Item -
-    # Item & CS for Items -
-    # Item & CS for Nothing -
-    # Item & CS for Pet -
-    # Item & CS for Pets -
-
-    # Items & CS for CS - NOT LIKELY
-    # Items & CS for Item -
-    # Items & CS for Items -
-    # Items & CS for Nothing -
-    # Items & CS for Pet -
-    # Items & CS for Pets -
-
-    # -------------------- TRIPLE --------------------
-    # Pet & Item & CS for CS - NOT LIKELY
-    # Pet & Item & CS for Item -
-    # Pet & Item & CS for Items -
-    # Pet & Item & CS for Nothing -
-    # Pet & Item & CS for Pet -
-    # Pet & Item & CS for Pets -
-
-    # Pet & Items & CS for CS - NOT LIKELY
-    # Pet & Items & CS for Item -
-    # Pet & Items & CS for Items -
-    # Pet & Items & CS for Nothing -
-    # Pet & Items & CS for Pet -
-    # Pet & Items & CS for Pets -
-
-    # Pets & Item & CS for CS - NOT LIKELY
-    # Pets & Item & CS for Item -
-    # Pets & Item & CS for Items -
-    # Pets & Item & CS for Nothing -
-    # Pets & Item & CS for Pet -
-    # Pets & Item & CS for Pets -
-
-    # Pets & Items & CS for CS - NOT LIKELY
-    # Pets & Items & CS for Item -
-    # Pets & Items & CS for Items -
-    # Pets & Items & CS for Nothing -
-    # Pets & Items & CS for Pet - http://www.chickensmoothie.com/trades/viewtrade.php?id=70863369&userid=916377&signature=lrtsp_22iSyFqgEtN8vNJQ
-    # Pets & Items & CS for Pets - http://www.chickensmoothie.com/trades/viewtrade.php?id=70685767&userid=860480&signature=MLvj4HtA1Fzt6TscnWkxKw
-
-    embed = discord.Embed(title='Trade', description='This command is still under development!', colour=0xff5252)  # Create embed
-    await client.say(embed=embed)  # Send embed
-
-
-'''
-# -------------------- EMBED TEST COMMAND --------------------
-@client.command()
-async def discordembedtest():
-    embed = discord.Embed(title="title ~~(did you know you can have markdown here too?)~~", colour=0xaf4119, url="https://discordapp.com", description="this supports [named links](https://discordapp.com) on top of the previously shown subset of markdown. ```\nyes, even code blocks```")
-
-    embed.set_image(url="https://cdn.discordapp.com/embed/avatars/0.png")
-    embed.set_thumbnail(url="https://cdn.discordapp.com/embed/avatars/0.png")
-    embed.set_author(name="author name", url="https://discordapp.com", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
-    embed.set_footer(text="footer text", icon_url="https://cdn.discordapp.com/embed/avatars/0.png")
-
-    embed.add_field(name="🤔", value="some of these properties have certain limits...")
-    embed.add_field(name="😱", value="try exceeding some of them!")
-    embed.add_field(name="🙄", value="an informative error should show up, and this view will remain as-is until all issues are fixed")
-    embed.add_field(name="<:thonkang:219069250692841473>", value="these last two", inline=True)
-    embed.add_field(name="<:thonkang:219069250692841473>", value="are inline fields", inline=True)
-
-    await client.say(embed=embed)
-'''
-
-
 async def compose_message(time):  # Function to compose and send mention messages to channels
     grep_statement = 'grep \'[0-9]*\\s[0-9]*\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f2 -d\' \' | sort -u'  # Get channels with Auto Remind set at 'time'
     channel_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
@@ -858,10 +692,8 @@ async def minute_check(time):  # Function to check if any user has Auto Remind s
         autoremind_hash = new_hash
         cut_statement = 'cut -f4 -d\' \' autoremind.txt | sort -u'  # Grab all unique reminding times from autoremind.txt
         autoremind_times = subprocess.Popen(cut_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run cut statement
-    else:
     if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
         await compose_message(time)  # Run compose message
-    else:
 
 
 async def pound_countdown():  # Background task to countdown to when the pound opens
@@ -869,9 +701,7 @@ async def pound_countdown():  # Background task to countdown to when the pound o
     await client.wait_until_ready()  # Wait until client has loaded before starting background task
     while not client.is_closed:  # While client is still running
         if not cooldown:  # If command is not on cooldown
-            pound_logger.info('Command not on cooldown.')
             data = await get_web_data('', 'pound')  # Get pound data
-            pound_logger.info('Pound web data received.')
             if data[0]:  # If pound data is valid and contains content
                 text = data[1].xpath('//h2/text()')  # List all texts with H2 element
                 try:  # Try getting pound opening text
@@ -915,13 +745,12 @@ async def pound_countdown():  # Background task to countdown to when the pound o
                     cooldown = False
                     sleep_amount = 10800  # 3 hours
             elif 'minute' and 'second' in text:  # If minute and second in text
-                pound_logger.info('Minute and second in text')
                 sleep_amount = value[1]
                 value = 1
             elif 'minute' in text:  # If minute in text
                 if value != 0:  # If minutes left is not zero
                     await minute_check(value)  # Run minute check
-                    value -= 1  #  Remove one minute
+                    value -= 1  # Remove one minute
                     sleep_amount = 60  # 1 minute
                 else:  # If time ran out (i.e. Pound is now open)
                     cooldown = False
@@ -931,4 +760,4 @@ async def pound_countdown():  # Background task to countdown to when the pound o
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
 
 client.loop.create_task(pound_countdown())  # Run 'pound_countdown' background task
-client.run(token)  # Start bot
+client.run(tokens[0])  # Start bot
