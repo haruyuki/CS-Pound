@@ -21,12 +21,12 @@ A Discord bot for the online virtual pet adopting website. With the bot you can 
 
 Though only tested on Python 3.5.2 and 3.6.5, it should work with any version of Python 3.
 
-The libraries [discord.py](https://github.com/Rapptz/discord.py), [lxml](http://lxml.de), [Pillow](http://python-pillow.org), [psutil](https://github.com/giampaolo/psutil), [PyImgur](https://github.com/Damgaard/PyImgur) and [Requests](http://docs.python-requests.org/en/master/) are required to run the Python script. These can be installed through Python PIP by running:
+The libraries [discord.py](https://github.com/Rapptz/discord.py), [lxml](http://lxml.de), [Pillow](http://python-pillow.org) and [psutil](https://github.com/giampaolo/psutil) are required to run the Python script. These can be installed through Python PIP by running:
 ```bash
-pip3 install discord lxml pillow psutil pyimgur subprocess
+pip3 install discord.py lxml Pillow psutil
 ```
 
-A [Discord](https://discordapp.com) and [Imgur](https://imgur.com) account is also required.
+A [Discord](https://discordapp.com) account is also required and a [Chicken Smoothie](https://www.chickensmoothie.com) is highly recommended.
 
 ### Running
 
@@ -42,12 +42,10 @@ python3 cs-pound.py
 * lxml 4.2.1
 * Pillow 5.1.0
 * psutil 5.4.5
-* PyImgur 0.6.0
-* Requests 2.18.4
 
 ## Authors
 
-* **Oliver Lin** - [Chao](http://27.253.115.239:3000/chao)
+* **Oliver Lin** - [@Rowlie](https://gitlab.com/Rowlie)
 
 ## License
 
