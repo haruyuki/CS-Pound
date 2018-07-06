@@ -454,11 +454,18 @@ async def image(ctx, link: str = ''):  # Autoremind command
         max_width = max(widths)  # Max width of images
         total_height = sum(heights) + (15 * len(information))  # Total height of images
         current_width = 0
+
         for key, value in information.items():  # For each item in information
-            temp_width = temp_draw.textsize(value, font=font)[0]  # Width of text
+            if 'rarities/' in value:
+                temp_width = 106
+            else:
+                temp_width = temp_draw.textsize(value, font=font)[0]  # Width of text
+
             if current_width < temp_width:  # If current width is less than width of texts
                 current_width = temp_width
-                max_width = temp_width * 2
+
+        if max_width < current_width:
+            max_width = current_width * 2
 
         image = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
         pil_image = ImageDraw.Draw(image)  # Draw the image to PIL
