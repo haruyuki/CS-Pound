@@ -7,13 +7,12 @@ A Discord bot for the online virtual pet adopting website. With the bot you can 
 | Command       | Description                                                               | Example                                                                       |
 |-------------  |-------------------------------------------------------------------------  |---------------------------------------------------------------------------    |
 | ,autoremind   | Setup an autoreminder for when the pound opens                            | ,autoremind 5m                                                                |
-| ,image        | Displays only the pet image from the given link                           | ,image http://www.chickensmoothie.com/viewpet.php?id=54685939                 |
+| ,image        | Displays the pet as you would see it in "My Pets" group                   | ,image http://www.chickensmoothie.com/viewpet.php?id=54685939                 |
 | ,oekaki       | Displays Oekaki drawing from the link                                     | ,oekaki http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993     |
 | ,pet          | Displays information about the pet from the link                          | ,pet http://www.chickensmoothie.com/viewpet.php?id=54685939                   |
-| ,pet2         | Displays a image of the pet and it's information                          | ,pet2 http://www.chickensmoothie.com/viewpet.php?id=54685939                  |
 | ,time         | Tells you how long before the pound opens                                 | ,time                                                                         |
 | ,remindme     | Pings you after specified amount of time. Maximum reminding time is 24h   | ,remindme 1h6m23s<br>,remindme 12m<br>,remindme 1h10s                         |
-| ,help         | Displays the help message of all or a specific command.                   | ,help remindme                                                                |
+| ,help         | Displays the help message of all or a specific command.                   | ,help autoremind                                                              |
 | ,support      | PM's you the link to the CS Pound Development Server                      | ,support                                                                      |
 | ,statistics   | Displays CS Pound bot statistics                                          | ,statistics                                                                   |
 
