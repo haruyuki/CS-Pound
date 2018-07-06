@@ -27,6 +27,8 @@ pip3 install discord.py lxml Pillow psutil
 
 A [Discord](https://discordapp.com) account is also required and a [Chicken Smoothie](https://www.chickensmoothie.com) is highly recommended.
 
+The fonts [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana#verdana) and [Verdana Bold](https://docs.microsoft.com/en-us/typography/font-list/verdana#verdana-bold) are also required.
+
 ### Running
 
 To start the bot run the following command:

@@ -1,3 +1,0 @@
-def temp():
-    print('hello!')
-        
