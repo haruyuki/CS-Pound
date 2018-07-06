@@ -53,7 +53,7 @@
 
     "help": {
         "usage": ",help <command>",
-        "description": "Gives you information on usage and examples of a command. If no command is provded, it will send you the command list with general descriptions of each command.",
+        "description": "Gives you information on usage and examples of a command. If no command is provided, it will send you the command list with general descriptions of each command.",
         "examples": {
             "1": ",help help",
             "2": ",help autoremind",
@@ -63,7 +63,7 @@
     },
 
     "image": {
-        "usage": ",help <link>",
+        "usage": ",image <link>",
         "description": "Displays an image of how you would see the pet in your 'My Pets' groups.",
         "examples": {
             "1": ",image https://www.chickensmoothie.com/viewpet.php?id=11214536",
@@ -80,7 +80,7 @@
         "description": "Displays Oekaki drawing, along with artist name and profile picture. Do not confuse this with dressup scenes! This command will not work with dressup scene links!",
         "examples": {
             "1": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=30&t=3843428",
-            "2": ",oekaki http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993",
+            "2": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993",
             "3": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=74&t=2918702"
         },
         "aliases": {}
