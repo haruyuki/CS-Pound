@@ -8,7 +8,7 @@ import traceback
 
 
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
-extensions = ['cogs.admin', 'cogs.pet', 'cogs.time', 'cogs.remindme', 'cogs.help', 'cogs.support', 'cogs.statistics']
+extensions = ['cogs.admin', 'cogs.image', 'cogs.pet', 'cogs.time', 'cogs.remindme', 'cogs.help', 'cogs.support', 'cogs.statistics']
 
 bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False)
 bot.remove_command('help')
