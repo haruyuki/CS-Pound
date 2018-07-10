@@ -7,7 +7,7 @@ import traceback
 from discord.ext import commands
 
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
-extensions = ['cogs.admin', 'cogs.help', 'cogs.support', 'cogs.statistics']
+extensions = ['cogs.admin', 'cogs.pet', 'cogs.help', 'cogs.support', 'cogs.statistics']
 
 bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False)
 bot.remove_command('help')
@@ -38,4 +38,4 @@ async def on_ready():  # When Client is loaded
     print('Created by Peko#7955')
     await bot.change_presence(activity=discord.Game(',help | By: Peko#7955'), status=discord.Status.online)
 
-bot.run(tokens[0], bot=True, reconnect=True)
+bot.run(tokens[1], bot=True, reconnect=True)

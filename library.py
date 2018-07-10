@@ -1,7 +1,11 @@
+import aiohttp
+import asyncio
+import discord
 import hashlib
 import json
+import lxml.html
 
-prefix = ','
+prefix = '.'
 version = '2.0'
 help_hash = ''  # Current hash of help.json
 help_list = {}
@@ -171,3 +175,43 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
     else:  # If there are no hours or minutes
         second_section = pluralise('second', second)  # Pluralise the second section
     return day_section + hour_section + minute_section + second_section  # Return the formatted text
+
+
+async def get_web_data(link, command_source):  # Get web data from link
+    success = False  # Boolean for whether link is valid
+    headers = {  # HTTP request headers
+        'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
+        'From': 'jumpy12359@gmail.com'  # Contact email
+    }
+    if link == '' and command_source != 'pound':  # If no link provided
+        description = 'You didn\'t provide a ' + command_source + ' link!'
+        return success, discord.Embed(title=command_source.capitalize(), description=description, colour=0xff5252)  # Create embed
+    else:  # If arguments provided
+        try:  # Checking link format
+            if command_source != 'pound':  # If command source does not come from ,time
+                parameters = link.split('?')[1].split('&')  # Get the PHP $GET values
+                success = True  # Link is valid
+            else:  # If command source comes from ,time
+                success = True
+        except IndexError:  # If cannot get $GET value
+            return success, discord.Embed(title=command_source.capitalize(), description='That is not a valid ' + command_source + ' link!', colour=0xff5252)  # Create embed
+        if success:  # If link exists and is valid
+            data = {}  # PHP $POST parameters
+            if command_source == 'pet':  # If function is being called from the Pet command
+                base_link = 'http://www.chickensmoothie.com/viewpet.php'  # Base PHP link for Pet command
+                parameters = parameters[0].split('=')  # Split the $POST variable
+                data[parameters[0]] = parameters[1]  # Add dictionary item with $POST variable and value
+            elif command_source == 'oekaki':  # If function is being called from the Oekaki command
+                base_link = 'http://www.chickensmoothie.com/Forum/viewtopic.php'  # Base PHP link for Oekaki command
+                for param in range(len(parameters)):  # For each parameter
+                    temp = parameters[param].split('=')  # Split the $POST variables
+                    data[temp[0]] = temp[1]  # Add dictionary item with $POST variable and value
+            elif command_source == 'pound':  # If function is being called from the Pound command
+                base_link = 'http://www.chickensmoothie.com/pound.php'  # Base PHP link for Time command
+            async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+                async with session.post(base_link, data=data, headers=headers) as response:  # POST the variables to the base php link
+                    connection = await response.text()  # Request HTML page data
+                    dom = lxml.html.fromstring(connection)  # Extract HTML from site
+            return success, dom  # Return whether connection was successful and DOM data
+        else:  # If link is not valid
+            return success  # Return whether connection was successful
