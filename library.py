@@ -1,7 +1,7 @@
 import hashlib
 import json
 
-prefix = '.'
+prefix = ','
 version = '2.0'
 help_hash = ''  # Current hash of help.json
 help_list = {}
