@@ -310,6 +310,7 @@ async def help(ctx, args=''):  # Help Command
         await client.say(embed=embed)  # Send embed
 
 
+
 # -------------------- AUTOREMIND COMMAND --------------------
 @client.command(pass_context=True, no_pm=True)  # Disallow using this command in PM's
 async def autoremind(ctx, args=''):  # Auto Remind command
@@ -535,6 +536,7 @@ async def oekaki(link: str = ''):  # Oekaki command
         await client.say(embed=data[1])  # Send embed
 
 
+
 # -------------------- PET COMMAND --------------------
 @client.command(no_pm=True)  # Disallow using this command in PM's
 async def pet(link: str = ''):  # Pet command
@@ -653,7 +655,6 @@ async def support():  # Support command
     except discord.errors.Forbidden:  # If cannot send PM to user
         embed = discord.Embed(title='Support', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Create embed
     await client.say(embed=embed)  # Send embed
-
 
 # -------------------- TIME COMMAND --------------------
 @client.command(no_pm=True, aliases=['pound'])  # Disallow using this command in PM's
