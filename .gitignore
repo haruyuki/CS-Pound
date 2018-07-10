@@ -1,8 +1,10 @@
-tokens.txt
+__pycache__
+cogs/__pycache__
 .DS_Store
 .python-version
-discord.log
 autoremind.txt
 autoremind.txt.bak
+discord.log
+tokens.txt
 Verdana.ttf
 Verdana Bold.ttf
