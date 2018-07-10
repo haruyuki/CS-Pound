@@ -1,0 +1,148 @@
+{
+    "warning": {
+        "string": "CS Pound website (Where you also get the invite link)\nhttp://tailstar.us"
+    },
+
+    "commands": {
+        "archive": "Search the Chicken Smoothie archives",
+        "autoremind": "Auto ping X minutes before the pound opens",
+        "fair": "Determine whether a trade is fair",
+        "help": "Get more information about a command",
+        "image": "Displays a 'screenshot' of your pet",
+        "oekaki": "Displays Oekaki drawing",
+        "pet": "Displays pet information",
+        "remindme": "Pings you after specified amount of time",
+        "statistics": "Displays system and bot statistics",
+        "support": "PM's you a link to the CS Pound Development Server",
+        "time": "Tells you how long before the pound opens",
+        "trade": "Displays trade information"
+    },
+
+    "archive": {
+        "usage": ",archive <year> <month/event> <species/artist>",
+        "description": "Displays all pets within the specified query. Species/artist is optional, if not provided, displays all pets in that query.",
+        "examples": {
+            "1": ",archive 2012 august cat",
+            "2": ",archive 2008 special-releases",
+            "3": ",archive 2011 kwanzaa sorren-fey"
+        },
+        "aliases": {}
+    },
+
+    "autoremind": {
+        "usage": ",autoremind <time/off>",
+        "description": "Allows you to set an Auto Remind to ping you at a time you set before the pound opens. The furthest you can set an Auto Remind for at the moment is 60 minutes.",
+        "examples": {
+            "1": ",autoremind 5m",
+            "2": ",autoremind 60m",
+            "3": ",autoremind off"
+        },
+        "aliases": {}
+    },
+
+    "fair": {
+        "usage": ",fair <link>",
+        "description": "Determines whether a trade is fair using the general trading rules from http://www.chickensmoothie.com/Forum/viewtopic.php?f=20&t=2066303. Make sure to paste the sharing link!",
+        "examples": {
+            "1": ",fair https://www.chickensmoothie.com/trades/viewtrade.php?id=69636615&userid=841634&signature=rkVfZpJ8QINKNRs6sdnbrA",
+            "2": ",fair https://www.chickensmoothie.com/trades/viewtrade.php?id=73699479&userid=841634&signature=04fb-lhuO0r2QlaSWmHOCA",
+            "3": ",fair https://www.chickensmoothie.com/trades/viewtrade.php?id=73697116&userid=841634&signature=pmC6F3REMRg3el89OYiP7A"
+        },
+        "aliases": {}
+    },
+
+    "help": {
+        "usage": ",help <command>",
+        "description": "Gives you information on usage and examples of a command. If no command is provided, it will send you the command list with general descriptions of each command.",
+        "examples": {
+            "1": ",help help",
+            "2": ",help autoremind",
+            "3": ",help remindme"
+        },
+        "aliases": {}
+    },
+
+    "image": {
+        "usage": ",image <link>",
+        "description": "Displays an image of how you would see the pet in your 'My Pets' groups.",
+        "examples": {
+            "1": ",image https://www.chickensmoothie.com/viewpet.php?id=11214536",
+            "2": ",image https://www.chickensmoothie.com/viewpet.php?id=11818645",
+            "3": ",image https://www.chickensmoothie.com/viewpet.php?id=18249055"
+        },
+        "aliases": {
+            "1": ",img"
+        }
+    },
+
+    "oekaki": {
+        "usage": ",oekaki <link>",
+        "description": "Displays Oekaki drawing, along with artist name and profile picture. Do not confuse this with dressup scenes! This command will not work with dressup scene links!",
+        "examples": {
+            "1": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=30&t=3843428",
+            "2": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993",
+            "3": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=74&t=2918702"
+        },
+        "aliases": {}
+    },
+
+    "pet": {
+        "usage": ",pet <link>",
+        "description": "Displays information about the pet. Unlike the image command, this command shows all available information about the pet, such as ID, age, and who it's given by.",
+        "examples": {
+            "1": ",pet http://www.chickensmoothie.com/viewpet.php?id=54685939",
+            "2": ",pet https://www.chickensmoothie.com/viewpet.php?id=2957856",
+            "3": ",pet https://www.chickensmoothie.com/viewpet.php?id=3539003"
+        },
+        "aliases": {}
+    },
+
+    "remindme": {
+        "usage": ",remindme <time>",
+        "description": "Pings you after a specified amount of time that you set. The maximum reminding time allowed is 24 hours.",
+        "examples": {
+            "1": ",remindme 1h6m23s",
+            "2": ",remindme 12m",
+            "3": ",remindme 1h10s"
+        },
+        "aliases": {
+            "1": ",rm"
+        }
+    },
+
+    "statistics": {
+        "usage": ",statistics",
+        "description": "Displays information about the system and the bot. Useful to see the current version of the bot or how many servers/users are using this bot.",
+        "examples": {},
+        "aliases": {
+            "1": ",stats"
+        }
+    },
+
+    "support": {
+        "usage": ",support",
+        "description": "Want to contribute to the bot development? This command will PM you a link to the CS Pound Development Server, where you can watch development take place.",
+        "examples": {},
+        "aliases": {}
+    },
+
+    "time": {
+        "usage": ",time",
+        "description": "Tells you how long is left before the pound opens.",
+        "examples": {},
+        "aliases": {
+            "1": ",pound"
+        }
+    },
+
+    "trade": {
+        "usage": ",trade <link>",
+        "description": "Displays the C$, Pets, and/or items being offered on each side. Make sure to use the sharing link or it won't work!",
+        "examples": {
+            "1": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73520120&userid=841634&signature=E_q5KzBvdwclqa5I0vx64Q",
+            "2": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73510216&userid=841634&signature=Bmkf6bFhCNBwgA32PoR-_g",
+            "3": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73233628&userid=841634&signature=EpJNgoMFtLk8VUccVDFZPA"
+        },
+        "aliases": {}
+    }
+}
