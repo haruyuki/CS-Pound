@@ -1,13 +1,14 @@
 import asyncio
 import discord
+from discord.ext import commands
 from library import prefix, version
 import logging
 import sys
 import traceback
-from discord.ext import commands
+
 
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
-extensions = ['cogs.admin', 'cogs.pet', 'cogs.remindme', 'cogs.help', 'cogs.support', 'cogs.statistics']
+extensions = ['cogs.admin', 'cogs.pet', 'cogs.time', 'cogs.remindme', 'cogs.help', 'cogs.support', 'cogs.statistics']
 
 bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False)
 bot.remove_command('help')
