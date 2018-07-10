@@ -1,86 +1,6 @@
 import discord
-import hashlib
-import json
+from library import warning_help, chickensmoothie_help, general_help, informational_help, process_help
 from discord.ext import commands
-
-help_hash = ''  # Current hash of help.json
-help_list = {}
-
-# -------------------- HELP TEXT --------------------
-warning_help = '''\
-CS Pound website (Where you also get the invite link)
-http://tailstar.us
-
--'''  # Title help
-
-chickensmoothie_help2 = '''\
-`,archive <query>` - Search the ChickenSmoothie archives (Under Development)
-
-`,fair <link>` - Determine whether a trade is fair (Under Development)
-
-`,image <link>` - Displays pet image only
-
-`,oekaki <link>` - Displays Oekaki drawing
-
-`,pet <link>` - Displays pet information
-
-`,time` - Tells you how long until the pound opens
-
-`,trade <link>` - Displays trade information (Under Development)
-
-_'''
-
-chickensmoothie_help = '''\
-`,image <link>` - Displays pet image only
-
-`,oekaki <link>` - Displays Oekaki drawing
-
-`,pet <link>` - Displays pet information
-
-`,time` - Tells you how long until the pound opens
-
-_'''  # Chicken Smoothie related commands help
-
-general_help = '''\
-`,autoremind <on/off> <time>` - Turns on or off global auto reminding
-
-`,remindme <time>` - Pings you after specified amount of time
-
-_'''  # General commands help
-
-informational_help = '''\
-`,help` - Displays this message
-
-`,support` - PM's you the link to the CS Pound Development Server
-
-`,statistics` - Displays bot statistics
-'''  # Informational commands help
-
-
-def process_help(command):  # Get the help text from help.json
-    global help_hash, help_list
-
-    def monospace(string):  # Returns string in Discord monospace format
-        return '`' + string + '`'  # `string`
-
-    def italic(string):  # Returns string in Discord italics format
-        return '*' + string + '*'  # *string*
-
-    new_help_hash = hashlib.md5(open('help.json').read().encode()).hexdigest()  # MD5 hash of help.json
-    if help_hash != new_help_hash:  # If help.json has been changed
-        help_hash = new_help_hash  # Set hash to the new changes
-        with open('help.json') as f:  # Open help.json
-            help_list = json.load(f)  # Load the JSON data
-
-    command_information = help_list[command]  # Get the command information of the command
-    message = monospace(command_information['usage']) + ' - ' + command_information['description']  # `usage` - description
-    if command_information['examples']:  # If there are examples for the command
-        message += '\n' + italic('Examples:') + ' ' + ', '.join([monospace(value) for key, value in command_information['examples'].items()])  # *Examples:* `example1`, `example2`, `example3`
-
-    if command_information['aliases']:  # If there are aliases for the command
-        message += '\n' + italic('Aliases:') + ' ' + ', '.join([monospace(value) for key, value in command_information['aliases'].items()])  # *Aliases:* `alias1`, `alias2`, `alias3`
-
-    return message
 
 
 class Help:
@@ -90,11 +10,19 @@ class Help:
     @commands.command()
     async def help(self, ctx, args: str = ''):
         embed = discord.Embed(colour=0x4ba139)  # Create empty embed
+        if args == '':  # If provided no arguments or requested a help topic that doesn't exist
+            embed.add_field(name=":pencil: __**To know about command usage or examples, use: ,help <command>**__", value=warning_help)  # add Warning help information to embed
+            embed.add_field(name=':dog: __**ChickenSmoothie Commands**__', value=chickensmoothie_help)  # Embed Chicken Smoothie related commands
+            embed.add_field(name=':file_folder: __**General Commands**__', value=general_help)  # Embed General commands
+            embed.add_field(name=':wrench: __**Informational Commands**__', value=informational_help)  # Embed informational commands
+
         # -------------------- CHICKENSMOOTHIE HELP --------------------
-        if args == 'archive':  # If requested Archive command help
+        elif args == 'archive':  # If requested Archive command help
             embed.add_field(name='**Archive**', value=process_help(args))  # Add Archive help information to embed
         elif args == 'fair':  # If requested Fair command help
-            embed.add_field(name='**Fair', value=process_help(args))  # Add Fair help information to embed
+            embed.add_field(name='**Fair**', value=process_help(args))  # Add Fair help information to embed
+        elif args == 'image':  # If requested Image command help
+            embed.add_field(name='**Image**', value=process_help(args))
         elif args == 'oekaki':  # If requested Oekaki command help
             embed.add_field(name='**Oekaki**', value=process_help(args))  # Add Oekaki help information to embed
         elif args == 'pet':  # If included 'pet' argument
@@ -117,12 +45,8 @@ class Help:
             embed.add_field(name='**Support**', value=process_help(args))  # Embed Support help information
         elif args == 'statistics':
             embed.add_field(name='**Statistics**', value=process_help(args))  # Embed Statistics help information
-
-        else:  # If provided no arguments or requested a help topic that doesn't exist
-            embed.add_field(name=":pencil: __**To know about command usage or examples, use: ,help <command>**__", value=warning_help)  # add Warning help information to embed
-            embed.add_field(name=':dog: __**ChickenSmoothie Commands**__', value=chickensmoothie_help)  # Embed Chicken Smoothie related commands
-            embed.add_field(name=':file_folder: __**General Commands**__', value=general_help)  # Embed General commands
-            embed.add_field(name=':wrench: __**Informational Commands**__', value=informational_help)  # Embed informational commands
+        else:
+            embed = discord.Embed(title='Help', description='That command doesn\'t exist!', colour=0xff5252)  # Create embed
 
         try:
             await ctx.author.send(embed=embed)
