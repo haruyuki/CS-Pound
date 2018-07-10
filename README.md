@@ -18,11 +18,11 @@ A Discord bot for the online virtual pet adopting website. With the bot you can 
 
 ### Prerequitites
 
-Though only tested on Python 3.5.2 and 3.6.5, it should work with any version of Python 3.
+Though only tested on Python 3.6.5, it should work with any version of Python 3.5.3+.
 
-The libraries [discord.py](https://github.com/Rapptz/discord.py), [lxml](http://lxml.de), [Pillow](http://python-pillow.org) and [psutil](https://github.com/giampaolo/psutil) are required to run the Python script. These can be installed through Python PIP by running:
+The libraries [discord.py](https://github.com/Rapptz/discord.py) (Rewrite Version), [lxml](http://lxml.de), [Pillow](http://python-pillow.org) and [psutil](https://github.com/giampaolo/psutil) are required to run the Python script. These can be installed through Python PIP by running:
 ```bash
-pip3 install discord.py lxml Pillow psutil
+pip3 install git+https://github.com/Rapptz/discord.py@rewrite lxml Pillow psutil
 ```
 
 A [Discord](https://discordapp.com) account is also required and a [Chicken Smoothie](https://www.chickensmoothie.com) is highly recommended.
@@ -39,10 +39,10 @@ python3 cs-pound.py
 ## Built With
 
 * Python 3.6.5
-* Discord.py 0.16.12
-* lxml 4.2.1
-* Pillow 5.1.0
-* psutil 5.4.5
+* Discord.py 1.0.0a
+* lxml 4.2.3
+* Pillow 5.2.0
+* psutil 5.4.6
 
 ## Authors
 
