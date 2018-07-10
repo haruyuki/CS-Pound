@@ -1,17 +1,21 @@
-import discord
-import random
 import asyncio
+import discord
+from library import prefix, version
+import logging
 import sys
 import traceback
 from discord.ext import commands
 
-prefix = ','
-version = '2.0'
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
-extensions = ['cogs.help', 'cogs.admin']
+extensions = ['cogs.admin', 'cogs.help', 'cogs.support', 'cogs.statistics']
 
-bot = commands.Bot(command_prefix=prefix, description='Rewrite Test', pm_help=False)
+bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False)
 bot.remove_command('help')
+logger = logging.getLogger('discord')  # Create logger
+logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')  # Set logging file
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s'))  # Set logging format
+logger.addHandler(handler)  # Start logger
 
 if __name__ == '__main__':
     for extension in extensions:
