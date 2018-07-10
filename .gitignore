@@ -1,5 +1,6 @@
 tokens.txt
 .DS_Store
+.python-version
 discord.log
 autoremind.txt
 autoremind.txt.bak
