@@ -3,14 +3,17 @@ import discord
 from discord.ext import commands
 from library import prefix, version
 import logging
+from os import listdir
+from os.path import isfile, join
 import sys
 import traceback
 
 
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
-extensions = ['cogs.admin', 'cogs.image', 'cogs.pet', 'cogs.time', 'cogs.remindme', 'cogs.help', 'cogs.support', 'cogs.statistics']
+cogs_dir = 'cogs'
+extensions = ['cogs.admin', 'cogs.image', 'cogs.pet', 'cogs.time', 'cogs.remindme', 'cogs.help', 'cogs.invite', 'cogs.support', 'cogs.statistics']
 
-bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False)
+bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')
 logger = logging.getLogger('discord')  # Create logger
 logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
@@ -19,10 +22,10 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s')
 logger.addHandler(handler)  # Start logger
 
 if __name__ == '__main__':
-    for extension in extensions:
+    for extension in [f.replace('.py', '') for f in listdir(cogs_dir) if isfile(join(cogs_dir, f))]:
         try:
-            bot.load_extension(extension)
-        except Exception as e:
+            bot.load_extension(f'{cogs_dir}.{extension}')
+        except (discord.ClientException, ModuleNotFoundError):
             print(f'Failed to load extension {extension}.', file=sys.stderr)
             traceback.print_exc()
 
