@@ -41,10 +41,10 @@ class Help:
                         if args == key2.replace(' ', '').lower():
                             content = f'`{value2["usage"]}` - {value2["description"]}'  # `usage` - description
                             if value2['examples']:  # If there are examples for the command
-                                content += '\n' + '*' + 'Examples:' + '* ' + ', '.join(['`' + value3 + '`' for key3, value3 in value2['examples'].items()])  # *Examples:* `example1`, `example2`, `example3`
+                                content += '\n\n' + '*' + 'Examples:' + '* ' + '\n' + '\n'.join(['`' + value3 + '`' for key3, value3 in value2['examples'].items()])  # *Examples:* `example1`, `example2`, `example3`
 
                             if value2['aliases']:  # If there are aliases for the command
-                                content += '\n' + '*' + 'Aliases:' + '* ' + ', '.join(['`' + value3 + '`' for key3, value3 in value2['aliases'].items()])  # *Aliases:* `alias1`, `alias2`, `alias3`
+                                content += '\n\n' + '*' + 'Aliases:' + '* ' + ', '.join(['`' + value3 + '`' for key3, value3 in value2['aliases'].items()])  # *Aliases:* `alias1`, `alias2`, `alias3`
                             embed.add_field(name=key2, value=content)
 
         try:
