@@ -2,12 +2,30 @@ import aiohttp
 import asyncio
 import discord
 import lxml.html
+import re
 
 prefix = '.'
 version = '2.0'
 
 
 # -------------------- FUNCTIONS --------------------
+def parse_short_time(time):
+    timestr = time.lower()
+    if re.findall('\\d{1,8}[smhd]', timestr) == []:
+        return -1
+    multiplier = 1
+    for i in range(len(timestr)):
+        if timestr[i] == 'd':
+            multiplier *= 86400
+        elif timestr[i]== 'h':
+            multiplier *= 3600
+        elif timestr[i] == 'm':
+            multiplier *= 60
+        elif timestr[i] == 's':
+            timestr = timestr[:-1]
+    return multiplier * int(''.join([x for x in timestr if x.isdigit()]))
+
+
 def time_extractor(time):  # Convert given time into seconds
     time = time.lower()  # Change all letters to lowercase
     htotal = 0
