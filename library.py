@@ -1,8 +1,9 @@
+import re
+
 import aiohttp
 import asyncio
 import discord
 import lxml.html
-import re
 
 prefix = '.'
 version = '2.0'

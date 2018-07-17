@@ -9,7 +9,7 @@ class Time:
         self.bot = bot
 
     @commands.command(aliases=['pound'])
-    #@commands.guild_only()
+    @commands.guild_only()
     async def time(self, ctx):
         async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
             async with session.get('http://www.chickensmoothie.com/pound.php') as response:  # GET HTTP response of pound page

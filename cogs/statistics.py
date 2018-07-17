@@ -1,10 +1,12 @@
-import discord
 from datetime import datetime, timedelta
-from library import version
 import os
-import psutil
 import time
+
+import discord
 from discord.ext import commands
+import psutil
+
+from library import version
 
 start_time = datetime.now()  # The time the script started running
 

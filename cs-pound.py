@@ -1,13 +1,15 @@
-import asyncio
-import discord
-from discord.ext import commands
-from library import prefix, version
 import logging
 from os import listdir
 from os.path import isfile, join
 import sys
 import traceback
+
+import asyncio
+import discord
+from discord.ext import commands
 import uvloop
+
+from library import prefix, version
 
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 cogs_dir = 'cogs'

@@ -1,6 +1,7 @@
 import aiohttp
 import discord
 from discord.ext import commands
+
 import chickensmoothie as cs
 
 
@@ -9,7 +10,7 @@ class PetImage:
         self.bot = bot
 
     @commands.command(aliases=['img'])
-    #@commands.guild_only()
+    @commands.guild_only()
     async def image(self, ctx, link: str = ''):
         pet_image = await cs.image(link)
         if pet_image is not None:

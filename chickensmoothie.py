@@ -1,11 +1,13 @@
-import aiohttp
-import asyncio
-from PIL import Image, ImageFont, ImageDraw
 import io
-from library import version
-import lxml.html
 import math
 from urllib.parse import urlparse, parse_qsl
+
+import aiohttp
+import asyncio
+from library import version
+from PIL import Image, ImageFont, ImageDraw
+
+from library import version
 
 async def _get_web_data(link):  # Get web data from link
     headers = {  # HTTP request headers
@@ -27,9 +29,10 @@ async def _get_web_data(link):  # Get web data from link
                 return None
     return dom  # Return whether connection was successful and DOM data
 
+
 async def image(link):
     data = await _get_web_data(link)
-    if data is not None:
+    if data:
         information = {}
         owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information

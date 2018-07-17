@@ -1,11 +1,13 @@
-import discord
 import hashlib
 import json
+
+import discord
 from discord.ext import commands
 
 current_hash = ''  # Current hash of help.json
 help_list = {}
 command_list = []
+
 
 class Help:
     def __init__(self, bot):

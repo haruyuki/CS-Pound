@@ -1,8 +1,9 @@
+import hashlib
+import subprocess
+
 import asyncio
 import discord
 from discord.ext import commands
-import hashlib
-import subprocess
 
 
 class AutoRemind:
@@ -77,7 +78,6 @@ class AutoRemind:
 
         await ctx.send(embed=embed)  # Send embed
 
-
     async def compose_message(self, time):  # Function to compose and send mention messages to channels
         grep_statement = 'grep \'[0-9]*\\s[0-9]*\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f2 -d\' \' | sort -u'  # Get channels with Auto Remind set at 'time'
         channel_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
@@ -92,7 +92,6 @@ class AutoRemind:
                 message += '<@' + user_ids[j] + '> '  # Message format for mentioning users | <@USER_ID>
             await self.bot.get_channel(int(channel_ids[i])).send(message)  # Send message to Discord channel with mention message
 
-
     async def minute_check(self, time):  # Function to check if any user has Auto Remind setup at 'time'
         time = str(time)
         new_hash = hashlib.md5(open('autoremind.txt').read().encode()).hexdigest()  # MD5 hash of autoremind.txt
@@ -103,7 +102,6 @@ class AutoRemind:
 
         if time in self.autoremind_times:  # If someone has a Auto Remind set at current 'time'
             await self.compose_message(time)  # Run compose message
-
 
     async def pound_countdown(self):  # Background task to countdown to when the pound opens
         global cooldown  # Use cooldown from global scope
