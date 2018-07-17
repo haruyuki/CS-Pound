@@ -109,8 +109,18 @@ class Giveaway:
         self._giveaway_task = bot.loop.create_task(self.giveaway_loop())  # Finish off any unfinished giveaways from last run
         self.emoji = u'\U0001F389'  # Reaction emoji
 
+    def has_permission():
+        def predicate(ctx):
+            roles_list = [role.name for role in ctx.author.roles]
+            if 'Giveaways' in roles_list or ctx.author.permissions_in(ctx.channel).manage_guild == True:
+                return True
+            else:
+                return False
+        return commands.check(predicate)
+
     @commands.command(aliases=['g'])  # Alternate aliases that can be invoked to call the command
     @commands.guild_only()  # Can only be run on a server
+    @has_permission()
     async def giveaway(self, ctx, length, *, description: str = 'Giveaway'):  # Giveaway command
         duration = parse_short_time(length)
         if duration == -1:
@@ -202,6 +212,12 @@ class Giveaway:
                     pass
 
             return winners_list
+
+    @giveaway.error
+    async def giveaway_handler(self, ctx, error):
+        if isinstance(error, discord.ext.commands.errors.CheckFailure):
+            embed = discord.Embed(title='Support', description='You don\'t have permission to run this command!', colour=0xff5252)
+            await ctx.send(embed=embed)
 
 
 def setup(bot):
