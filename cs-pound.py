@@ -7,11 +7,10 @@ from os import listdir
 from os.path import isfile, join
 import sys
 import traceback
-
+import uvloop
 
 tokens = [token.replace('\n', '') for token in list(open('tokens.txt'))]  # Get tokens from tokens.txt file
 cogs_dir = 'cogs'
-extensions = ['cogs.admin', 'cogs.image', 'cogs.pet', 'cogs.time', 'cogs.remindme', 'cogs.help', 'cogs.invite', 'cogs.support', 'cogs.statistics']
 
 bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')
@@ -26,8 +25,11 @@ if __name__ == '__main__':
         try:
             bot.load_extension(f'{cogs_dir}.{extension}')
         except (discord.ClientException, ModuleNotFoundError):
-            print(f'Failed to load extension {extension}.', file=sys.stderr)
-            traceback.print_exc()
+            if extension == '.DS_Store':
+                pass
+            else:
+                print(f'Failed to load extension {extension}.', file=sys.stderr)
+                traceback.print_exc()
 
 
 @bot.event
@@ -41,5 +43,7 @@ async def on_ready():  # When Client is loaded
     print(f'You are running {bot.user.name} v{version}')
     print('Created by Peko#7955')
     await bot.change_presence(activity=discord.Game(',help | By: Peko#7955'), status=discord.Status.online)
+
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 bot.run(tokens[1], bot=True, reconnect=True)
