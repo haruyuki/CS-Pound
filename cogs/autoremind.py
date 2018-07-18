@@ -5,13 +5,16 @@ import asyncio
 import discord
 from discord.ext import commands
 
+from library import get_web_data
+
 
 class AutoRemind:
     def __init__(self, bot):
         self.bot = bot
-        self._auto_remind_task = bot.loop.create_task(self.pound_countdown())
+        self.auto_remind_task = bot.loop.create_task(self.pound_countdown())
         self.autoremind_hash = ''
         self.autoremind_times = []
+        self.cooldown = False
 
     @commands.command()
     @commands.guild_only()
@@ -104,10 +107,9 @@ class AutoRemind:
             await self.compose_message(time)  # Run compose message
 
     async def pound_countdown(self):  # Background task to countdown to when the pound opens
-        global cooldown  # Use cooldown from global scope
         await self.bot.wait_until_ready()  # Wait until bot has loaded before starting background task
-        while not self.bot.is_closed:  # While bot is still running
-            if not cooldown:  # If command is not on cooldown
+        while not self.bot.is_closed():  # While bot is still running
+            if not self.cooldown:  # If command is not on cooldown
                 data = await get_web_data('', 'pound')  # Get pound data
                 if data[0]:  # If pound data is valid and contains content
                     text = data[1].xpath('//h2/text()')  # List all texts with H2 element
@@ -118,14 +120,14 @@ class AutoRemind:
                             value = value[0]
                             if 'hour' in text:  # If hour in pound opening time
                                 if value == 1:  # If there is one hour left
-                                    cooldown = True
+                                    self.cooldown = True
                                     value = 60  # Start countdown from 60 minutes
                                     sleep_amount = 0
                                 else:  # If there is more than one hour
                                     sleep_amount = (value - 2) * 3600  # -1 hour and convert into seconds
                             elif 'minute' in text:  # If minute in pound opening time
                                 sleep_amount = 0
-                                cooldown = True
+                                self.cooldown = True
                             elif 'second' in text:  # If second in pound opening time
                                 pass
                         elif len(value) == 2:  # If there are two numbers
@@ -133,7 +135,7 @@ class AutoRemind:
                                 sleep_amount = value[1] * 60  # Get the minutes and convert to seconds
                                 value = 60
                                 text = 'minute'
-                                cooldown = True
+                                self.cooldown = True
                             elif 'minute' and 'second' in text:
                                 pass
                         elif len(value) == 0:  # If there are no times i.e. Pound recently closed or not opening anytime soon
@@ -149,7 +151,7 @@ class AutoRemind:
                         value -= 1  # Remove one minute
                         sleep_amount = 60  # 1 minute
                     else:  # If time ran out (i.e. Pound is now open)
-                        cooldown = False
+                        self.cooldown = False
                         sleep_amount = 10800  # 3 hours
                 elif 'minute' and 'second' in text:  # If minute and second in text
                     sleep_amount = value[1]
@@ -160,7 +162,7 @@ class AutoRemind:
                         value -= 1  # Remove one minute
                         sleep_amount = 60  # 1 minute
                     else:  # If time ran out (i.e. Pound is now open)
-                        cooldown = False
+                        self.cooldown = False
                         sleep_amount = 10800  # 3 hours
                 elif 'second' in text:  # If second in text
                     pass
