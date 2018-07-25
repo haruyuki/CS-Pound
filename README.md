@@ -36,7 +36,7 @@ Create a text file called `tokens.txt` and paste in the bot token in the first l
 
 To start the bot run the following command:
 ```bash
-python3 cs-pound.py
+python cs-pound.py
 ```
 
 ## Built With
