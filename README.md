@@ -62,3 +62,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) f
 * [discord.py](https://github.com/Rapptz/discord.py)
 * [DigitalOcean](https://www.digitalocean.com)
 * [BlobGivingBot](https://github.com/BlobEmoji/blobgivingbot)
+* [GiveawayBot](https://github.com/jagrosh/GiveawayBot)
