@@ -35,7 +35,7 @@ class AutoRemind:
                 if role.name == "Auto Remind":  # If role exists
                     break  # Break out of for loop
             else:  # If role doesn't exist
-                await self.bot.create_role(ctx.message.guild, name='Auto Remind')  # Create 'Auto Remind' role in guild
+                await ctx.guild.create_role(name='Auto Remind', reason='Auto Remind didn\'t exist')  # Create 'Auto Remind' role in guild
 
         if args == 'off':  # If user wants to turn off Auto Remind
             if id_exists == '':  # If user doesn't exist in database
