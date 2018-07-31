@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from library import get_web_data
+import chickensmoothie as cs
 
 
 class Pet:
@@ -11,65 +11,49 @@ class Pet:
     @commands.command()
     @commands.guild_only()
     async def pet(self, ctx, link: str = ''):  # Pet command
-        if 'static' in link:
-            embed = discord.Embed(title='Pet', description='That is not a valid pet link!', colour=0xff5252)  # Create embed
-            await ctx.send(embed=embed)
+        pet = await cs.pet(link)  # Get pet data
+        if pet is None:
+            embed = discord.Embed(title='Pet', description='An error has occured while processing pet image.', colour=0xff5252)  # Create embed
         else:
-            data = await get_web_data(link, 'pet')  # Get pet data
-            if data[0]:  # If data is valid
-                titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
-                values = data[1].xpath('//td[@class="r"]')  # Values of pet information
-                given = True  # Pet has been given by another user
-                value_list = []
+            embed = discord.Embed(title=pet['owner'] + '\'s Pet', colour=0x4ba139)  # Create embed
+            embed.set_image(url=pet['image'])  # Set image
 
-                petimg = data[1].xpath('//img[@id="petimg"]/@src')[0]  # Pet image link
-                if 'trans' in petimg:  # If pet image is transparent (i.e. Pet has items)
-                    petimg = 'http://www.chickensmoothie.com' + petimg  # Pet image link
-                owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
-                owner_link = 'http://www.chickensmoothie.com/' + data[1].xpath('//td[@class="r"]/a/@href')[0]  # Link to user profile
+            initial = True
+            for key, value in pet.items():
+                if (key == 'owner' or key == 'pps') and initial:
+                    if key == 'pps':
+                        if value == False:
+                            continue
+                        else:
+                            embed.add_field(name='PPS', value='[This pet has "PPS". What\'s that?](http://www.chickensmoothie.com/help/pets#pps)', inline=False)
+                    elif key == 'owner':
+                        value = f'[{pet["owner"]}]({pet["owner_link"]})'
+                        embed.add_field(name=key.capitalize(), value=value, inline=False)
+                else:
+                    if key == 'image' or key == 'owner_link' or key == 'given_link':
+                        pass
+                    else:
+                        if key == 'id':
+                            key = 'Pet ID'
+                        elif key == 'name':
+                            if value == '':
+                                continue
+                            else:
+                                key='Pet\'s name'
+                        elif key == 'age':
+                            key = 'Age'
+                            value = f'{value} days'
+                        elif key == 'given':
+                            if value == '':
+                                continue
+                            else:
+                                key = f'Given to {pet["owner"]} by'
+                                value = f'[{pet["given"]}]({pet["given_link"]})'
+                        else:
+                            key = key.capitalize()
+                        embed.add_field(name=key, value=value, inline=True)
 
-                if titles[0] == 'PPS':  # If pet is PPS
-                    value_list.append('[This pet has "PPS". What\'s that?](http://www.chickensmoothie.com/help/pets#pps)')  # Append PPS value
-                    value_list.append('[' + owner_name + '](' + owner_link + ')')  # [Owner Name](Link to Owner) | Formats to Owner Name
-                    pps = True
-                else:  # If pet is not PPS
-                    value_list.append('[' + owner_name + '](' + owner_link + ')')  # [Owner Name](Link to Owner) | Formats to Owner Name
-                    pps = False
-
-                tables = len(titles)  # Number of rows
-                temp = tables - 1 if pps else tables  # -1 Rows if pet is PPS
-                for i in range(temp):  # For each title in titles
-                    if i == 0:  # If 'i' is at first value (PPS or Owner name)
-                        pass  # Pass as first value has already been set
-                    elif temp - i == 2 or temp - i == 1:  # If 'i' is at second last or last value
-                        if titles[i] == ('Age:' if pps else 'Growth:') or not given:  # If text of titles at 'i' is 'Age:' if pet is PPS otherwise 'Growth:' or pet not given
-                            given = False
-                            if temp - i == 2:  # If 'i' is second last value (i.e. Growth)
-                                value_list.append(values[i].xpath('text()')[0])  # Append growth of pet
-                            elif temp - i == 1:  # If 'i' is last value (i.e. Rarity)
-                                value_list.append(values[i].xpath('img/@alt')[0])  # Append rarity of pet
-                        elif titles[i] == ('Growth:' if pps else 'Rarity:') or given:  # If text of titles at 'i' is 'Growth:' is pet is PPS otherwise 'Rarity:' or pet is given
-                            given = True
-                            if temp - i == 2:  # If 'i' is second last value (i.e. Rarity)
-                                value_list.append(values[i].xpath('img/@alt')[0])  # Append rarity of pet
-                            elif temp - i == 1:  # If 'i' is last value (i.e. Given by)
-                                titles[i] = titles[i].replace('\t', '').replace('\n', '')  # Remove extra formatting
-                                value_list.append('[' + data[1].xpath('//td[@class="r"]/a/text()')[1] + ']' + '(' + 'http://www.chickensmoothie.com/' + data[1].xpath('//td[@class="r"]/a/@href')[1] + ')')  # Append given user profile
-                    else:  # Any other 'i'
-                        value_list.append(values[i].xpath('text()')[0])  # Append text
-
-                embed = discord.Embed(title=owner_name + '\'s Pet', colour=0x4ba139)  # Create embed
-                embed.set_image(url=petimg)  # Set image
-
-                for i in range(tables):  # For each title in titles
-                    if i == 0:  # If 'i' is first value (PPS or Owner name)
-                        embed.add_field(name=titles[i], value=value_list[i], inline=False)  # Add field with no inline
-                    else:  # Any other 'i'
-                        embed.add_field(name=titles[i], value=value_list[i], inline=True)  # Add field with inline
-                await ctx.send(embed=embed)  # Send embed
-            else:  # If data is not valid
-                await ctx.send(embed=data[1])  # Send embed
-
+        await ctx.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Pet(bot))

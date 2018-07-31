@@ -1,10 +1,12 @@
 import io
 import math
+import re
 from urllib.parse import urlparse, parse_qsl
 
 import aiohttp
 import asyncio
 from library import version
+import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
 from library import version
@@ -32,14 +34,80 @@ async def _get_web_data(link):  # Get web data from link
                 connection = await response.text()  # Request HTML page data
                 dom = lxml.html.fromstring(connection)  # Extract HTML from site
     return success, dom, connection  # Return whether connection was successful and DOM data
-            else:
-                return None
-    return dom  # Return whether connection was successful and DOM data
 
+async def pet(link):
+    def key_process(string):
+        string = string.lower()
+        replacements = {
+            ':': '',
+            'pet ': '',
+            'pet\'s ': '',
+            '\t': '',
+            '\n': ''
+        }
+
+        substrs = sorted(replacements, key=len, reverse=True)
+        regexp = re.compile('|'.join(map(re.escape, substrs)))
+
+        return regexp.sub(lambda match: replacements[match.group(0)], string)
+
+    data = await _get_web_data(link)
+    if data[0]:
+        pet_data = {
+            'pps': False,
+            'image': '',
+            'owner': '',
+            'owner_link': '',
+            'id': 0,
+            'name': '',
+            'adopted': '',
+            'age': 0,
+            'growth': '',
+            'rarity': '',
+            'given': '',
+            'given_link': ''
+        }
+
+        table = data[1].xpath('//table[@class="spine"]/tr')
+        for i in range(len(table)):
+            if i == 0:
+                pet_data['image'] = table[i].xpath('td/img/@src')[0]
+
+            else:
+                key = key_process(table[i].xpath('td[1]/text()')[0])
+                if i == 1:
+                    if 'PPS' in data[2]:
+                        pet_data['pps'] = True
+                        i += 1
+                    value = table[i].xpath('td[2]/a/text()')[0]
+                    link = 'https://www.chickensmoothie.com/' + table[i].xpath('td[2]/a/@href')[0]
+                    pet_data['owner_link'] = link
+                elif len(table) - i == 2 or len(table) - i == 1:
+                    if key == 'rarity':
+                        value = table[i].xpath('td[2]/img/@alt')[0]
+                    if 'given' in key:
+                        key = 'given'
+                        value = table[i].xpath('td[2]/a/text()')[0]
+                        pet_data[key] = value
+                        key = 'given_link'
+                        value = 'https://www.chickensmoothie.com/' + table[i].xpath('td[2]/a/@href')[0]
+                else:
+                    value = table[i].xpath('td[2]/text()')[0]
+                    if key == 'owner':
+                        value = table[i].xpath('td[2]/a/text()')[0]
+                    elif key == 'id':
+                        value = int(value)
+                    elif key == 'age':
+                        value = int(value[:-5])
+                pet_data[key] = value
+        return pet_data
+
+    else:
+        return None
 
 async def image(link):
     data = await _get_web_data(link)
-    if data:
+    if data[0]:
         information = {}
         owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
@@ -156,4 +224,4 @@ async def image(link):
 
         return output_buffer
     else:
-        return 'Invalid'
+        return None
