@@ -10,6 +10,11 @@ from PIL import Image, ImageFont, ImageDraw
 from library import version
 
 async def _get_web_data(link):  # Get web data from link
+    success = False
+
+    if 'static' in link:
+        return success
+
     headers = {  # HTTP request headers
         'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
         'From': 'jumpy12359@gmail.com'  # Contact email
@@ -23,8 +28,10 @@ async def _get_web_data(link):  # Get web data from link
     async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
         async with session.post(base_link, data=parameters, headers=headers) as response:  # POST the variables to the base php link
             if response.status == 200:
+                success = True
                 connection = await response.text()  # Request HTML page data
                 dom = lxml.html.fromstring(connection)  # Extract HTML from site
+    return success, dom, connection  # Return whether connection was successful and DOM data
             else:
                 return None
     return dom  # Return whether connection was successful and DOM data
