@@ -4,41 +4,46 @@ import json
 import discord
 from discord.ext import commands
 
-current_hash = ''  # Current hash of help.json
-help_list = {}
-command_list = []
-
 
 class Help:
     def __init__(self, bot):
         self.bot = bot
+        self.current_hash = ''  # Current hash of help.json
+        self.help_list = {}  # Dictionary of all commands and their usage
+        self.command_list = []  # List of available commands
 
     @commands.command()
     async def help(self, ctx, args: str = ''):
-        global current_hash, help_list, command_list
         embed = discord.Embed(colour=0x4ba139)  # Create empty embed
         message = ''
 
         new_hash = hashlib.md5(open('help.json').read().encode()).hexdigest()  # MD5 hash of help.json
-        if current_hash != new_hash:  # If help.json has been changed
-            current_hash = new_hash  # Set hash to the new changes
+        if self.current_hash != new_hash:  # If help.json has been changed
+            self.current_hash = new_hash  # Set hash to the new changes
             with open('help.json') as f:  # Open help.json
-                help_list = json.load(f)  # Load the JSON data
-            for key, value in help_list['categories'].items():
+                self.help_list = json.load(f)  # Load the JSON data
+            for key, value in self.help_list['categories'].items():
                 for key2, value2 in value['commands'].items():
-                    command_list.append(key2.replace(' ', '').lower())
+                    self.command_list.append(key2.replace(' ', '').lower())
 
         if args == '':
-            title = f':{help_list["warning"]["icon"]}: __**Note**__'
-            content = help_list["warning"]["description"] + '\n\n_'
+            title = f':{self.help_list["warning"]["icon"]}: __**Note**__'
+            content = self.help_list["warning"]["description"] + '\n\n_'
             embed.add_field(name=title, value=content)  # add Warning help information to embed
-            for key, value in help_list['categories'].items():
+            for key, value in self.help_list['categories'].items():
                 title = f':{value["icon"]}: __**{key} Commands**__'
                 content = '\n\n'.join([f'`{value2["usage"]}` - {value2["short"]}' for key2, value2 in value['commands'].items()]) + '\n\n_'
                 embed.add_field(name=title, value=content)
+            ctx.author.send(embed=embed)
+            
+            embed = discord.Embed(title='Help', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
+            if ctx.message.guild is None:
+                pass
+            else:
+                await ctx.send(embed=embed)  # Send embed
         else:
-            if args in command_list:
-                for key, value in help_list['categories'].items():
+            if args in self.command_list:
+                for key, value in self.help_list['categories'].items():
                     for key2, value2 in value['commands'].items():
                         if args == key2.replace(' ', '').lower():
                             content = f'`{value2["usage"]}` - {value2["description"]}'  # `usage` - description
