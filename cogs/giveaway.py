@@ -32,7 +32,7 @@ class Giveaway:
                 return False
         return commands.check(predicate)
 
-    @commands.command(aliases=['g'])  # Alternate aliases that can be invoked to call the command
+    @commands.command(aliases=['g','gstart'])  # Alternate aliases that can be invoked to call the command
     @commands.guild_only()  # Can only be run on a server
     @has_permission()
     async def giveaway(self, ctx, length, *, description: str = 'Giveaway'):  # Giveaway command
