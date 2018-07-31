@@ -36,7 +36,7 @@ Create a text file called `tokens.txt` and paste in the bot token in the first l
 
 To start the bot run the following command:
 ```bash
-python3 cs-pound.py
+python cs-pound.py
 ```
 
 ## Built With
@@ -50,7 +50,7 @@ python3 cs-pound.py
 
 ## Authors
 
-* **Oliver Lin** - [@Rowlie](https://gitlab.com/Rowlie)
+* **Oliver Lin** - [@Tesshin](https://github.com/Tesshin)
 
 ## License
 
@@ -62,3 +62,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) f
 * [discord.py](https://github.com/Rapptz/discord.py)
 * [DigitalOcean](https://www.digitalocean.com)
 * [BlobGivingBot](https://github.com/BlobEmoji/blobgivingbot)
+* [GiveawayBot](https://github.com/jagrosh/GiveawayBot)
