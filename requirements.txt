@@ -2,4 +2,5 @@ git+https://github.com/Rapptz/discord.py@rewrite
 lxml
 Pillow
 psutil
+pycodestyle
 uvloop
