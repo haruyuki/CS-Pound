@@ -21,7 +21,7 @@ async def _get_web_data(link):  # Get web data from link
         'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
         'From': 'jumpy12359@gmail.com'  # Contact email
     }
-    parameters = ''
+    parameters = {}
     components = urlparse(link)
     if components.query:
         parameters = dict(parse_qsl(components.query, keep_blank_values=True))
@@ -33,7 +33,7 @@ async def _get_web_data(link):  # Get web data from link
                 success = True
                 connection = await response.text()  # Request HTML page data
                 dom = lxml.html.fromstring(connection)  # Extract HTML from site
-    return success, dom, connection  # Return whether connection was successful and DOM data
+    return success, dom  # Return whether connection was successful and DOM data
 
 async def pet(link):
     def key_process(string):
