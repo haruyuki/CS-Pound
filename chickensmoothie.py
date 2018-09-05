@@ -189,24 +189,24 @@ async def image(link):
 
         y_offset = 0  # Offset for vertically stacking images
         if transparent:  # If pet has items
-            canvas.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[0]
+            canvas.paste(images[0], (math.floor((max_width - images[0].size[0]) / 2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[0]
         else:  # If pet doesn't have items
-            canvas.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
+            canvas.paste(images[0], (math.floor((max_width - images[0].size[0]) / 2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
         y_offset += images[0].size[1]  # Add height of image + 10 to offset
 
         try:
-            draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Name'], font=font)[0]))/2)), y_offset), information['Name'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Name'], font=font)[0])) / 2)), y_offset), information['Name'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
             y_offset += 15  # Add offset of 15
         except KeyError:
             pass
 
         try:
-            draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Adopted'], font=font)[0]))/2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Adopted'], font=font)[0])) / 2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
             y_offset += 15  # Add offset of 15
         except KeyError:
             pass
 
-        canvas.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
+        canvas.paste(images[1], (math.floor((max_width - images[1].size[0]) / 2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
 
         output_buffer = io.BytesIO()  # Convert the PIL output into bytes
         canvas.save(output_buffer, 'png')  # Save the bytes as a PNG format
