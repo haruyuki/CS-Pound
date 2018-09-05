@@ -10,8 +10,10 @@ from PIL import Image, ImageFont, ImageDraw
 
 from library import version
 
+
 async def _get_web_data(link):  # Get web data from link
     success = False
+    dom = ''
 
     if 'static' in link:
         return success
@@ -33,6 +35,7 @@ async def _get_web_data(link):  # Get web data from link
                 connection = await response.text()  # Request HTML page data
                 dom = lxml.html.fromstring(connection)  # Extract HTML from site
     return success, dom  # Return whether connection was successful and DOM data
+
 
 async def pet(link):
     def key_process(string):
@@ -69,6 +72,7 @@ async def pet(link):
 
         table = data[1].xpath('//table[@class="spine"]/tr')
         for i in range(len(table)):
+            value = ''
             if i == 0:
                 pet_data['image'] = table[i].xpath('td/img/@src')[0]
 
@@ -104,11 +108,11 @@ async def pet(link):
     else:
         return None
 
+
 async def image(link):
     data = await _get_web_data(link)
     if data[0]:
         information = {}
-        owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
         values = data[1].xpath('//td[@class="r"]')  # Values of pet information
 
@@ -152,9 +156,9 @@ async def image(link):
 
         temp = len(titles) - 1 if pps else len(titles)  # Is pet is PPS, remove one title, else all titles
         for i in range(temp):  # For each title in titles
-            if titles[i] == (case1):
+            if titles[i] == case1:
                 information['Name'] = values[i].xpath('text()')[0]  # Add pet name to information dictionary
-            elif titles[i] == (case2):
+            elif titles[i] == case2:
                 information['Adopted'] = values[i].xpath('text()')[0]  # Add pet adoption date to information dictionary
             elif titles[i] == ('Growth:' if pps else 'Rarity:'):  # If pet is PPS, if titles[i] matches 'Growth:', otherwise if not PPS, if titles[i] matches with 'Rarity:'
                 information['Rarity'] = 'rarities/' + values[i].xpath('img/@src')[0][12:]  # Local link to rarity image
@@ -193,14 +197,14 @@ async def image(link):
         if max_width < current_width:
             max_width = current_width * 2
 
-        image = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
-        pil_image = ImageDraw.Draw(image)  # Draw the image to PIL
+        pil_image = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
+        pil_image = ImageDraw.Draw(pil_image)  # Draw the image to PIL
 
         y_offset = 0  # Offset for vertically stacking images
         if transparent:  # If pet has items
-            image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[0]
+            pil_image.paste(images[0], (math.floor((max_width - images[0].size[0]) / 2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[0]
         else:  # If pet doesn't have items
-            image.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
+            pil_image.paste(images[0], (math.floor((max_width - images[0].size[0]) / 2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
         y_offset += images[0].size[1]  # Add height of image + 10 to offset
 
         try:
@@ -215,10 +219,10 @@ async def image(link):
         except KeyError:
             pass
 
-        image.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
+        pil_image.paste(images[1], (math.floor((max_width - images[1].size[0]) / 2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
 
         output_buffer = io.BytesIO()  # Convert the PIL output into bytes
-        image.save(output_buffer, 'png')  # Save the bytes as a PNG format
+        pil_image.save(output_buffer, 'png')  # Save the bytes as a PNG format
         output_buffer.seek(0)  # Move the 'cursor' back to the start
 
         return output_buffer
