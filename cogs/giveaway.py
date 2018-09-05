@@ -1,10 +1,6 @@
 import datetime
-import json
-import os
 import random
 import re
-import time
-import uuid
 
 import asyncio
 import discord
