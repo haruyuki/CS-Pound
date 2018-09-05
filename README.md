@@ -24,16 +24,16 @@ A Discord bot for the online virtual pet adopting website. With the bot you can 
 | ,support      | PM's you the link to the CS Pound Development Server                      | ,support                                                                      |
 | ,time         | Tells you how long before the pound opens                                 | ,time                                                                         |
 
-### Prerequitites
+### Prerequisites
 
 * Python 3.6 and above.
-* Install all requirements using : `pip install -r requirements.txt`.
+* Install all Python requirements using: `pip install -r requirements.txt`.
 * A [Discord](https://discordapp.com) account.
-* Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is essential as it's the purpose of the bot.
+* Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is highly recommended.
 * The [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana) font family.
 
 ### Installation
-Create a text file called `tokens.txt` and paste in the bot token in the first line.
+Please refer to the wiki for [Server](https://github.com/Tesshin/CS-Pound/wiki/Server-Installation) or [User](https://github.com/Tesshin/CS-Pound/wiki/User-Installation) installation
 
 ### Running
 
