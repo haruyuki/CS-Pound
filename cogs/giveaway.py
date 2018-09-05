@@ -19,7 +19,7 @@ class Giveaway:
         self.bot = bot
         self.emoji = u'\U0001F389'  # Reaction emoji
 
-    def has_permission(self):
+    def has_permission():
         def predicate(ctx):
             roles_list = [role.name for role in ctx.author.roles]
             if 'Giveaways' in roles_list or ctx.author.permissions_in(ctx.channel).manage_guild:
