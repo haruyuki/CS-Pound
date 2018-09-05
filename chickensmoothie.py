@@ -203,13 +203,13 @@ async def image(link):
         y_offset += images[0].size[1]  # Add height of image + 10 to offset
 
         try:
-            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Name'], font=font)[0]))/2)), y_offset), information['Name'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Name'], font=font)[0])) / 2)), y_offset), information['Name'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
             y_offset += 15  # Add offset of 15
         except KeyError:
             pass
 
         try:
-            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Adopted'], font=font)[0]))/2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Adopted'], font=font)[0])) / 2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
             y_offset += 15  # Add offset of 15
         except KeyError:
             pass
