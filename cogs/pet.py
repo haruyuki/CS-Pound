@@ -22,7 +22,7 @@ class Pet:
             for key, value in pet.items():
                 if (key == 'owner' or key == 'pps') and initial:
                     if key == 'pps':
-                        if value == False:
+                        if not value:
                             continue
                         else:
                             embed.add_field(name='PPS', value='[This pet has "PPS". What\'s that?](http://www.chickensmoothie.com/help/pets#pps)', inline=False)
@@ -39,7 +39,7 @@ class Pet:
                             if value == '':
                                 continue
                             else:
-                                key='Pet\'s name'
+                                key = 'Pet\'s name'
                         elif key == 'age':
                             key = 'Age'
                             value = f'{value} days'
@@ -54,6 +54,7 @@ class Pet:
                         embed.add_field(name=key, value=value, inline=True)
 
         await ctx.send(embed=embed)
+
 
 def setup(bot):
     bot.add_cog(Pet(bot))

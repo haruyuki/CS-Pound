@@ -15,7 +15,6 @@ class Help:
     @commands.command()
     async def help(self, ctx, args: str = ''):
         embed = discord.Embed(colour=0x4ba139)  # Create empty embed
-        message = ''
 
         new_hash = hashlib.md5(open('help.json').read().encode()).hexdigest()  # MD5 hash of help.json
         if self.current_hash != new_hash:  # If help.json has been changed
@@ -34,13 +33,7 @@ class Help:
                 title = f':{value["icon"]}: __**{key} Commands**__'
                 content = '\n\n'.join([f'`{value2["usage"]}` - {value2["short"]}' for key2, value2 in value['commands'].items()]) + '\n\n_'
                 embed.add_field(name=title, value=content)
-            ctx.author.send(embed=embed)
-            
-            embed = discord.Embed(title='Help', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
-            if ctx.message.guild is None:
-                pass
-            else:
-                await ctx.send(embed=embed)  # Send embed
+
         else:
             if args in self.command_list:
                 for key, value in self.help_list['categories'].items():

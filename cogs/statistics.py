@@ -13,9 +13,6 @@ start_time = datetime.now()  # The time the script started running
 
 def resolver(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
     day_section = ''
-    hour_section = ''
-    minute_section = ''
-    second_section = ''
 
     def pluralise(string, value, and_placement=''):  # Correctly prefix or suffix ',' or 'and' placements
         if value == 0:  # If given time has no value
