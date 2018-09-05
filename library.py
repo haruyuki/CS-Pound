@@ -1,10 +1,5 @@
 import re
 
-import aiohttp
-import asyncio
-import discord
-import lxml.html
-
 prefix = '.'
 version = '2.0'
 
@@ -18,7 +13,7 @@ def parse_short_time(time):
     for i in range(len(timestr)):
         if timestr[i] == 'd':
             multiplier *= 86400
-        elif timestr[i]== 'h':
+        elif timestr[i] == 'h':
             multiplier *= 3600
         elif timestr[i] == 'm':
             multiplier *= 60
@@ -68,9 +63,6 @@ def time_extractor(time):  # Convert given time into seconds
 
 def resolver(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
     day_section = ''
-    hour_section = ''
-    minute_section = ''
-    second_section = ''
 
     def pluralise(string, value, and_placement=''):  # Correctly prefix or suffix ',' or 'and' placements
         if value == 0:  # If given time has no value
