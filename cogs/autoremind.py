@@ -19,9 +19,9 @@ class AutoRemind:
     @commands.command()
     @commands.guild_only()
     async def autoremind(self, ctx, args=''):
-        grep_statement = f'grep -n "{ctx.message.author.id}" autoremind.txt | cut -f1 -d:'  # Get line number of ID
+        grep_statement = f'grep -n "{ctx.author.id}" autoremind.txt | cut -f1 -d:'  # Get line number of ID
         id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]  # Run grep statement
-        guild_roles = ctx.message.guild.roles  # List of roles in guild
+        guild_roles = ctx.guild.roles  # List of roles in guild
         for role in guild_roles:  # For each role in the guild
             if role.name == "CS Pound":  # If 'CS Pound' role exists
                 permission = role.permissions.manage_roles  # Check whether role has 'Manage Roles' permission and set boolean value
@@ -30,7 +30,7 @@ class AutoRemind:
             permission = False
 
         if permission:  # If bot has permission to 'Manage Roles'
-            guild_roles = ctx.message.guild.roles  # List of roles in guild
+            guild_roles = ctx.guild.roles  # List of roles in guild
             for role in guild_roles:  # Checks if role already exists in guild
                 if role.name == "Auto Remind":  # If role exists
                     break  # Break out of for loop
@@ -44,7 +44,7 @@ class AutoRemind:
                 sed_statement = 'sed -i.bak ' + id_exists + 'd autoremind.txt'  # sed statement
                 subprocess.Popen(sed_statement, shell=True)  # Run sed statement
                 if permission:  # If bot has permission to 'Manage Roles'
-                    await ctx.message.author.remove_roles(discord.utils.get(guild_roles, name='Auto Remind'), reason='User disabled Auto Remind.')  # Remove role from user
+                    await ctx.author.remove_roles(discord.utils.get(guild_roles, name='Auto Remind'), reason='User disabled Auto Remind.')  # Remove role from user
                     embed = discord.Embed(title='Auto Remind', description='You have been removed from the Auto Remind role.', colour=0x4ba139)  # Create embed
                 else:  # If bot doesn't have permission to 'Manage Roles'
                     embed = discord.Embed(title='Auto Remind', description='You have been removed from the Auto Remind.', colour=0x4ba139)  # Create embed
@@ -74,7 +74,7 @@ class AutoRemind:
                             file.write(text)  # Write the text
 
                         if permission:  # If bot has 'Manage Roles' permission
-                            await ctx.message.author.add_roles(discord.utils.get(guild_roles, name='Auto Remind'), reason='User enabled Auto Remind.')  # Add user to Auto Remind role
+                            await ctx.author.add_roles(discord.utils.get(guild_roles, name='Auto Remind'), reason='User enabled Auto Remind.')  # Add user to Auto Remind role
 
                         message = 'Will ping you ' + args + ' minutes before the pound opens!'
                         embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)  # Create embed
