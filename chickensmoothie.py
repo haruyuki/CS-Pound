@@ -4,8 +4,7 @@ import re
 from urllib.parse import urlparse, parse_qsl
 
 import aiohttp
-import asyncio
-from library import version
+import discord
 import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
