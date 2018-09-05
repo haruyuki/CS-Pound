@@ -1,8 +1,11 @@
 # CS Pound Discord Bot
 
-<a href="https://github.com/Rapptz/discord.py" alt="Discord.py Rewrite"><img src="https://img.shields.io/badge/discord.py-rewrite-orange.svg" /></a>
-<a href="https://www.python.org/" alt="Python 3.6"><img src="https://img.shields.io/badge/python-3.6-blue.svg" /></a>
-<a href="https://gitlab.com/Rowlie/cs-pound/blob/master/LICENSE" alt="MIT License"><img src="https://img.shields.io/badge/License-MIT-blue.svg" /></a>
+[![Build Status](https://travis-ci.com/Tesshin/CS-Pound.svg?branch=master)](https://travis-ci.com/Tesshin/CS-Pound)
+[![Discord.py Rewrite](https://img.shields.io/badge/discord.py-rewrite-orange.svg)](https://github.com/Rapptz/discord.py)
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/github/license/Tesshin/CS-Pound.svg)](https://github.com/Tesshin/CS-Pound/blob/master/LICENSE)
+[![Discord Server](https://img.shields.io/discord/409642350600781824.svg)](https://invite.gg/cspound)
+[![Website Status](https://img.shields.io/website-up-down-green-red/http/tailstar.us.svg?label=www.tailstar.us)](https://www.tailstar.us)
 
 A Discord bot for the online virtual pet adopting website. With the bot you can view pet information and pound opening times straight in Discord without needing to access the website.
 
