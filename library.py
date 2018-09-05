@@ -7,7 +7,7 @@ version = '2.0'
 # -------------------- FUNCTIONS --------------------
 def parse_short_time(time):
     timestr = time.lower()
-    if re.findall('\\d{1,8}[smhd]', timestr) == []:
+    if not re.findall('\\d{1,8}[smhd]', timestr):
         return -1
     multiplier = 1
     for i in range(len(timestr)):

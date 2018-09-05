@@ -22,6 +22,7 @@ class AutoRemind:
         grep_statement = f'grep -n "{ctx.author.id}" autoremind.txt | cut -f1 -d:'  # Get line number of ID
         id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]  # Run grep statement
         guild_roles = ctx.guild.roles  # List of roles in guild
+        embed = discord.Embed()
         for role in guild_roles:  # For each role in the guild
             if role.name == "CS Pound":  # If 'CS Pound' role exists
                 permission = role.permissions.manage_roles  # Check whether role has 'Manage Roles' permission and set boolean value
