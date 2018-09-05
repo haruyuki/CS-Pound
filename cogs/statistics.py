@@ -67,7 +67,7 @@ class Statistics:
     async def statistics(self, ctx):
         def converter(seconds):  # Convert seconds into days, hours, minutes and seconds
             d = datetime(1, 1, 1) + timedelta(seconds=int(seconds))  # Create tuple of date values
-            return d.day-1, d.hour, d.minute, d.second  # Return tuple of date values
+            return d.day - 1, d.hour, d.minute, d.second  # Return tuple of date values
         system_memory_mb = str(round(psutil.virtual_memory()[3] / 1000 / 1024, 2)) + ' MB'  # Get the used virtual memory (physical memory) of the system | X MB
         system_memory_percent = str(psutil.virtual_memory()[2]) + '%'  # Get the available virtual memory (physical memory) of the system | X%
         bot_memory_mb = str(round(psutil.Process(os.getpid()).memory_info()[0] / 1024**2, 2)) + ' MB'  # Get the memory usage of the bot (i.e. This script) | X MB

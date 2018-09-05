@@ -26,13 +26,13 @@ class Giveaway:
     def has_permission(self):
         def predicate(ctx):
             roles_list = [role.name for role in ctx.author.roles]
-            if 'Giveaways' in roles_list or ctx.author.permissions_in(ctx.channel).manage_guild == True:
+            if 'Giveaways' in roles_list or ctx.author.permissions_in(ctx.channel).manage_guild:
                 return True
             else:
                 return False
         return commands.check(predicate)
 
-    @commands.command(aliases=['g','gstart'])  # Alternate aliases that can be invoked to call the command
+    @commands.command(aliases=['g', 'gstart'])  # Alternate aliases that can be invoked to call the command
     @commands.guild_only()  # Can only be run on a server
     @has_permission()
     async def giveaway(self, ctx, length, *, description: str = 'Giveaway'):  # Giveaway command
@@ -70,13 +70,13 @@ class Giveaway:
                     message = await ctx.send(file=file, embed=embed)
                 else:
                     message = await ctx.send(embed=embed)
-                
+
                 channel_id = message.channel.id
                 until_end = float(ends_at.timestamp()) - datetime.datetime.utcnow().timestamp()
-                
+
                 await message.add_reaction(self.emoji)
                 await asyncio.sleep(until_end)
-                
+
                 message = await message.channel.get_message(message.id)
                 embed = message.embeds[0]
                 footer_text = (f'{winners} Winners | ' if winners > 1 else '') + 'Ended at'
