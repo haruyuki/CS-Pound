@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-from library import get_web_data
+from chickensmoothie import _get_web_data
 
 
 class Oekaki:
@@ -11,14 +11,13 @@ class Oekaki:
     @commands.command()
     @commands.guild_only()
     async def oekaki(self, ctx, link: str = ''):
-        data = await get_web_data(link, 'oekaki')  # Get Oekaki data
+        data = await _get_web_data(link)  # Get Oekaki data
         if data[0]:  # If data is valid
             base_link = 'http://www.chickensmoothie.com/Forum/'
 
             oekaki_title = data[1].xpath('//h3[@class="first"]/a/text()')[0]  # Title of drawing
             image = 'https://www.chickensmoothie.com' + data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]  # Image of drawing
             user_icon = base_link[:-1] + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]  # The profile picture of the artist
-            titles = data[1].xpath('//table[@class="ok-drawing-info"]/tr/td[@class="label"]/text()')  # Get titles of drawing information
             warning_text = 'Reminder!! Copying another person\'s art without permission to reproduce their work is a form of art-theft!'  # General warning text regarding Oekaki art
 
             if data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')[0] == 'Click to view':  # If drawing is based off another drawing
