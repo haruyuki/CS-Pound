@@ -5,7 +5,7 @@ import asyncio
 import discord
 from discord.ext import commands
 
-from library import get_web_data
+from chickensmoothie import _get_web_data
 
 
 class AutoRemind:
@@ -37,7 +37,7 @@ class AutoRemind:
             else:  # If role doesn't exist
                 await ctx.guild.create_role(name='Auto Remind', reason='Auto Remind didn\'t exist')  # Create 'Auto Remind' role in guild
 
-        if args == 'off':  # If user wants to turn off Auto Remind
+        if args == 'off' or args == 'cancel':  # If user wants to turn off Auto Remind
             if id_exists == '':  # If user doesn't exist in database
                 embed = discord.Embed(title='Auto Remind', description='You don\'t have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)  # Create embed
             else:  # If user exists
@@ -108,9 +108,12 @@ class AutoRemind:
 
     async def pound_countdown(self):  # Background task to countdown to when the pound opens
         await self.bot.wait_until_ready()  # Wait until bot has loaded before starting background task
+        value = 0
+        text = ''
         while not self.bot.is_closed():  # While bot is still running
+            sleep_amount = 0
             if not self.cooldown:  # If command is not on cooldown
-                data = await get_web_data('', 'pound')  # Get pound data
+                data = await _get_web_data('https://www.chickensmoothie.com/pound.php')  # Get pound data
                 if data[0]:  # If pound data is valid and contains content
                     text = data[1].xpath('//h2/text()')  # List all texts with H2 element
                     try:  # Try getting pound opening text
@@ -157,7 +160,7 @@ class AutoRemind:
                     sleep_amount = value[1]
                     value = 1
                 elif 'minute' in text:  # If minute in text
-                    if value != 0:  # If minutes left is not zero
+                    if value > 0:  # If minutes left is not zero
                         await self.minute_check(value)  # Run minute check
                         value -= 1  # Remove one minute
                         sleep_amount = 60  # 1 minute
@@ -166,6 +169,8 @@ class AutoRemind:
                         sleep_amount = 10800  # 3 hours
                 elif 'second' in text:  # If second in text
                     pass
+                else:
+                    sleep_amount = 3600
             await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
 
 
