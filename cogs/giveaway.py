@@ -67,7 +67,6 @@ class Giveaway:
                 else:
                     message = await ctx.send(embed=embed)
 
-                channel_id = message.channel.id
                 until_end = float(ends_at.timestamp()) - datetime.datetime.utcnow().timestamp()
 
                 await message.add_reaction(self.emoji)
@@ -75,7 +74,6 @@ class Giveaway:
 
                 message = await message.channel.get_message(message.id)
                 embed = message.embeds[0]
-                footer_text = (f'{winners} Winners | ' if winners > 1 else '') + 'Ended at'
                 giveaway_title = embed.title
 
                 try:

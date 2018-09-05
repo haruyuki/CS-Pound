@@ -26,8 +26,8 @@ async def on_ready():
     print(f'User Count: {user_count}')
     print('===== END =====')
     client.close()
-    with open(os.devnull, 'w') as devnull:
-        sys.stderr = devnull
+    with open(os.devnull, 'w') as dev:
+        sys.stderr = dev
         exit()
 
 client.run(token)
