@@ -12,10 +12,12 @@ if token is None:
         exit()
 
 
+@client.event()
 async def on_shard_ready(shard_id):
     print(f'Shard {shard_id} connected.')
 
 
+@client.event()
 async def on_ready():
     user_count = sum([1 for _ in client.get_all_members()])
     print('\n\n== START OF "PROOF" ==')
