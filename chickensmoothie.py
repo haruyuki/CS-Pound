@@ -136,23 +136,15 @@ async def image(link):
         if no_name:  # If pet has no name
             case1 = 'Pet\'s name:'
             case2 = 'Adopted:'
-            case3 = 1
-            case4 = 1
             if pps:  # If pet has no name and is PPS
                 case1 = 'Pet\'s name:'
                 case2 = 'Pet ID:'
-                case3 = 2
-                case4 = 1
         elif pps:  # If pet has a name and is PPS
             case1 = 'Pet ID:'
             case2 = 'Pet\'s name:'
-            case3 = 2
-            case4 = 1
         else:  # If pet has a name but is not PPS
             case1 = 'Pet\'s name:'
             case2 = 'Adopted:'
-            case3 = 1
-            case4 = 1
 
         temp = len(titles) - 1 if pps else len(titles)  # Is pet is PPS, remove one title, else all titles
         for i in range(temp):  # For each title in titles
