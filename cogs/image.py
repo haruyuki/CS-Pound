@@ -16,7 +16,7 @@ class PetImage:
         if pet_image is not None:
             await ctx.send(file=discord.File(fp=pet_image, filename='pet.png'))  # Upload the file to the channel where message came from
         else:  # If data is invalid
-            await ctx.send(embed=data[1])  # Send embed
+            await ctx.send(embed=pet_image)  # Send embed
 
 
 def setup(bot):
