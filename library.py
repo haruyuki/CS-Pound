@@ -1,7 +1,7 @@
 import re
 
 prefix = '.'
-version = '2.0'
+version = '2.11'
 
 
 # -------------------- FUNCTIONS --------------------
