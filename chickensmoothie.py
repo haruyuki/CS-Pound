@@ -163,11 +163,6 @@ async def image(link):
             elif titles[i] == ('Growth:' if pps else 'Rarity:'):  # If pet is PPS, if titles[i] matches 'Growth:', otherwise if not PPS, if titles[i] matches with 'Rarity:'
                 information['Rarity'] = 'rarities/' + values[i].xpath('img/@src')[0][12:]  # Local link to rarity image
 
-        if titles[case3] == 'Pet ID:':
-            filename = values[case4].xpath('text()')[0]  # Get pet ID
-        else:  # If ID cannot be found
-            filename = 'pet'
-
         async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
             async with session.get(pet_image) as response:  # GET HTTP response of pet image link
                 connection = await response.read()  # Read the response content
@@ -227,4 +222,5 @@ async def image(link):
 
         return output_buffer
     else:
-        return None
+        embed = discord.Embed(title="Image", description="That is not a valid pet link!", colour=0xff5252)
+        return embed
