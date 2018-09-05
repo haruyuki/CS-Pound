@@ -68,7 +68,7 @@ class AutoRemind:
                     embed = discord.Embed(title='Auto Remind', description='That time is too far!', colour=0xff5252)  # Create embed
                 else:  # If time is less than 60 minutes
                     if id_exists != '':  # If user has already set an Auto Remind
-                        embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)  # Create embed
+                        embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup!'.format(ctx.message.author), colour=0xff5252)  # Create embed
                     else:  # If user doesn't have an Auto Remind setup
                         text = f'{ctx.message.guild.id} {ctx.message.channel.id} {ctx.message.author.id} {args}' + '\n'  # Write in the format 'GUILD_ID CHANNEL_ID USER_ID REMIND_TIME'
                         with open('autoremind.txt', 'a+') as file:  # Open autoremind.txt
