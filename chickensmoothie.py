@@ -34,7 +34,7 @@ async def _get_web_data(link):  # Get web data from link
                 success = True
                 connection = await response.text()  # Request HTML page data
                 dom = lxml.html.fromstring(connection)  # Extract HTML from site
-    return success, dom  # Return whether connection was successful and DOM data
+    return success, dom, connection  # Return whether connection was successful and DOM data
 
 
 async def pet(link):
@@ -72,7 +72,6 @@ async def pet(link):
 
         table = data[1].xpath('//table[@class="spine"]/tr')
         for i in range(len(table)):
-            value = ''
             if i == 0:
                 pet_data['image'] = table[i].xpath('td/img/@src')[0]
 
@@ -113,6 +112,7 @@ async def image(link):
     data = await _get_web_data(link)
     if data[0]:
         information = {}
+        owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
         values = data[1].xpath('//td[@class="r"]')  # Values of pet information
 
@@ -184,32 +184,32 @@ async def image(link):
         if max_width < current_width:
             max_width = current_width * 2
 
-        pil_image = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
-        pil_image = ImageDraw.Draw(pil_image)  # Draw the image to PIL
+        canvas = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
+        draw = ImageDraw.Draw(canvas)  # Draw the image to PIL
 
         y_offset = 0  # Offset for vertically stacking images
         if transparent:  # If pet has items
-            pil_image.paste(images[0], (math.floor((max_width - images[0].size[0]) / 2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[0]
+            canvas.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset), images[0])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[0]
         else:  # If pet doesn't have items
-            pil_image.paste(images[0], (math.floor((max_width - images[0].size[0]) / 2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
+            canvas.paste(images[0], (math.floor((max_width - images[0].size[0])/2), y_offset))  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2)
         y_offset += images[0].size[1]  # Add height of image + 10 to offset
 
         try:
-            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Name'], font=font)[0])) / 2)), y_offset), information['Name'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Name'], font=font)[0]))/2)), y_offset), information['Name'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
             y_offset += 15  # Add offset of 15
         except KeyError:
             pass
 
         try:
-            pil_image.text((math.floor(((max_width - math.floor(pil_image.textsize(information['Adopted'], font=font)[0])) / 2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+            draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Adopted'], font=font)[0]))/2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
             y_offset += 15  # Add offset of 15
         except KeyError:
             pass
 
-        pil_image.paste(images[1], (math.floor((max_width - images[1].size[0]) / 2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
+        canvas.paste(images[1], (math.floor((max_width - images[1].size[0])/2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
 
         output_buffer = io.BytesIO()  # Convert the PIL output into bytes
-        pil_image.save(output_buffer, 'png')  # Save the bytes as a PNG format
+        canvas.save(output_buffer, 'png')  # Save the bytes as a PNG format
         output_buffer.seek(0)  # Move the 'cursor' back to the start
 
         return output_buffer
