@@ -20,7 +20,7 @@ async def on_shard_ready(shard_id):
 @client.event
 async def on_ready():
     user_count = sum([1 for _ in client.get_all_members()])
-    print('\n\n===== START =====')
+    print('===== START =====')
     print(f'This proof certifies that the bot with ID {client.user.id} holds the following statistics:')
     print(f'Guild Count: {len(client.guilds)}')
     print(f'User Count: {user_count}')
