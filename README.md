@@ -44,12 +44,12 @@ python cs-pound.py
 
 ## Built With
 
-* Python 3.6.6
-* Discord.py 1.0.0a
-* lxml 4.2.3
-* Pillow 5.2.0
-* psutil 5.4.6
-* uvloop 0.11.0
+* [Python](https://www.python.org/downloads/release/python-366/) 3.6.6
+* [Discord.py](https://pypi.org/project/discord.py/) 1.0.0a
+* [lxml](https://pypi.org/project/lxml/) 4.2.3
+* [Pillow](https://pypi.org/project/Pillow/) 5.2.0
+* [psutil](https://pypi.org/project/psutil/) 5.4.6
+* [uvloop](https://pypi.org/project/uvloop/) 0.11.0
 
 ## Authors
 
