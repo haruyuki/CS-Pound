@@ -60,6 +60,7 @@ async def compose_message(time):  # Function to compose and send mention message
         except AttributeError:
             pass
 
+
 async def minute_check(time):  # Function to check if any user has Auto Remind setup at 'time'
     global autoremind_hash, autoremind_times
     time = str(time)
@@ -71,6 +72,7 @@ async def minute_check(time):  # Function to check if any user has Auto Remind s
 
     if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
         await compose_message(time)  # Run compose message
+
 
 async def pound_countdown():  # Background task to countdown to when the pound opens
     global cooldown
