@@ -22,7 +22,7 @@ autoremind_hash = ''
 autoremind_times = []
 cooldown = False
 
-bot = commands.Bot(command_prefix=prefix, description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')
 logger = logging.getLogger('discord')  # Create logger
 logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
@@ -43,6 +43,7 @@ if __name__ == '__main__':
 
 
 async def compose_message(time):  # Function to compose and send mention messages to channels
+    print(f'Composing message for {time} minutes')
     grep_statement = 'grep \'[0-9]*\\s[0-9]*\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f2 -d\' \' | sort -u'  # Get channels with Auto Remind set at 'time'
     channel_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
     for i in range(len(channel_ids)):  # For each Discord channel ID
@@ -56,12 +57,16 @@ async def compose_message(time):  # Function to compose and send mention message
             message += '<@' + user_ids[j] + '> '  # Message format for mentioning users | <@USER_ID>
         try:
             channel = bot.get_channel(int(channel_ids[i]))
+            print(f'Channel is {channel}')
             await channel.send(message)  # Send message to Discord channel with mention message
+            print(f'Message sent')
         except AttributeError:
+            print('Some error appeared')
             pass
 
 
 async def minute_check(time):  # Function to check if any user has Auto Remind setup at 'time'
+    print(f'Running minute check for {time} minutes')
     global autoremind_hash, autoremind_times
     time = str(time)
     new_hash = hashlib.md5(open('autoremind.txt').read().encode()).hexdigest()  # MD5 hash of autoremind.txt
@@ -155,7 +160,7 @@ async def pound_countdown():  # Background task to countdown to when the pound o
                 pass
             else:
                 print(f'Cooldown but no value')
-                sleep_amount = 3600
+                sleep_amount = 10800  # 3 hours
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
         print(f'Slept for: {sleep_amount}')
         print(f'Command is on cooldown: {cooldown}')
@@ -171,7 +176,7 @@ async def on_ready():  # When Client is loaded
     print('--------')
     print(f'You are running {bot.user.name} v{version}')
     print('Created by Peko#7955')
-    bot.loop.create_task(pound_countdown())
     await bot.change_presence(activity=discord.Game(',help | By: Peko#7955'), status=discord.Status.online)
 
-bot.run(tokens[1], bot=True, reconnect=True)
+bot.loop.create_task(pound_countdown())
+bot.run(tokens[0], bot=True, reconnect=True)
