@@ -1,10 +1,7 @@
 import subprocess
 
-import asyncio
 import discord
 from discord.ext import commands
-
-from chickensmoothie import _get_web_data
 
 
 class AutoRemind:
