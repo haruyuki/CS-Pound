@@ -99,5 +99,6 @@ class Osu:
         else:
             await ctx.send("That user doesn't exist!")
 
+
 def setup(bot):
     bot.add_cog(Osu(bot))
