@@ -8,7 +8,7 @@ import discord
 import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
-from library import version
+from constants import constants
 
 
 async def _get_web_data(link):  # Get web data from link
@@ -19,7 +19,7 @@ async def _get_web_data(link):  # Get web data from link
         return success
 
     headers = {  # HTTP request headers
-        'User-Agent': 'CS Pound Discord Bot Agent ' + version,  # Connecting User-Agent
+        'User-Agent': 'CS Pound Discord Bot Agent ' + constants.version,  # Connecting User-Agent
         'From': 'jumpy12359@gmail.com'  # Contact email
     }
     parameters = {}

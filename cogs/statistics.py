@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 import psutil
 
-from library import version
+from constants import constants
 
 start_time = datetime.now()  # The time the script started running
 
@@ -84,7 +84,7 @@ class Statistics:
         embed = discord.Embed(title='Stats', description='', colour=0x4ba139)  # Create empty embed
         embed.add_field(name='System Memory Usage', value=f'{system_memory_percent} ({system_memory_mb})', inline=False)  # Add system memory usage to embed
         embed.add_field(name=self.bot.user.name + ' Memory Usage', value=f'{bot_memory_percent} ({bot_memory_mb})', inline=False)  # Add bot memory usage to embed
-        embed.add_field(name=self.bot.user.name + ' Version', value=version, inline=False)  # Add bot version to embed
+        embed.add_field(name=self.bot.user.name + ' Version', value=constants.version, inline=False)  # Add bot version to embed
         embed.add_field(name='Discord.py Version', value=discord_py_version, inline=False)  # Add Discord.py version to embed
         embed.add_field(name='Server Count', value=server_count, inline=False)  # Add server count to embed
         embed.add_field(name='Member Count', value=member_count, inline=False)  # Add member count to embed

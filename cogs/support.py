@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+from constants import constants
+
 
 class Support:
     def __init__(self, bot):
@@ -9,7 +11,7 @@ class Support:
     @commands.command()
     async def support(self, ctx):
         try:
-            await ctx.author.send('https://invite.gg/cspound')  # PM Discord link to the CS-Pound Development Server to user
+            await ctx.author.send(constants.support_server_link)  # PM Discord link to the CS-Pound Development Server to user
             embed = discord.Embed(title='Support', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
             if ctx.message.guild is None:
                 pass
