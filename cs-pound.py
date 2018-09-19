@@ -188,4 +188,4 @@ async def on_ready():  # When Client is loaded
     await bot.change_presence(activity=discord.Game(',help | By: Peko#7955'), status=discord.Status.online)
 
 bot.loop.create_task(pound_countdown())
-bot.run(Constants.discord_token_dev, bot=True, reconnect=True)
+bot.run(Constants.discord_token, bot=True, reconnect=True)
