@@ -12,7 +12,7 @@ from discord.ext import commands
 import uvloop
 
 from chickensmoothie import _get_web_data
-from constants import constants
+from constants import Constants
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
@@ -21,7 +21,7 @@ autoremind_hash = ''
 autoremind_times = []
 cooldown = False
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or(constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')
 logger = logging.getLogger('discord')  # Create logger
 logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
@@ -173,9 +173,9 @@ async def on_ready():  # When Client is loaded
     print('--------')
     print(f'Use this link to invite {bot.user.name}: https://discordapp.com/oauth2/authorize?client_id={bot.user.id}&scope=bot&permissions=268897512')
     print('--------')
-    print(f'You are running {bot.user.name} v{constants.version}')
+    print(f'You are running {bot.user.name} v{Constants.version}')
     print('Created by Peko#7955')
     await bot.change_presence(activity=discord.Game(',help | By: Peko#7955'), status=discord.Status.online)
 
 bot.loop.create_task(pound_countdown())
-bot.run(constants.discord_token, bot=True, reconnect=True)
+bot.run(Constants.discord_token_dev, bot=True, reconnect=True)
