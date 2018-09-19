@@ -14,6 +14,7 @@ from constants import Constants
 async def _get_web_data(link):  # Get web data from link
     success = False
     dom = ''
+    connection = ''
 
     if 'static' in link:
         return success
@@ -76,6 +77,7 @@ async def pet(link):
                 pet_data['image'] = table[i].xpath('td/img/@src')[0]
 
             else:
+                value = ''
                 key = key_process(table[i].xpath('td[1]/text()')[0])
                 if i == 1:
                     if 'PPS' in data[2]:
@@ -112,7 +114,6 @@ async def image(link):
     data = await _get_web_data(link)
     if data[0]:
         information = {}
-        owner_name = data[1].xpath('//td[@class="r"]/a/text()')[0]  # User of pet
         titles = data[1].xpath('//td[@class="l"]/text()')  # Titles of pet information
         values = data[1].xpath('//td[@class="r"]')  # Values of pet information
 
