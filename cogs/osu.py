@@ -10,7 +10,8 @@ from osuapi import OsuApi, AHConnector, enums
 from sklearn.cluster import KMeans
 import urllib.request
 
-from constants import constants
+from constants import Constants
+from library import get_dominant_colour
 
 
 class Osu:
@@ -63,7 +64,7 @@ class Osu:
         else:  # Set default gamemode
             gamemode = enums.OsuMode.osu
 
-        api = OsuApi(constants.osu_api_key, connector=AHConnector())
+        api = OsuApi(Constants.osu_api_key, connector=AHConnector())  # Connect to osu! API
         result = await api.get_user(user, mode=gamemode)
         try:
             user_data = result[0]
