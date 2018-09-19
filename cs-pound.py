@@ -9,6 +9,7 @@ import traceback
 import asyncio
 import discord
 from discord.ext import commands
+import motor.motor_asyncio as amotor
 import uvloop
 
 from chickensmoothie import _get_web_data
@@ -20,6 +21,9 @@ cogs_dir = 'cogs'
 autoremind_hash = ''
 autoremind_times = []
 cooldown = False
+mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_connection_string)
+database = mongo_client['cs_pound']
+collection = database['auto_remind']
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')
@@ -39,6 +43,12 @@ if __name__ == '__main__':
             else:
                 print(f'Failed to load extension {extension}.', file=sys.stderr)
                 traceback.print_exc()
+
+
+async def mongodb_query(query):
+    cursor = collection.find(query)
+    results = await cursor.to_list(length=1000)
+    return results
 
 
 async def compose_message(time):  # Function to compose and send mention messages to channels
