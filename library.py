@@ -1,4 +1,8 @@
+from collections import Counter
 import re
+
+import cv2
+from sklearn.cluster import KMeans
 
 
 # -------------------- FUNCTIONS --------------------
@@ -103,3 +107,14 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
     else:  # If there are no hours or minutes
         second_section = pluralise('second', second)  # Pluralise the second section
     return day_section + hour_section + minute_section + second_section  # Return the formatted text
+
+
+def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
+    # Slightly modified from https://adamspannbauer.github.io/2018/03/02/app-icon-dominant-colors/
+    image = cv2.resize(image, (25, 25), interpolation=cv2.INTER_AREA)  # Resize image
+    image = image.reshape((image.shape[0] * image.shape[1], 3))  # Reshape image a list of pixels
+    clt = KMeans(n_clusters=4)
+    labels = clt.fit_predict(image)  # Cluster and assign labels to pixels
+    label_counts = Counter(labels)  # Count labels to find most popular
+    dominant_color = clt.cluster_centers_[label_counts.most_common(1)[0][0]]  # Subset out most popular centroid
+    return list(dominant_color)
