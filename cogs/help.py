@@ -13,7 +13,7 @@ class Help:
         self.command_list = []  # List of available commands
 
     @commands.command()
-    async def help(self, ctx, args: str = '', public = ''):
+    async def help(self, ctx, args: str = '', public=''):
         embed = discord.Embed(colour=0x4ba139)  # Create empty embed
 
         new_hash = hashlib.md5(open('help.json').read().encode()).hexdigest()  # MD5 hash of help.json
