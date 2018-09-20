@@ -1,3 +1,4 @@
+import math
 import re
 
 import cv2
@@ -31,6 +32,10 @@ class Osu:
     @osu.command()
     async def profile(self, ctx, user, mode=''):
         osu_emoji = discord.utils.get(self.bot.emojis, name='osu')  # Osu emoji
+        osu_track_emoji = discord.utils.get(self.bot.emojis, name='osutrack')  # osu!track emoji
+        osu_skills_emoji = discord.utils.get(self.bot.emojis, name='osuskills')  # osu!skills emoji
+        osu_chan_emoji = discord.utils.get(self.bot.emojis, name='osuchan')  # osu!chan emoji
+        pp_plus_emoji = discord.utils.get(self.bot.emojis, name='pp_plus')  # PP+ emoji
         score_xh = discord.utils.get(self.bot.emojis, name='scoreXH')  # XH score emoji
         score_x = discord.utils.get(self.bot.emojis, name='scoreX')  # X score emoji
         score_sh = discord.utils.get(self.bot.emojis, name='scoreSH')  # SH score emoji
@@ -84,7 +89,7 @@ class Osu:
                 user_icon = 'https://osu.ppy.sh/images/layout/avatar-guest.png'
                 hex_colour = eval('0xfefefe')
 
-            title = f'{osu_emoji} Stats for {user_data.username} (Lvl. {user_data.level})'
+            title = f'{osu_emoji} Stats for {user_data.username} (Lvl. {math.floor(user_data.level)})'
             try:
                 seconds_played = user_data.total_seconds_played
                 m, s = divmod(seconds_played, 60)
@@ -92,45 +97,44 @@ class Osu:
                 seconds_played = "%dhrs %02dmins %02dsecs" % (h, m, s)
             except Exception:
                 seconds_played = 'Not Available Yet'
+            total_hits = user_data.count300 + user_data.count100 + user_data.count50
 
             description = f'''User ID: {user_data.user_id}
-                        PP: {user_data.pp_raw}
-                        Rank: #{user_data.pp_rank}
-                        Country Rank: :flag_{user_data.country.lower()}: #{user_data.pp_country_rank}
+PP: {round(user_data.pp_raw)}
+Rank: #{user_data.pp_rank}
+Country Rank: :flag_{user_data.country.lower()}: #{user_data.pp_country_rank}
 
-                        Ranked Score: {user_data.ranked_score}
-                        Hit Accuracy: {user_data.accuracy}
-                        Play Count: {user_data.playcount}
-                        Total Score: {user_data.total_score}
-                        Total Hits: {user_data.count300 + user_data.count100 + user_data.count50}
-                        Total Play Time: {seconds_played}
+Ranked Score: {format(user_data.ranked_score, ',')}
+Hit Accuracy: {round(user_data.accuracy, 2)}
+Play Count: {format(user_data.playcount, ',')}
+Total Score: {format(user_data.total_score, ',')}
+Total Hits: {format(total_hits, ',')}
+Total Play Time: {seconds_played}
 
-                        {score_xh}: {user_data.count_rank_ssh}　{score_x}: {user_data.count_rank_ss}　{score_sh}: {user_data.count_rank_sh}　{score_s}: {user_data.count_rank_s}　{score_a}: {user_data.count_rank_a}'''
+{score_xh}: {user_data.count_rank_ssh}　{score_x}: {user_data.count_rank_ss}　{score_sh}: {user_data.count_rank_sh}　{score_s}: {user_data.count_rank_s}　{score_a}: {user_data.count_rank_a}'''
             embed = discord.Embed(title=title, description=description, colour=hex_colour)
             embed.set_thumbnail(url=user_icon)
 
+            ameobea_link = 'https://ameobea.me/osutrack/user/' + user_data.username
+            osuskills_link = 'http://osuskills.tk/user/' + user_data.username
+            osuchan_link = 'https://syrin.me/osuchan/u/' + str(user_data.user_id)
+            ppplus_link = 'https://syrin.me/pp+/u/' + user_data.username
+
             if mode == 'taiko':
-                ameobea = 'https://ameobea.me/osutrack/user/' + user_data.username + '/taiko'
-                osuchan = 'https://syrin.me/osuchan/u/' + str(user_data.user_id) + '/?m=1'
-                other_sites = f'[osu!track]({ameobea}) - [osu!chan]({osuchan})'
-                embed.add_field(name="More information", value=other_sites, inline=False)
+                ameobea_link += '/taiko'
+                osuchan_link += '/?m=1'
+                other_sites = f'{osu_track_emoji} [osu!track]({ameobea_link}) - {osu_chan_emoji} [osu!chan]({osuchan_link})'
             elif mode == 'ctb' or mode == 'catch' or mode == 'fruits':
-                ameobea = 'https://ameobea.me/osutrack/user/' + user_data.username + '/ctb'
-                osuchan = 'https://syrin.me/osuchan/u/' + str(user_data.user_id) + '/?m=2'
-                other_sites = f'[osu!track]({ameobea}) - [osu!chan]({osuchan})'
-                embed.add_field(name="More information", value=other_sites, inline=False)
+                ameobea_link += '/ctb'
+                osuchan_link += '/?m=2'
+                other_sites = f'{osu_track_emoji} [osu!track]({ameobea_link}) - {osu_chan_emoji} [osu!chan]({osuchan_link})'
             elif mode == 'mania':
-                ameobea = 'https://ameobea.me/osutrack/user/' + user_data.username + '/mania'
-                osuchan = 'https://syrin.me/osuchan/u/' + str(user_data.user_id) + '/?m=3'
-                other_sites = f'[osu!track]({ameobea}) - [osu!chan]({osuchan})'
-                embed.add_field(name="More information", value=other_sites, inline=False)
+                ameobea_link += '/mania'
+                osuchan_link += '/?m=3'
+                other_sites = f'{osu_track_emoji} [osu!track]({ameobea_link}) - {osu_chan_emoji} [osu!chan]({osuchan_link})'
             else:
-                ameobea = 'https://ameobea.me/osutrack/user/' + user_data.username
-                osuskills = 'http://osuskills.tk/user/' + user_data.username
-                osuchan = 'https://syrin.me/osuchan/u/' + str(user_data.user_id)
-                ppplus = 'https://syrin.me/pp+/u/' + user_data.username
-                other_sites = f'[osu!track]({ameobea}) - [osu!Skills]({osuskills}) - [osu!chan]({osuchan}) - [PP+]({ppplus})'
-                embed.add_field(name="More information", value=other_sites, inline=False)
+                other_sites = f'{osu_track_emoji} [osu!track]({ameobea_link}) - {osu_skills_emoji} [osu!Skills]({osuskills_link}) - {osu_chan_emoji} [osu!chan]({osuchan_link}) - {pp_plus_emoji} [PP+]({ppplus_link})'
+            embed.add_field(name="More information", value=other_sites, inline=False)
 
             await ctx.send(embed=embed)
         else:
