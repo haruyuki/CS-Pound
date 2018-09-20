@@ -1,8 +1,19 @@
 from collections import Counter
 import re
 
+import asyncio
 import cv2
+import motor.motor_asyncio as amotor
 from sklearn.cluster import KMeans
+
+from chickensmoothie import _get_web_data
+from constants import Constants
+
+autoremind_times = []
+cooldown = False
+mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_connection_string)
+database = mongo_client['cs_pound']
+collection = database['test']
 
 
 # -------------------- FUNCTIONS --------------------
@@ -118,3 +129,142 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
     label_counts = Counter(labels)  # Count labels to find most popular
     dominant_color = clt.cluster_centers_[label_counts.most_common(1)[0][0]]  # Subset out most popular centroid
     return list(dominant_color)
+
+
+async def mongodb_query(query):
+    cursor = collection.find(query)
+    results = await cursor.to_list(length=1000)
+    return results
+
+
+async def compose_message(bot, time):  # Function to compose and send mention messages to channels
+    channel_ids = set()  # Create a set to prevent duplicate channel ID's
+    results = await mongodb_query({'remind_time': time})  # Query the collection for documents with an Auto Remind time of 'time'
+    for i in range(len(results)):
+        channel_ids.add(int(results[i]['channel_id']))
+    channel_ids = list(channel_ids)
+    print(f'Channel IDs: {channel_ids}')
+
+    for channel in range(len(channel_ids)):  # For each Discord channel ID
+        results = await mongodb_query({'channel_id': str(channel_ids[channel]), 'remind_time': time})
+        user_ids = []
+        for i in range(len(results)):
+            user_ids.append(int(results[i]['_id']))
+        print(f'User IDS: {user_ids}')
+
+        # grep_statement = 'grep \'[0-9]*\\s' + str(channel_ids[channel]) + '\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f3 -d\' \''  # Grab all unique Discord user ID's with that channel ID
+        # user_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
+        if time == 1:  # If there is only one minute left
+            message = f'{time} minute until pound opens! '
+        else:  # If there is more than 1 minute left
+            message = f'{time} minutes until pound opens! '
+        for j in range(len(user_ids)):  # For each Discord user
+            message += f'<@{user_ids[j]}> '  # Message format for mentioning users | <@USER_ID>
+        try:
+            sending_channel = bot.get_channel(channel_ids[channel])
+            print(f'Channel is {channel}')
+            await sending_channel.send(message)  # Send message to Discord channel with mention message
+            print(f'Message sent')
+        except AttributeError:
+            print('Some error appeared')
+            pass
+
+
+async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
+    global autoremind_times
+    autoremind_times = set()
+    results = await mongodb_query({})
+    print(f'SHOULD BE SINGLE RESULT HERE: {results}')
+    for i in range(len(results)):
+        autoremind_times.add(results[i]['remind_time'])
+    print(f'Auto Remind times: {autoremind_times}')
+    if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
+        await compose_message(bot, time)  # Run compose message
+
+
+async def pound_countdown(bot):  # Background task to countdown to when the pound opens
+    global cooldown
+    print('Started pound countdown function')
+    await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
+    value = 0
+    text = ''
+    print('Bot is ready')
+    await minute_check(bot, 1)
+    while not bot.is_closed():  # While bot is still running
+        sleep_amount = 0
+        print('Bot is still running')
+        if not cooldown:  # If command is not on cooldown
+            print('Command not on cooldown')
+            data = await _get_web_data('https://www.chickensmoothie.com/pound.php')  # Get pound data
+            print('Received web data')
+            if data[0]:  # If pound data is valid and contains content
+                print('Data was sucessful')
+                text = data[1].xpath('//h2/text()')  # List all texts with H2 element
+                print(f'Texts with h2 element: {text}')
+                try:  # Try getting pound opening text
+                    print('Trying to get pound text')
+                    text = text[1]  # Grab the pound opening time text
+                    print(f'Received text: {text}')
+                    value = [int(s) for s in text.split() if s.isdigit()]  # Extract the numbers in the text
+                    print(f'Values in text: {value}')
+                    if len(value) == 1:  # If there is only one number
+                        value = value[0]
+                        if 'hour' in text:  # If hour in pound opening time
+                            print('Hour in text')
+                            if value == 1:  # If there is one hour left
+                                cooldown = True
+                                value = 60  # Start countdown from 60 minutes
+                                sleep_amount = 0
+                            else:  # If there is more than one hour
+                                sleep_amount = (value - 2) * 3600  # -1 hour and convert into seconds
+                        elif 'minute' in text:  # If minute in pound opening time
+                            print('Minute in text')
+                            sleep_amount = 0
+                            cooldown = True
+                        elif 'second' in text:  # If second in pound opening time
+                            pass
+                    elif len(value) == 2:  # If there are two numbers
+                        if 'hour' and 'minute' in text:
+                            print('Hour and minute in text')
+                            sleep_amount = value[1] * 60  # Get the minutes and convert to seconds
+                            value = 60
+                            text = 'minute'
+                            cooldown = True
+                        elif 'minute' and 'second' in text:
+                            print('Minute and second in text')
+                    elif len(value) == 0:  # If there are no times i.e. Pound recently closed or not opening anytime soon
+                        print('No time')
+                        sleep_amount = 3600  # 1 hour
+                except IndexError:  # Pound is currently open
+                    print('Pound open')
+                    sleep_amount = 3600  # 1 hour
+            else:  # If pound data isn't valid
+                sleep_amount = 11400  # 3 hours 10 minutes
+        else:  # If command is on cooldown
+            if 'hour' in text:  # If hour in text
+                if value != 0:  # If minutes left is not zero
+                    await minute_check(bot, value)  # Run minute check
+                    value -= 1  # Remove one minute
+                    sleep_amount = 60  # 1 minute
+                else:  # If time ran out (i.e. Pound is now open)
+                    cooldown = False
+                    sleep_amount = 10800  # 3 hours
+            elif 'minute' and 'second' in text:  # If minute and second in text
+                sleep_amount = value[1]
+                value = 1
+            elif 'minute' in text:  # If minute in text
+                if value > 0:  # If minutes left is not zero
+                    await minute_check(bot, value)  # Run minute check
+                    value -= 1  # Remove one minute
+                    sleep_amount = 60  # 1 minute
+                else:  # If time ran out (i.e. Pound is now open)
+                    cooldown = False
+                    sleep_amount = 10800  # 3 hours
+            elif 'second' in text:  # If second in text
+                pass
+            else:
+                print(f'Cooldown but no value')
+                sleep_amount = 10800  # 3 hours
+        await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
+        print(f'Slept for: {sleep_amount}')
+        print(f'Command is on cooldown: {cooldown}')
