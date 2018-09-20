@@ -13,7 +13,7 @@ class Help:
         self.command_list = []  # List of available commands
 
     @commands.command()
-    async def help(self, ctx, args: str = ''):
+    async def help(self, ctx, args: str = '', public = ''):
         embed = discord.Embed(colour=0x4ba139)  # Create empty embed
 
         new_hash = hashlib.md5(open('help.json').read().encode()).hexdigest()  # MD5 hash of help.json
@@ -25,7 +25,7 @@ class Help:
                 for key2, value2 in value['commands'].items():
                     self.command_list.append(key2.replace(' ', '').lower())
 
-        if args == '':
+        if args == '' or args == 'public':
             title = f':{self.help_list["warning"]["icon"]}: __**Note**__'
             content = self.help_list["warning"]["description"] + '\n\n_'
             embed.add_field(name=title, value=content)  # add Warning help information to embed
@@ -47,16 +47,19 @@ class Help:
                                 content += '\n\n' + '*' + 'Aliases:' + '* ' + ', '.join(['`' + value3 + '`' for key3, value3 in value2['aliases'].items()])  # *Aliases:* `alias1`, `alias2`, `alias3`
                             embed.add_field(name=key2, value=content)
 
-        try:
-            await ctx.author.send(embed=embed)
-            if ctx.message.guild is None:  # If the user is calling command from PM
-                pass
-            else:  # If the user is calling command from a channel
-                embed = discord.Embed(title='Help', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
-                await ctx.send(embed=embed)
-        except discord.errors.Forbidden:  # If cannot send PM to user
-            embed = discord.Embed(title='Help', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Create embed
+        if args == 'public' or public == 'public':
             await ctx.send(embed=embed)
+        else:
+            try:
+                await ctx.author.send(embed=embed)
+                if ctx.message.guild is None:  # If the user is calling command from PM
+                    pass
+                else:  # If the user is calling command from a channel
+                    embed = discord.Embed(title='Help', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
+                    await ctx.send(embed=embed)
+            except discord.errors.Forbidden:  # If cannot send PM to user
+                embed = discord.Embed(title='Help', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Create embed
+                await ctx.send(embed=embed)
 
 
 def setup(bot):
