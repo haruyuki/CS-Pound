@@ -18,6 +18,7 @@ class Osu:
         self.bot = bot
 
     @commands.group()
+    @commands.guild_only()
     async def osu(self, ctx):
         if ctx.invoked_subcommand is None:
             osu_emoji = discord.utils.get(self.bot.emojis, name='osu')  # Osu emoji
@@ -30,6 +31,7 @@ class Osu:
             await ctx.send(embed=embed)
 
     @osu.command()
+    @commands.guild_only()
     async def profile(self, ctx, user, mode=''):
         osu_emoji = discord.utils.get(self.bot.emojis, name='osu')  # Osu emoji
         osu_track_emoji = discord.utils.get(self.bot.emojis, name='osutrack')  # osu!track emoji
