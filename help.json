@@ -8,30 +8,6 @@
         "Chicken Smoothie": {
             "icon": "dog",
             "commands": {
-                "Archive": {
-                    "usage": ",archive <year> <month/event> <species/artist>",
-                    "short": "~~Search the Chicken Smoothie archives~~ (***Under Development***)",
-                    "description": "Displays all pets within the specified query. Species/artist is optional, if not provided, displays all pets in that query.",
-                    "examples": {
-                        "1": ",archive 2012 august cat",
-                        "2": ",archive 2008 special-releases",
-                        "3": ",archive 2011 kwanzaa sorren-fey"
-                    },
-                    "aliases": {}
-                },
-
-                "Fair": {
-                    "usage": ",fair <link>",
-                    "short": "~~Determine whether a trade is fair~~ (***Under Development***)",
-                    "description": "Determines whether a trade is fair using the general trading rules from http://www.chickensmoothie.com/Forum/viewtopic.php?f=20&t=2066303. Make sure to paste the sharing link!",
-                    "examples": {
-                        "1": ",fair https://www.chickensmoothie.com/trades/viewtrade.php?id=69636615&userid=841634&signature=rkVfZpJ8QINKNRs6sdnbrA",
-                        "2": ",fair https://www.chickensmoothie.com/trades/viewtrade.php?id=73699479&userid=841634&signature=04fb-lhuO0r2QlaSWmHOCA",
-                        "3": ",fair https://www.chickensmoothie.com/trades/viewtrade.php?id=73697116&userid=841634&signature=pmC6F3REMRg3el89OYiP7A"
-                    },
-                    "aliases": {}
-                },
-
                 "Image": {
                     "usage": ",image <link>",
                     "short": "Displays a 'screenshot' of your pet",
