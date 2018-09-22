@@ -2,7 +2,7 @@ import os
 
 
 class Constants:
-    prefix = '.'
+    prefix = ','
     discord_token = os.environ.get('discord', None)  # dev
     osu_api_key = os.environ.get('osu', None)
     support_server_link = 'https://invite.gg/cspound'
