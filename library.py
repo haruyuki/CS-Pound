@@ -189,7 +189,6 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
     value = 0
     text = ''
     print('Bot is ready')
-    await minute_check(bot, 1)
     while not bot.is_closed():  # While bot is still running
         sleep_amount = 0
         print('Bot is still running')
