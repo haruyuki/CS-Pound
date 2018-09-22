@@ -1,5 +1,6 @@
 import math
 import re
+import time
 
 import cv2
 import discord
@@ -30,7 +31,7 @@ class Osu:
             # embed.add_field(name='__**osu recent**__ <username|id>')
             await ctx.send(embed=embed)
 
-    @osu.command()
+    @osu.command(aliases=['p'])
     @commands.guild_only()
     async def profile(self, ctx, user, mode=''):
         osu_emoji = discord.utils.get(self.bot.emojis, name='osu')  # Osu emoji
@@ -81,7 +82,7 @@ class Osu:
 
         if success:
             try:
-                user_icon = 'https://a.ppy.sh/' + str(user_data.user_id)  # The URL to the user profile picture
+                user_icon = f'https://a.ppy.sh/{user_data.user_id}?_={int(time.time())}'  # The URL to the user profile picture
                 resp = urllib.request.urlopen(user_icon)  # Get icon
                 image = np.asarray(bytearray(resp.read()), dtype='uint8')  # Convert image into array
                 image = cv2.imdecode(image, cv2.IMREAD_COLOR)  # Convert into openCV-friendly format
