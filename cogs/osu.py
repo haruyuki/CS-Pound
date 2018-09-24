@@ -93,13 +93,10 @@ class Osu:
                 hex_colour = eval('0xfefefe')
 
             title = f'{osu_emoji} Stats for {user_data.username} (Lvl. {math.floor(user_data.level)})'
-            try:
-                seconds_played = user_data.total_seconds_played
-                m, s = divmod(seconds_played, 60)
-                h, m = divmod(m, 60)
-                seconds_played = "%dhrs %02dmins %02dsecs" % (h, m, s)
-            except Exception:
-                seconds_played = 'Not Available Yet'
+            seconds_played = user_data.total_seconds_played
+            m, s = divmod(seconds_played, 60)
+            h, m = divmod(m, 60)
+            seconds_played = "%dhrs, %02dmins, %02dsecs" % (h, m, s)
             total_hits = user_data.count300 + user_data.count100 + user_data.count50
 
             description = f'''User ID: {user_data.user_id}
@@ -112,7 +109,7 @@ Hit Accuracy: {round(user_data.accuracy, 2)}
 Play Count: {format(user_data.playcount, ',')}
 Total Score: {format(user_data.total_score, ',')}
 Total Hits: {format(total_hits, ',')}
-Total Play Time: {seconds_played}
+Play Time: {seconds_played}
 
 {score_xh}: {user_data.count_rank_ssh}　{score_x}: {user_data.count_rank_ss}　{score_sh}: {user_data.count_rank_sh}　{score_s}: {user_data.count_rank_s}　{score_a}: {user_data.count_rank_a}'''
             embed = discord.Embed(title=title, description=description, colour=hex_colour)
