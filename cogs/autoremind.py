@@ -3,7 +3,7 @@ import subprocess
 import discord
 from discord.ext import commands
 
-from library import pound_countdown
+from library import pound_countdown, mongodb_query
 
 
 class AutoRemind:
@@ -13,8 +13,12 @@ class AutoRemind:
     @commands.command()
     @commands.guild_only()
     async def autoremind(self, ctx, args=''):
-        grep_statement = f'grep -n "{ctx.author.id}" autoremind.txt | cut -f1 -d:'  # Get line number of ID
-        id_exists = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1]  # Run grep statement
+        id_exists = await mongodb_query({'_id': str(ctx.author.id)})  # Get document of user
+        try:
+            id_exists = id_exists[0]
+        except IndexError:
+            pass
+        print(f'DOCUMENT: {id_exists}')
         guild_roles = ctx.guild.roles  # List of roles in guild
         embed = discord.Embed()
         for role in guild_roles:  # For each role in the guild
