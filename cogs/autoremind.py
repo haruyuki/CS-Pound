@@ -10,8 +10,8 @@ class AutoRemind:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    @commands.guild_only()
+    @commands.command(aliases=['ar'])
+    @commands.guild_only()  # Command can only be run in guilds
     async def autoremind(self, ctx, args=''):
         id_exists = await mongodb_query({'_id': str(ctx.author.id)})  # Get document of user
         try:
