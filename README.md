@@ -5,7 +5,6 @@
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/github/license/Tesshin/CS-Pound.svg)](https://github.com/Tesshin/CS-Pound/blob/master/LICENSE)
 [![Discord Server](https://img.shields.io/discord/409642350600781824.svg)](https://invite.gg/cspound)
-[![Website Status](https://img.shields.io/website-up-down-green-red/http/tailstar.us.svg?label=www.tailstar.us)](https://www.tailstar.us)
 
 A Discord bot for the online virtual pet adopting website. With the bot you can view pet information and pound opening times straight in Discord without needing to access the website.
 
