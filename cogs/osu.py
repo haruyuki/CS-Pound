@@ -17,6 +17,16 @@ from library import get_dominant_colour
 class Osu:
     def __init__(self, bot):
         self.bot = bot
+        self.osu_emoji = discord.utils.get(bot.emojis, name='osu')  # Osu emoji
+        self.osu_track_emoji = discord.utils.get(bot.emojis, name='osutrack')  # osu!track emoji
+        self.osu_skills_emoji = discord.utils.get(bot.emojis, name='osuskills')  # osu!skills emoji
+        self.osu_chan_emoji = discord.utils.get(bot.emojis, name='osuchan')  # osu!chan emoji
+        self.pp_plus_emoji = discord.utils.get(bot.emojis, name='pp_plus')  # PP+ emoji
+        self.score_xh = discord.utils.get(bot.emojis, name='scoreXH')  # XH score emoji
+        self.score_x = discord.utils.get(bot.emojis, name='scoreX')  # X score emoji
+        self.score_sh = discord.utils.get(bot.emojis, name='scoreSH')  # SH score emoji
+        self.score_s = discord.utils.get(bot.emojis, name='scoreS')  # S score emoji
+        self.score_a = discord.utils.get(bot.emojis, name='scoreA')  # A score emoji
 
     @commands.group()
     @commands.guild_only()
