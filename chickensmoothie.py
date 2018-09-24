@@ -217,3 +217,16 @@ async def image(link):
     else:
         embed = discord.Embed(title="Image", description="That is not a valid pet link!", colour=0xff5252)
         return embed
+
+
+async def pound_text():
+    data = await _get_web_data('https://www.chickensmoothie.com/pound.php')  # Get web data
+    if data[0]:  # If the data is valid
+        text = data[1].xpath('//h2/text()')  # Get all H2 elements in the data
+        try:
+            text = text[1]  # Try and get pound opening text
+        except IndexError:  # If there isn't any pound opening text
+            text = 'Pound is currently open!'
+        return text
+    else:
+        return None
