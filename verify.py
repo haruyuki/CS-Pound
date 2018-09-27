@@ -25,7 +25,7 @@ async def on_ready():
     print(f'Guild Count: {len(client.guilds)}')
     print(f'User Count: {user_count}')
     print('===== END =====')
-    client.close()
+    await client.close()
     with open(os.devnull, 'w') as dev:
         sys.stderr = dev
         exit()
