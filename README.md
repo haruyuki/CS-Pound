@@ -52,7 +52,7 @@ python cs-pound.py
 
 ## Authors
 
-* [**@haryuki**](https://github.com/haruyuki)
+* [**@haruyuki**](https://github.com/haruyuki)
 
 ## License
 
