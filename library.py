@@ -19,7 +19,7 @@ collection = database['test']
 # -------------------- FUNCTIONS --------------------
 def parse_short_time(time):  # A function to parse a single short time format (1d, 2h, 3m, 4s)
     timestr = time.lower()
-    if not re.findall('\\d{1,8}[smhd]', timestr):
+    if not re.findall(r'\d{1,8}[smhd]', timestr):
         return -1
     multiplier = 1
     for i in range(len(timestr)):
