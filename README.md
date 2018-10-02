@@ -52,7 +52,7 @@ python cs-pound.py
 
 ## Authors
 
-* **Oliver Lin** - [@Tesshin](https://github.com/Tesshin)
+* [**@haryuki**](https://github.com/haruyuki)
 
 ## License
 
