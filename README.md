@@ -1,9 +1,9 @@
 # CS Pound Discord Bot
 
-[![Build Status](https://travis-ci.com/Tesshin/CS-Pound.svg?branch=master)](https://travis-ci.com/Tesshin/CS-Pound)
+[![Build Status](https://travis-ci.com/haruyuki/CS-Pound.svg?branch=master)](https://travis-ci.com/haruyuki/CS-Pound)
 [![Discord.py Rewrite](https://img.shields.io/badge/discord.py-rewrite-orange.svg)](https://github.com/Rapptz/discord.py)
-[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/github/license/Tesshin/CS-Pound.svg)](https://github.com/Tesshin/CS-Pound/blob/master/LICENSE)
+[![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
+[![License](https://img.shields.io/github/license/haruyuki/CS-Pound.svg)](https://github.com/haruyuki/CS-Pound/blob/master/LICENSE)
 [![Discord Server](https://img.shields.io/discord/409642350600781824.svg)](https://invite.gg/cspound)
 
 A Discord bot for the online virtual pet adopting website. With the bot you can view pet information and pound opening times straight in Discord without needing to access the website.
@@ -43,7 +43,7 @@ python cs-pound.py
 
 ## Built With
 
-* [Python](https://www.python.org/downloads/release/python-366/) 3.6.6
+* [Python](https://www.python.org/downloads/release/python-370/) 3.7.0
 * [Discord.py](https://pypi.org/project/discord.py/) 1.0.0a
 * [lxml](https://pypi.org/project/lxml/) 4.2.3
 * [Pillow](https://pypi.org/project/Pillow/) 5.2.0
