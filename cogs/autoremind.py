@@ -3,7 +3,7 @@ import subprocess
 import discord
 from discord.ext import commands
 
-from library import pound_countdown, mongodb_query
+from library import pound_countdown, mongodb_find
 
 
 class AutoRemind:
@@ -13,7 +13,7 @@ class AutoRemind:
     @commands.command(aliases=['ar'])
     @commands.guild_only()  # Command can only be run in guilds
     async def autoremind(self, ctx, args=''):
-        id_exists = await mongodb_query({'_id': str(ctx.author.id)})  # Get document of user
+        id_exists = await mongodb_find({'_id': str(ctx.author.id)})  # Get document of user
         try:
             id_exists = id_exists[0]
         except IndexError:

@@ -11,7 +11,7 @@ from constants import Constants
 
 autoremind_times = []
 cooldown = False
-mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_connection_string)
+mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client['cs_pound']
 collection = database['test']
 
@@ -131,7 +131,7 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
     return list(dominant_color)
 
 
-async def mongodb_query(query):
+async def mongodb_find(query):
     cursor = collection.find(query)
     results = await cursor.to_list(length=1000)
     return results
@@ -140,21 +140,21 @@ async def mongodb_query(query):
 async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
     global autoremind_times
     autoremind_times = set()
-    results = await mongodb_query({})
+    results = await mongodb_find({})
     print(f'SHOULD BE SINGLE RESULT HERE: {results}')
     for i in range(len(results)):
         autoremind_times.add(results[i]['remind_time'])
     print(f'Auto Remind times: {autoremind_times}')
     if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
         channel_ids = set()  # Create a set to prevent duplicate channel ID's
-        results = await mongodb_query({'remind_time': time})  # Query the collection for documents with an Auto Remind time of 'time'
+        results = await mongodb_find({'remind_time': time})  # Query the collection for documents with an Auto Remind time of 'time'
         for i in range(len(results)):
             channel_ids.add(int(results[i]['channel_id']))
         channel_ids = list(channel_ids)
         print(f'Channel IDs: {channel_ids}')
 
         for channel in range(len(channel_ids)):  # For each Discord channel ID
-            results = await mongodb_query({'channel_id': str(channel_ids[channel]), 'remind_time': time})
+            results = await mongodb_find({'channel_id': str(channel_ids[channel]), 'remind_time': time})
             user_ids = []
             for i in range(len(results)):
                 user_ids.append(int(results[i]['user_id']))

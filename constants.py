@@ -8,4 +8,4 @@ class Constants:
     support_server_link = 'https://invite.gg/cspound'
     version = '2.2'
     invite_link = 'https://www.tailstar.us/'
-    mongodb_connection_string = os.environ.get('mongodb', None)
+    mongodb_uri = os.environ.get('mongodb', None)
