@@ -1,17 +1,20 @@
 import math
-import re
 import time
 
 import cv2
 import discord
 from discord.ext import commands
+import motor.motor_asyncio as amotor
 import numpy as np
-from osuapi import OsuApi, AHConnector, enums
 import urllib.error
 import urllib.request
 
 from constants import Constants
 from library import get_dominant_colour, get_user
+
+client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
+db = client['cs_pound']
+collection = db['osu_profiles']
 
 
 class Osu:
@@ -34,15 +37,27 @@ class Osu:
         if ctx.invoked_subcommand is None:
             title = f'{self.osu_emoji} Welcome to osu!'
             embed = discord.Embed(title=title, description='Available commands:', colour=0xFC6BA4)
-            # embed.add_field(name='__**osu link**__ <username|id>', value='Link your Discord account to osu', inline=False)
+            embed.add_field(name='__**osu link**__ <username|id>', value='Link your Discord account to osu', inline=False)
             embed.add_field(name='__**osu profile**__ <username|id> [osu|taiko|ctb|mania]', value="View a user's osu! profile.", inline=False)
             # embed.add_field(name='__**osu beatmap**__ <link/id>', value='View information about a beatmap.', inline=False)
             # embed.add_field(name='__**osu recent**__ <username|id>', value="View a user's recently played maps")
             await ctx.send(embed=embed)
 
+    @osu.command(aliases=['l'])
+    @commands.guild_only()
+    async def link(self, ctx, user=None):
+        if user is None:
+            embed = discord.Embed(title='osu!', description="You didn't provide a username/id!", colour=0xff5252)
+        else:
+            await collection.insert_one({'user_id': str(ctx.author.id), 'osu_user': str(user)})
+            embed = discord.Embed(title='osu! **Linked!**', description='Your profile has been linked!', colour=0xFC6BA4)
+        await ctx.send(embed=embed)
+
     @osu.command(aliases=['p'])
     @commands.guild_only()
     async def profile(self, ctx, user=None, mode=''):
+        if user is None:
+            user = ctx.author.id
         data = await get_user(user, mode)
 
         if data is not None:
@@ -61,7 +76,7 @@ class Osu:
             seconds_played = data.total_seconds_played
             m, s = divmod(seconds_played, 60)
             h, m = divmod(m, 60)
-            seconds_played = "%dhrs, %02dmins, %02dsecs" % (h, m, s)
+            seconds_played = '%dhrs, %02dmins, %02dsecs' % (h, m, s)
             total_hits = data.count300 + data.count100 + data.count50
             description = f'''User ID: {data.user_id}
 
@@ -97,7 +112,7 @@ Play Time: {seconds_played}
                 other_sites = f'{self.osu_track_emoji} [osu!track]({ameobea_link}) - {self.osu_chan_emoji} [osu!chan]({osuchan_link})'
             else:
                 other_sites = f'{self.osu_track_emoji} [osu!track]({ameobea_link}) - {self.osu_skills_emoji} [osu!Skills]({osuskills_link}) - {self.osu_chan_emoji} [osu!chan]({osuchan_link}) - {self.pp_plus_emoji} [PP+]({ppplus_link})'
-            embed.add_field(name="More information", value=other_sites, inline=False)
+            embed.add_field(name='More information', value=other_sites, inline=False)
 
         else:
             embed = discord.Embed(title='osu!', description="You didn't provide a valid username or id!", colour=0xff5252)
