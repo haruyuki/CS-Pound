@@ -173,8 +173,6 @@ async def minute_check(bot, time):  # Function to check if any user has Auto Rem
                 pass
 
 
-
-
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
     global cooldown
     print('Started pound countdown function')
