@@ -137,39 +137,6 @@ async def mongodb_query(query):
     return results
 
 
-async def compose_message(bot, time):  # Function to compose and send mention messages to channels
-    channel_ids = set()  # Create a set to prevent duplicate channel ID's
-    results = await mongodb_query({'remind_time': time})  # Query the collection for documents with an Auto Remind time of 'time'
-    for i in range(len(results)):
-        channel_ids.add(int(results[i]['channel_id']))
-    channel_ids = list(channel_ids)
-    print(f'Channel IDs: {channel_ids}')
-
-    for channel in range(len(channel_ids)):  # For each Discord channel ID
-        results = await mongodb_query({'channel_id': str(channel_ids[channel]), 'remind_time': time})
-        user_ids = []
-        for i in range(len(results)):
-            user_ids.append(int(results[i]['_id']))
-        print(f'User IDS: {user_ids}')
-
-        # grep_statement = 'grep \'[0-9]*\\s' + str(channel_ids[channel]) + '\\s[0-9]*\\s' + time + '\' autoremind.txt | cut -f3 -d\' \''  # Grab all unique Discord user ID's with that channel ID
-        # user_ids = subprocess.Popen(grep_statement, shell=True, stdout=subprocess.PIPE).stdout.read().decode('utf-8')[:-1].split('\n')  # Run grep statement
-        if time == 1:  # If there is only one minute left
-            message = f'{time} minute until pound opens! '
-        else:  # If there is more than 1 minute left
-            message = f'{time} minutes until pound opens! '
-        for j in range(len(user_ids)):  # For each Discord user
-            message += f'<@{user_ids[j]}> '  # Message format for mentioning users | <@USER_ID>
-        try:
-            sending_channel = bot.get_channel(channel_ids[channel])
-            print(f'Channel is {channel}')
-            await sending_channel.send(message)  # Send message to Discord channel with mention message
-            print(f'Message sent')
-        except AttributeError:
-            print('Some error appeared')
-            pass
-
-
 async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
     global autoremind_times
     autoremind_times = set()
@@ -179,7 +146,33 @@ async def minute_check(bot, time):  # Function to check if any user has Auto Rem
         autoremind_times.add(results[i]['remind_time'])
     print(f'Auto Remind times: {autoremind_times}')
     if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
-        await compose_message(bot, time)  # Run compose message
+        channel_ids = set()  # Create a set to prevent duplicate channel ID's
+        results = await mongodb_query({'remind_time': time})  # Query the collection for documents with an Auto Remind time of 'time'
+        for i in range(len(results)):
+            channel_ids.add(int(results[i]['channel_id']))
+        channel_ids = list(channel_ids)
+        print(f'Channel IDs: {channel_ids}')
+
+        for channel in range(len(channel_ids)):  # For each Discord channel ID
+            results = await mongodb_query({'channel_id': str(channel_ids[channel]), 'remind_time': time})
+            user_ids = []
+            for i in range(len(results)):
+                user_ids.append(int(results[i]['user_id']))
+            print(f'User IDs: {user_ids}')
+
+            message = f'{time} minute{"" if time == 1 else "s"} until pound opens!'
+            for j in range(len(user_ids)):  # For each Discord user
+                message += f'<@{user_ids[j]}>'  # Message format for mentioning users | <@USER_ID>
+            try:
+                sending_channel = bot.get_channel(channel_ids[channel])
+                print(f'Channel is {channel}')
+                await sending_channel.send(message)  # Send message to Discord channel with mention message
+                print(f'Message sent')
+            except AttributeError:
+                print('Some error appeared')
+                pass
+
+
 
 
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
