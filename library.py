@@ -4,6 +4,7 @@ import re
 import asyncio
 import cv2
 import motor.motor_asyncio as amotor
+from osuapi import OsuApi, AHConnector, enums
 from sklearn.cluster import KMeans
 
 from chickensmoothie import _get_web_data
@@ -258,3 +259,38 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
         print(f'Slept for: {sleep_amount}')
         print(f'Command is on cooldown: {cooldown}')
+
+
+async def get_user(user, mode):
+    if user is None:
+        return None
+    else:
+        regex = re.compile(
+            r'^(?:http)s?://osu\.ppy\.sh/users/')  # Regex to check if a link is provided
+
+        if user.isdigit():  # If user provided an ID
+            user = int(user)
+        elif re.match(regex, user) is not None:  # If user provided an link
+            link_split = user.split('/')
+            user_id = [i for i in link_split if i.isdigit()]  # Get the user ID
+            user = int(user_id[0])  # Convert ID into integer
+        elif user.isalpha():  # If user provided a username
+            pass
+
+        if mode == 'taiko':  # If taiko mode selected
+            gamemode = enums.OsuMode.taiko
+        elif mode == 'ctb' or mode == 'catch' or mode == 'fruits':  # If catch the beat mode selected
+            gamemode = enums.OsuMode.ctb
+        elif mode == 'mania':  # If mania mode selected
+            gamemode = enums.OsuMode.mania
+        else:  # Set default gamemode
+            gamemode = enums.OsuMode.osu
+
+        api = OsuApi(Constants.osu_api_key, connector=AHConnector())  # Connect to osu! API
+        result = await api.get_user(user, mode=gamemode)
+        try:
+            user_data = result[0]
+        except IndexError:
+            user_data = None
+
+        return user_data
