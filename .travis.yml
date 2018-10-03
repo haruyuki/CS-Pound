@@ -1,6 +1,9 @@
 language: python
 cache: pip
 
+git:
+  depth: 10
+
 matrix:
   include:
     - python: 3.6
