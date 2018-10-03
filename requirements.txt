@@ -9,7 +9,7 @@ Pillow
 psutil
 pycodestyle
 pytest
-python-coveralls
+pytest-cov
 scipy
 sklearn
 uvloop
