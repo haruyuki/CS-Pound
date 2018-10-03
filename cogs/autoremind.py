@@ -2,8 +2,14 @@ import subprocess
 
 import discord
 from discord.ext import commands
+import motor.motor_asyncio as amotor
 
-from library import pound_countdown, mongodb_find
+from constants import Constants
+from library import pound_countdown
+
+mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
+database = mongo_client['cs_pound']
+collection = database['test']
 
 
 class AutoRemind:
@@ -13,7 +19,7 @@ class AutoRemind:
     @commands.command(aliases=['ar'])
     @commands.guild_only()  # Command can only be run in guilds
     async def autoremind(self, ctx, args=''):
-        id_exists = await mongodb_find({'_id': str(ctx.author.id)})  # Get document of user
+        id_exists = await collection.find({'_id': str(ctx.author.id)})  # Get document of user
         try:
             id_exists = id_exists[0]
         except IndexError:
