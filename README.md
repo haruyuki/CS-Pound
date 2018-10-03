@@ -5,7 +5,7 @@
 [![Discord.py Rewrite](https://img.shields.io/badge/discord.py-rewrite-orange.svg)](https://github.com/Rapptz/discord.py)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/github/license/haruyuki/CS-Pound.svg)](https://github.com/haruyuki/CS-Pound/blob/master/LICENSE)
-[![Discord Server](https://img.shields.io/discord/409642350600781824.svg)](https://invite.gg/cspound)
+[![Discord Server](https://img.shields.io/discord/409642350600781824.svg?logo=discord)](https://invite.gg/cspound)
 
 A Discord bot for the online virtual pet adopting website. With the bot you can view pet information and pound opening times straight in Discord without needing to access the website.
 
