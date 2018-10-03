@@ -16,8 +16,9 @@ os: linux
 install: pip install -r requirements.txt
 
 script:
-  - pytest
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then pytest; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then pytest --ignore=tests/get-osu-user_test.py; fi'
 
 after_success:
   - coveralls
-  - python verify.py
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then python verify.py; fi'
