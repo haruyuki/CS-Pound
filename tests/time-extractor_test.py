@@ -28,4 +28,3 @@ def test_result():
     assert time_extractor('2h2m') == (7320, 2, 2, 0)
     assert time_extractor('2h2m1s') == (7321, 2, 2, 1)
     assert time_extractor('2h2m2s') == (7322, 2, 2, 2)
-
