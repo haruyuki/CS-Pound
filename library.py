@@ -14,7 +14,7 @@ autoremind_times = []
 cooldown = False
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client['cs_pound']
-collection = database['test']
+autoremind_collection = database['test']
 osu_collection = database['osu_profiles']
 
 
@@ -133,40 +133,36 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
     return list(dominant_color)
 
 
-async def mongodb_find(query):
-    cursor = collection.find(query)
-    results = await cursor.to_list(length=1000)
-    return results
-
-
 async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
     global autoremind_times
+
     autoremind_times = set()
-    results = await mongodb_find({})
-    print(f'SHOULD BE SINGLE RESULT HERE: {results}')
-    for i in range(len(results)):
-        autoremind_times.add(results[i]['remind_time'])
+    cursor = autoremind_collection.find({})
+    for document in await cursor.to_list(length=200):
+        autoremind_times.add(document['remind_time'])
     print(f'Auto Remind times: {autoremind_times}')
+
     if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
         channel_ids = set()  # Create a set to prevent duplicate channel ID's
-        results = await mongodb_find({'remind_time': time})  # Query the collection for documents with an Auto Remind time of 'time'
-        for i in range(len(results)):
-            channel_ids.add(int(results[i]['channel_id']))
+        cursor = autoremind_collection.find({'remind_time': time})
+        for document in await cursor.to_list(length=200):
+            channel_ids.add(int(document['channel_id']))
         channel_ids = list(channel_ids)
         print(f'Channel IDs: {channel_ids}')
 
-        for channel in range(len(channel_ids)):  # For each Discord channel ID
-            results = await mongodb_find({'channel_id': str(channel_ids[channel]), 'remind_time': time})
+        for channel in channel_ids:  # For each Discord channel ID
             user_ids = []
-            for i in range(len(results)):
-                user_ids.append(int(results[i]['user_id']))
+            cursor = autoremind_collection.find({'channel_id': str(channel), 'remind_time': time})
+            for document in await cursor.to_list(length=200):
+                user_ids.append(int(document['user_id']))
             print(f'User IDs: {user_ids}')
 
             message = f'{time} minute{"" if time == 1 else "s"} until pound opens!'
-            for j in range(len(user_ids)):  # For each Discord user
-                message += f'<@{user_ids[j]}>'  # Message format for mentioning users | <@USER_ID>
+            for user in range(len(user_ids)):  # For each Discord user
+                message += f'<@{user_ids[user]}>'  # Message format for mentioning users | <@USER_ID>
+
             try:
-                sending_channel = bot.get_channel(channel_ids[channel])
+                sending_channel = bot.get_channel(channel)
                 print(f'Channel is {channel}')
                 await sending_channel.send(message)  # Send message to Discord channel with mention message
                 print(f'Message sent')
