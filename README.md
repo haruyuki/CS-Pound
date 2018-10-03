@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/github/license/haruyuki/CS-Pound.svg)](https://github.com/haruyuki/CS-Pound/blob/master/LICENSE)
 [![Discord Server](https://img.shields.io/discord/409642350600781824.svg?logo=discord)](https://invite.gg/cspound)
 
-A Discord bot for the virtual pet adoption website. With this bot you can view information on pets and pound opening times straight from Discord without accessing the website.
+A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://www.chickensmoothie.com). With this bot you can view information on pets and pound opening times straight from Discord without accessing the website.
 
 ### Features
 
@@ -38,12 +38,10 @@ Please refer to the wiki for [Server](https://github.com/Tesshin/CS-Pound/wiki/S
 
 ### Running
 
-To start the bot run the following command:
+To start the bot run either of the following commands:
 ```bash
 python cs-pound.py
-```
-or
-```bash
+
 python3 cs-pound.py
 ```
 
@@ -56,11 +54,8 @@ python3 cs-pound.py
 * [psutil](https://pypi.org/project/psutil/) 5.4.6
 * [uvloop](https://pypi.org/project/uvloop/) 0.11.0
 
-## Authors
+## Contributors
 
-* [**@haruyuki**](https://github.com/haruyuki)
-
-## Editors
 * [**@ev-ev**](https://github.com/ev-ev) => edited README.MD
 
 ## License
