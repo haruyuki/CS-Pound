@@ -19,4 +19,6 @@ script:
   - pytest
   - pycodestyle *.py cogs/
 
-after_success: python verify.py
+after_success:
+  - coveralls
+  - python verify.py
