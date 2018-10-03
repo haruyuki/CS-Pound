@@ -1,11 +1,6 @@
-from collections import Counter
 import re
 
-import asyncio
-import cv2
 import motor.motor_asyncio as amotor
-from osuapi import OsuApi, AHConnector, enums
-from sklearn.cluster import KMeans
 
 from chickensmoothie import _get_web_data
 from constants import Constants
@@ -14,8 +9,6 @@ autoremind_times = []
 cooldown = False
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client['cs_pound']
-autoremind_collection = database['test']
-osu_collection = database['osu_profiles']
 
 
 # -------------------- FUNCTIONS --------------------
@@ -123,6 +116,10 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
 
 
 def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
+    from collections import Counter
+    import cv2
+    from sklearn.cluster import KMeans
+
     # Slightly modified from https://adamspannbauer.github.io/2018/03/02/app-icon-dominant-colors/
     image = cv2.resize(image, (25, 25), interpolation=cv2.INTER_AREA)  # Resize image
     image = image.reshape((image.shape[0] * image.shape[1], 3))  # Reshape image a list of pixels
@@ -135,6 +132,7 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
 
 async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
     global autoremind_times
+    autoremind_collection = database['test']
 
     autoremind_times = set()
     cursor = autoremind_collection.find({})
@@ -159,7 +157,7 @@ async def minute_check(bot, time):  # Function to check if any user has Auto Rem
 
             message = f'{time} minute{"" if time == 1 else "s"} until pound opens!'
             for user in range(len(user_ids)):  # For each Discord user
-                message += f'<@{user_ids[user]}>'  # Message format for mentioning users | <@USER_ID>
+                message += f' <@{user_ids[user]}>'  # Message format for mentioning users | <@USER_ID>
 
             try:
                 sending_channel = bot.get_channel(channel)
@@ -172,6 +170,8 @@ async def minute_check(bot, time):  # Function to check if any user has Auto Rem
 
 
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
+    import asyncio
+
     global cooldown
     print('Started pound countdown function')
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
@@ -259,6 +259,9 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
 
 
 async def get_user(user, mode):
+    from osuapi import OsuApi, AHConnector, enums
+    osu_collection = database['osu_profiles']
+
     if isinstance(user, int):
         cursor = osu_collection.find({'user_id': str(user)})
         document = await cursor.to_list(length=1)

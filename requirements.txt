@@ -8,6 +8,7 @@ osuapi
 Pillow
 psutil
 pycodestyle
+pytest
 scipy
 sklearn
 uvloop

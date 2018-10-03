@@ -4,12 +4,14 @@ python:
   - "3.6"
   - "3.7-dev"
 
-os:
-  - linux
+env: PYTHONPATH=$TRAVIS_BUILD_DIR
 
-install:
-  - pip install -r requirements.txt
+os: linux
 
-script:
-  - pycodestyle *.py cogs/
-  - python verify.py
+install: pip install -r requirements.txt
+
+before_script: pytest
+
+script: python verify.py
+
+after_script: pycodestyle *.py cogs/
