@@ -3,7 +3,7 @@ import os
 import sys
 
 client = discord.AutoShardedClient()
-token = os.environ.get('BOT_TOKEN', None)
+token = os.environ.get('discord', None)
 
 if token is None:
     print('Please specify a token in Travis as an environment variable. The variable should be called "BOT_TOKEN"')
