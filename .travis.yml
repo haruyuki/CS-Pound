@@ -1,8 +1,13 @@
 language: python
 cache: pip
-python:
-  - "3.6"
-  - "3.7-dev"
+
+matrix:
+  include:
+    - python: 3.6
+    - python: 3.7
+      dist: xenial
+      sudo: true
+
 
 env: PYTHONPATH=$TRAVIS_BUILD_DIR
 
@@ -10,8 +15,8 @@ os: linux
 
 install: pip install -r requirements.txt
 
-before_script: pytest
+script:
+  - pytest
+  - pycodestyle *.py cogs/
 
-script: python verify.py
-
-after_script: pycodestyle *.py cogs/
+after_success: python verify.py
