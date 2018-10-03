@@ -7,10 +7,6 @@ opencv-python
 osuapi
 Pillow
 psutil
-pytest
-pytest-cov
-pytest-pep8
-python-coveralls
 scipy
 sklearn
 uvloop

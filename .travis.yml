@@ -13,11 +13,10 @@ env: PYTHONPATH=$TRAVIS_BUILD_DIR
 
 os: linux
 
-install: pip install -r requirements.txt
+install: pip install -r travis-requirements.txt
 
 script:
   - pytest
-  - pycodestyle *.py cogs/
 
 after_success:
   - coveralls
