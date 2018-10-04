@@ -20,16 +20,31 @@ collection = db['osu_profiles']
 class Osu:
     def __init__(self, bot):
         self.bot = bot
-        self.osu_emoji = discord.utils.get(bot.emojis, name='osu')  # Osu emoji
-        self.osu_track_emoji = discord.utils.get(bot.emojis, name='osutrack')  # osu!track emoji
-        self.osu_skills_emoji = discord.utils.get(bot.emojis, name='osuskills')  # osu!skills emoji
-        self.osu_chan_emoji = discord.utils.get(bot.emojis, name='osuchan')  # osu!chan emoji
-        self.pp_plus_emoji = discord.utils.get(bot.emojis, name='pp_plus')  # PP+ emoji
-        self.score_xh = discord.utils.get(bot.emojis, name='scoreXH')  # XH score emoji
-        self.score_x = discord.utils.get(bot.emojis, name='scoreX')  # X score emoji
-        self.score_sh = discord.utils.get(bot.emojis, name='scoreSH')  # SH score emoji
-        self.score_s = discord.utils.get(bot.emojis, name='scoreS')  # S score emoji
-        self.score_a = discord.utils.get(bot.emojis, name='scoreA')  # A score emoji
+        self.osu_emoji = None
+        self.osu_track_emoji = None
+        self.osu_skills_emoji = None
+        self.osu_chan_emoji = None
+        self.pp_plus_emoji = None
+        self.score_xh = None
+        self.score_x = None
+        self.score_sh = None
+        self.score_s = None
+        self.score_a = None
+        bot.loop.create_task(self.load_emoji())
+
+    async def load_emoji(self):
+        await self.bot.wait_until_ready()
+        self.osu_emoji = discord.utils.get(self.bot.emojis, name='osu')  # Osu emoji
+        self.osu_track_emoji = discord.utils.get(self.bot.emojis, name='osutrack')  # osu!track emoji
+        self.osu_skills_emoji = discord.utils.get(self.bot.emojis, name='osuskills')  # osu!skills emoji
+        self.osu_chan_emoji = discord.utils.get(self.bot.emojis, name='osuchan')  # osu!chan emoji
+        self.pp_plus_emoji = discord.utils.get(self.bot.emojis, name='pp_plus')  # PP+ emoji
+        self.score_xh = discord.utils.get(self.bot.emojis, name='scoreXH')  # XH score emoji
+        self.score_x = discord.utils.get(self.bot.emojis, name='scoreX')  # X score emoji
+        self.score_sh = discord.utils.get(self.bot.emojis, name='scoreSH')  # SH score emoji
+        self.score_s = discord.utils.get(self.bot.emojis, name='scoreS')  # S score emoji
+        self.score_a = discord.utils.get(self.bot.emojis, name='scoreA')  # A score emoji
+        return None
 
     @commands.group()
     @commands.guild_only()
