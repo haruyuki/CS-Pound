@@ -3,3 +3,4 @@ __pycache__
 cogs/__pycache__
 .DS_Store
 discord.log
+start.command
