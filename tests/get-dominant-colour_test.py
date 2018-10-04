@@ -24,7 +24,7 @@ class TestClass:
     def test_two_bar_minor_colour(self):
         im = Image.new('RGB', (128, 128), main_colour)
         draw = ImageDraw.Draw(im)
-        draw.rectangle([(0, 0), (68, 128)], fill=secondary_colour)
+        draw.rectangle([(0, 0), (70, 128)], fill=secondary_colour)
         image_array = np.array(im)
         assert get_dominant_colour(image_array) == list(secondary_colour)
 
