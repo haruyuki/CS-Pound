@@ -28,3 +28,9 @@ def test_result():
     assert time_extractor('2h2m') == (7320, 2, 2, 0)
     assert time_extractor('2h2m1s') == (7321, 2, 2, 1)
     assert time_extractor('2h2m2s') == (7322, 2, 2, 2)
+
+    assert time_extractor('1') == (0, 0, 0, 0)
+    assert time_extractor('2') == (0, 0, 0, 0)
+    assert time_extractor('0s') == (0, 0, 0, 0)
+    assert time_extractor('0m') == (0, 0, 0, 0)
+    assert time_extractor('0h') == (0, 0, 0, 0)
