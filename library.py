@@ -122,7 +122,7 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
 
 def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
     # Slightly modified from https://adamspannbauer.github.io/2018/03/02/app-icon-dominant-colors/
-    image = cv2.resize(image, (25, 25), interpolation=cv2.INTER_AREA)  # Resize image
+    image = cv2.resize(image, (64, 64), interpolation=cv2.INTER_CUBIC)  # Resize image
     image = image.reshape((image.shape[0] * image.shape[1], 3))  # Reshape image a list of pixels
     clt = KMeans(n_clusters=4)
     labels = clt.fit_predict(image)  # Cluster and assign labels to pixels
