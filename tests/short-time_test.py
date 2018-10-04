@@ -15,3 +15,10 @@ def test_results():
     assert parse_short_time('60m') == 3600
     assert parse_short_time('24h') == 86400
     assert parse_short_time('30d') == 2592000
+
+    assert parse_short_time('s') == -1
+    assert parse_short_time('m') == -1
+    assert parse_short_time('h') == -1
+    assert parse_short_time('d') == -1
+    assert parse_short_time('1') == -1
+    assert parse_short_time('2') == -1
