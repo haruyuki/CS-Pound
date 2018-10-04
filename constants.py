@@ -3,9 +3,9 @@ import os
 
 class Constants:
     prefix = ','
-    discord_token = os.environ.get('discord', None)  # dev
+    discord_token = os.environ.get('discord', None)
     osu_api_key = os.environ.get('osu', None)
     support_server_link = 'https://invite.gg/cspound'
-    version = '2.2'
+    version = '2.3'
     invite_link = 'https://www.tailstar.us/'
     mongodb_uri = os.environ.get('mongodb', None)
