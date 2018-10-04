@@ -8,23 +8,25 @@ secondary_colour = (251, 230, 124)
 
 class TestClass:
     def test_single_colour(self):
-        image = Image.new('RGB', (128, 128), main_colour)
-        image_array = np.array(image)
-        assert get_dominant_colour(image_array) == [175, 40, 205]
+        im = Image.new('RGB', (128, 128), main_colour)
+        image_array = np.array(im)
+        assert get_dominant_colour(image_array) == list(main_colour)
+        del im
 
     def test_two_bar_major_colour(self):
         im = Image.new('RGB', (128, 128), main_colour)
         draw = ImageDraw.Draw(im)
         draw.rectangle([(0, 0), (25, 128)], fill=secondary_colour)
         image_array = np.array(im)
-        assert get_dominant_colour(image_array) == [175, 40, 205]
+        assert get_dominant_colour(image_array) == list(main_colour)
+        del im
 
     def test_two_bar_minor_colour(self):
         im = Image.new('RGB', (128, 128), main_colour)
         draw = ImageDraw.Draw(im)
-        draw.rectangle([(0, 0), (62, 128)], fill=secondary_colour)
+        draw.rectangle([(0, 0), (68, 128)], fill=secondary_colour)
         image_array = np.array(im)
-        assert get_dominant_colour(image_array) == [175, 40, 205]
+        assert get_dominant_colour(image_array) == list(secondary_colour)
 
     def test_real_images_1_colour(self):
         im = Image.open('tests/test-images/7109858.jpeg')
@@ -37,6 +39,6 @@ class TestClass:
         assert get_dominant_colour(image_array) == [201, 195, 185]
 
     def test_real_images_3_colour(self):
-        im = Image.open('tests/test-images/7109858.jpeg')
+        im = Image.open('tests/test-images/10778583.jpeg')
         image_array = np.array(im)
         assert get_dominant_colour(image_array) == [239, 234, 233]
