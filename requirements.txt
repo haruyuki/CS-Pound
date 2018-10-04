@@ -1,5 +1,6 @@
 aiohttp>=3.4.4
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
+dnspython
 lxml
 motor
 numpy
