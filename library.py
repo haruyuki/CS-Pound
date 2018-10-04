@@ -13,7 +13,7 @@ from constants import Constants
 autoremind_times = []
 cooldown = False
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
-database = mongo_client['cs_pound']
+database = mongo_client[Constants.database_name]
 
 
 # -------------------- FUNCTIONS --------------------
@@ -134,7 +134,7 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
 
 async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
     global autoremind_times
-    autoremind_collection = database['test']
+    autoremind_collection = database[Constants.autoremind_collection_name]
 
     autoremind_times = set()
     cursor = autoremind_collection.find({})
@@ -260,7 +260,7 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
 
 
 async def get_user(user, mode):
-    osu_collection = database['osu_profiles']
+    osu_collection = database[Constants.osu_collection_name]
 
     if isinstance(user, int):
         cursor = osu_collection.find({'user_id': str(user)})
