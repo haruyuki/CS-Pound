@@ -127,8 +127,9 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
     clt = KMeans(n_clusters=4)
     labels = clt.fit_predict(image)  # Cluster and assign labels to pixels
     label_counts = Counter(labels)  # Count labels to find most popular
-    dominant_color = clt.cluster_centers_[label_counts.most_common(1)[0][0]]  # Subset out most popular centroid
-    return list(dominant_color)
+    dominant_colour = clt.cluster_centers_[label_counts.most_common(1)[0][0]]  # Subset out most popular centroid
+    dominant_colour = [int(colour) for colour in dominant_colour]
+    return list(dominant_colour)
 
 
 async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
