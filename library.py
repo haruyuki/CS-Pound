@@ -1,6 +1,11 @@
+from collections import Counter
 import re
 
+import asyncio
+import cv2
 import motor.motor_asyncio as amotor
+from osuapi import OsuApi, AHConnector, enums
+from sklearn.cluster import KMeans
 
 from chickensmoothie import _get_web_data
 from constants import Constants
@@ -116,10 +121,6 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
 
 
 def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
-    from collections import Counter
-    import cv2
-    from sklearn.cluster import KMeans
-
     # Slightly modified from https://adamspannbauer.github.io/2018/03/02/app-icon-dominant-colors/
     image = cv2.resize(image, (25, 25), interpolation=cv2.INTER_AREA)  # Resize image
     image = image.reshape((image.shape[0] * image.shape[1], 3))  # Reshape image a list of pixels
@@ -170,7 +171,6 @@ async def minute_check(bot, time):  # Function to check if any user has Auto Rem
 
 
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
-    import asyncio
 
     global cooldown
     print('Started pound countdown function')
@@ -259,7 +259,6 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
 
 
 async def get_user(user, mode):
-    from osuapi import OsuApi, AHConnector, enums
     osu_collection = database['osu_profiles']
 
     if isinstance(user, int):
