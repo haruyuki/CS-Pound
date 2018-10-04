@@ -36,9 +36,9 @@ class TestClass:
     def test_real_images_2_colour(self):
         im = Image.open('tests/test-images/2070907.jpeg')
         image_array = np.array(im)
-        assert get_dominant_colour(image_array) == [201, 195, 185]
+        assert get_dominant_colour(image_array) == [206, 199, 189]
 
     def test_real_images_3_colour(self):
         im = Image.open('tests/test-images/10778583.jpeg')
         image_array = np.array(im)
-        assert get_dominant_colour(image_array) == [239, 234, 233]
+        assert get_dominant_colour(image_array) == [244, 239, 238]
