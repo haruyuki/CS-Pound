@@ -9,3 +9,6 @@ class Constants:
     version = '2.3'
     invite_link = 'https://www.tailstar.us/'
     mongodb_uri = os.environ.get('mongodb', None)
+    database_name = 'cs_pound'
+    osu_collection_name = 'osu_profiles'
+    autoremind_collection_name = 'auto_remind'
