@@ -80,7 +80,7 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
         if value == 0:  # If given time has no value
             return ''
         else:  # If given time has value
-            return (' and ' if and_placement == 'pre' else '') + str(value) + ' ' + string + ('s' if value > 1 else '') + (' and ' if and_placement == 'suf' else (', ' if and_placement == 'com' else ''))
+            return f'{" and " if and_placement == "pre" else ""}{value} {string}{"s" if value > 1 else ""}{" and " if and_placement == "suf" else ""}{", " if and_placement == "com" else ""}'
             # If 'and_placement' is set to prefix add 'and' otherwise leave blank
             # The value of the time
             # The type of time (day, hour, minute, second)
@@ -93,6 +93,7 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
         # No hours or seconds
         # No minutes or seconds
         day_section = pluralise('day', day, 'suf')  # Pluralise the day section with a suffixed 'and' placement
+
     elif day != 0 and ((hour != 0 and minute != 0 and second != 0) or (hour != 0 and minute == 0) or (hour != 0 and second == 0) or (minute != 0 and second == 0) or (hour == 0 and minute != 0) or (hour == 0 and second != 0) or (minute == 0 and second != 0)):
         # If there are day(s) but:
         # There are hour(s) and minute(s) and second(s)
@@ -117,7 +118,7 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
         second_section = pluralise('second', second, 'pre')  # Pluralise the second section with a prefixed 'and' placement
     else:  # If there are no hours or minutes
         second_section = pluralise('second', second)  # Pluralise the second section
-    return day_section + hour_section + minute_section + second_section  # Return the formatted text
+    return f'{day_section}{hour_section}{minute_section}{second_section}'  # Return the formatted text
 
 
 def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
