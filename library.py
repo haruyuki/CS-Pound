@@ -161,7 +161,7 @@ async def get_autoremind_documents(time):  # Get documents of users with specifi
 async def get_sending_channels(time):
     channel_ids = set()
     documents = await get_autoremind_documents(time)
-    if not None:
+    if documents is not None:
         for document in documents:
             channel_ids.add(int(document['channel_id']))
         return channel_ids
