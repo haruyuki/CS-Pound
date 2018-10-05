@@ -142,6 +142,7 @@ async def update_autoremind_times():
     cursor = autoremind_collection.find({})
     for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
         autoremind_times.add(document['remind_time'])
+    return autoremind_times
 
 
 async def get_autoremind_documents(time):  # Get documents of users with specified Auto Remind time
