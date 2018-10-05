@@ -12,7 +12,7 @@ from chickensmoothie import _get_web_data
 from constants import Constants
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-autoremind_times = []
+autoremind_times = set()
 cooldown = False
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client[Constants.database_name]
@@ -127,7 +127,7 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
     # Slightly modified from https://adamspannbauer.github.io/2018/03/02/app-icon-dominant-colors/
     image = cv2.resize(image, (64, 64), interpolation=cv2.INTER_CUBIC)  # Resize image
     image = image.reshape((image.shape[0] * image.shape[1], 3))  # Reshape image a list of pixels
-    clt = KMeans(n_clusters=4)
+    clt = KMeans(n_clusters=5)
     labels = clt.fit_predict(image)  # Cluster and assign labels to pixels
     label_counts = Counter(labels)  # Count labels to find most popular
     dominant_colour = clt.cluster_centers_[label_counts.most_common(1)[0][0]]  # Subset out most popular centroid
@@ -135,43 +135,51 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
     return list(dominant_colour)
 
 
-async def minute_check(bot, time):  # Function to check if any user has Auto Remind setup at 'time'
+async def update_autoremind_times():
     global autoremind_times
-    autoremind_collection = database[Constants.autoremind_collection_name]
-
     autoremind_times = set()
+    autoremind_collection = database[Constants.autoremind_collection_name]
     cursor = autoremind_collection.find({})
-    for document in await cursor.to_list(length=200):
+    for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
         autoremind_times.add(document['remind_time'])
-    print(f'Auto Remind times: {autoremind_times}')
 
-    if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
-        channel_ids = set()  # Create a set to prevent duplicate channel ID's
-        cursor = autoremind_collection.find({'remind_time': time})
-        for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
-            channel_ids.add(int(document['channel_id']))
-        channel_ids = list(channel_ids)
-        print(f'Channel IDs: {channel_ids}')
 
-        for channel in channel_ids:  # For each Discord channel ID
-            user_ids = []
-            cursor = autoremind_collection.find({'channel_id': str(channel), 'remind_time': time})
-            for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
-                user_ids.append(int(document['user_id']))
-            print(f'User IDs: {user_ids}')
+async def get_autoremind_documents(time):  # Get documents of users with specified Auto Remind time
+    documents = []
+    autoremind_collection = database[Constants.autoremind_collection_name]
+    cursor = autoremind_collection.find({'remind_time': time})
+    for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
+        documents.append(document)
+    return documents
 
-            message = f'{time} minute{"" if time == 1 else "s"} until pound opens!'
-            for user in range(len(user_ids)):  # For each Discord user
-                message += f' <@{user_ids[user]}>'  # Message format for mentioning users | <@USER_ID>
 
-            try:
-                sending_channel = bot.get_channel(channel)
-                print(f'Channel is {channel}')
-                await sending_channel.send(message)  # Send message to Discord channel with mention message
-                print(f'Message sent')
-            except AttributeError:
-                print('Some error appeared')
-                pass
+async def get_sending_channels(time):
+    channel_ids = set()
+    documents = await get_autoremind_documents(time)
+
+    for document in documents:
+        channel_ids.add(int(document['channel_id']))
+    return channel_ids
+
+
+async def prepare_message(channel_id, time):
+    message = f'{time} minute{"" if time == 1 else "s"} until pound opens!'
+    documents = await get_autoremind_documents(time)
+
+    for document in documents:
+        if int(document['channel_id']) == channel_id:
+            message += f' <@{document["user_id"]}>'
+    return message
+
+
+async def send_message(bot, time):
+    if time in autoremind_times:
+        channel_ids = await get_sending_channels(time)
+
+        for channel in channel_ids:
+            sending_channel = bot.get_channel(channel)
+            message = await prepare_message(channel, time)
+            await sending_channel.send(message)
 
 
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
@@ -235,7 +243,7 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
         else:  # If command is on cooldown
             if 'hour' in text:  # If hour in text
                 if value != 0:  # If minutes left is not zero
-                    await minute_check(bot, value)  # Run minute check
+                    await send_message(bot, value)  # Run minute check
                     value -= 1  # Remove one minute
                     sleep_amount = 60  # 1 minute
                 else:  # If time ran out (i.e. Pound is now open)
@@ -246,7 +254,7 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
                 value = 1
             elif 'minute' in text:  # If minute in text
                 if value > 0:  # If minutes left is not zero
-                    await minute_check(bot, value)  # Run minute check
+                    await send_message(bot, value)  # Run minute check
                     value -= 1  # Remove one minute
                     sleep_amount = 60  # 1 minute
                 else:  # If time ran out (i.e. Pound is now open)
