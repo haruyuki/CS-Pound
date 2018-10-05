@@ -13,3 +13,4 @@ class Constants:
     osu_collection_name = 'osu_profiles'  # The name of the collection for osu! user linking
     autoremind_collection_name = 'auto_remind'  # The name of the collection for Auto Remind users
     autoremind_fetch_limit = 300  # The amount of documents to buffer. Should update as collection gets bigger
+    cogs_dir = 'cogs'  # The directory where your cogs are placed

@@ -9,8 +9,6 @@ from discord.ext import commands
 
 from constants import Constants
 
-cogs_dir = 'cogs'
-
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')  # Remove default help command to add custom one
 logger = logging.getLogger('discord')  # Create logger
@@ -20,9 +18,9 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s')
 logger.addHandler(handler)  # Start logger
 
 if __name__ == '__main__':
-    for extension in [f.replace('.py', '') for f in listdir(cogs_dir) if isfile(join(cogs_dir, f))]:
+    for extension in [f.replace('.py', '') for f in listdir(Constants.cogs_dir) if isfile(join(Constants.cogs_dir, f))]:
         try:
-            bot.load_extension(f'{cogs_dir}.{extension}')
+            bot.load_extension(f'{Constants.cogs_dir}.{extension}')
         except (discord.ClientException, ModuleNotFoundError):
             if extension == '.DS_Store':
                 pass
