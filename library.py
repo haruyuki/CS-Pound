@@ -6,10 +6,12 @@ import cv2
 import motor.motor_asyncio as amotor
 from osuapi import OsuApi, AHConnector, enums
 from sklearn.cluster import KMeans
+import uvloop
 
 from chickensmoothie import _get_web_data
 from constants import Constants
 
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 autoremind_times = []
 cooldown = False
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
