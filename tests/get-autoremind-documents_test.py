@@ -23,4 +23,4 @@ def test_results():
 
     loop.run_until_complete(collection.delete_one({'_id': objectid.inserted_id}))
     document = loop.run_until_complete(get_autoremind_documents(0))
-    assert document == []
+    assert document is None
