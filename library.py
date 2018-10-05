@@ -146,7 +146,7 @@ async def minute_check(bot, time):  # Function to check if any user has Auto Rem
     if time in autoremind_times:  # If someone has a Auto Remind set at current 'time'
         channel_ids = set()  # Create a set to prevent duplicate channel ID's
         cursor = autoremind_collection.find({'remind_time': time})
-        for document in await cursor.to_list(length=200):
+        for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
             channel_ids.add(int(document['channel_id']))
         channel_ids = list(channel_ids)
         print(f'Channel IDs: {channel_ids}')
@@ -154,7 +154,7 @@ async def minute_check(bot, time):  # Function to check if any user has Auto Rem
         for channel in channel_ids:  # For each Discord channel ID
             user_ids = []
             cursor = autoremind_collection.find({'channel_id': str(channel), 'remind_time': time})
-            for document in await cursor.to_list(length=200):
+            for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
                 user_ids.append(int(document['user_id']))
             print(f'User IDs: {user_ids}')
 
@@ -293,7 +293,7 @@ async def get_user(user, mode):
     else:  # Set default gamemode
         gamemode = enums.OsuMode.osu
 
-    api = OsuApi(Constants.osu_api_key, connector=AHConnector())  # Connect to osu! API
+    api = OsuApi(Constants.osu_key, connector=AHConnector())  # Connect to osu! API
     result = await api.get_user(user, mode=gamemode)
     try:
         user_data = result[0]
