@@ -151,13 +151,17 @@ async def get_autoremind_documents(time):  # Get documents of users with specifi
     cursor = autoremind_collection.find({'remind_time': time})
     for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
         documents.append(document)
-    return documents
+
+    if documents:
+        return documents
+    else:
+        return None
 
 
 async def get_sending_channels(time):
     channel_ids = set()
     documents = await get_autoremind_documents(time)
-    if documents:
+    if not None:
         for document in documents:
             channel_ids.add(int(document['channel_id']))
         return channel_ids
@@ -169,10 +173,13 @@ async def prepare_message(channel_id, time):
     message = f'{time} minute{"" if time == 1 else "s"} until pound opens!'
     documents = await get_autoremind_documents(time)
 
-    for document in documents:
-        if int(document['channel_id']) == channel_id:
-            message += f' <@{document["user_id"]}>'
-    return message
+    if documents is not None:
+        for document in documents:
+            if int(document['channel_id']) == channel_id:
+                message += f' <@{document["user_id"]}>'
+        return message
+    else:
+        return None
 
 
 async def send_message(bot, time):
