@@ -4,14 +4,10 @@ from os.path import isfile, join
 import sys
 import traceback
 
-import asyncio
 import discord
 from discord.ext import commands
-import uvloop
 
 from constants import Constants
-
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 cogs_dir = 'cogs'
 
