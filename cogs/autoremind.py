@@ -78,8 +78,7 @@ class AutoRemind:
                     else:
                         await collection.insert_one({'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'user_id': str(ctx.author.id), 'remind_time': time})
                         await ctx.send(f'Your Auto Remind has been set for {time} minute{"" if time == 1 else "s"}!')
-                    new_times = await update_autoremind_times()
-                    print(new_times)
+                    await update_autoremind_times()
             elif args == '':  # If no arguments provided
                 await ctx.send("You didn't provide a time!")
             else:
