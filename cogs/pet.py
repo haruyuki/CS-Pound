@@ -13,7 +13,7 @@ class Pet:
     async def pet(self, ctx, link: str = ''):  # Pet command
         pet = await cs.pet(link)  # Get pet data
         if pet is None:
-            embed = discord.Embed(title='Pet', description='An error has occured while processing pet image.', colour=0xff5252)  # Create embed
+            embed = discord.Embed(title='Pet', description='An error has occurred while processing pet image.', colour=0xff5252)  # Create embed
         else:
             embed = discord.Embed(title=pet['owner'] + '\'s Pet', colour=0x4ba139)  # Create embed
             embed.set_image(url=pet['image'])  # Set image
