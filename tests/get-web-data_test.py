@@ -1,6 +1,6 @@
 import lxml.html
 
-from library import _get_web_data
+from chickensmoothie import _get_web_data
 
 
 def test_results():
