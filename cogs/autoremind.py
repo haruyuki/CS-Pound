@@ -1,15 +1,16 @@
-import subprocess
+import re
 
+import asyncio
 import discord
 from discord.ext import commands
 import motor.motor_asyncio as amotor
 
 from constants import Constants
-from library import pound_countdown
+from library import pound_countdown, update_autoremind_times
 
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
-database = mongo_client['cs_pound']
-collection = database['test']
+database = mongo_client[Constants.database_name]
+collection = database[Constants.autoremind_collection_name]
 
 
 class AutoRemind:
@@ -19,74 +20,72 @@ class AutoRemind:
     @commands.command(aliases=['ar'])
     @commands.guild_only()  # Command can only be run in guilds
     async def autoremind(self, ctx, args=''):
-        id_exists = await collection.find({'_id': str(ctx.author.id)})  # Get document of user
-        try:
-            id_exists = id_exists[0]
-        except IndexError:
-            pass
-        print(f'DOCUMENT: {id_exists}')
-        guild_roles = ctx.guild.roles  # List of roles in guild
-        embed = discord.Embed()
-        for role in guild_roles:  # For each role in the guild
-            if role.name == "CS Pound":  # If 'CS Pound' role exists
-                permission = role.permissions.manage_roles  # Check whether role has 'Manage Roles' permission and set boolean value
-                break  # Break out of for loop
-        else:  # If role doesn't exist
-            permission = False
+        if args == 'off' or args == 'cancel':  # If user is turning off Auto Remind
+            cursor = collection.find({'user_id': str(ctx.author.id)})  # Get document of user
+            user_data = await cursor.to_list(length=1)
+            try:
+                user_data = user_data[0]
+                user_object_id = user_data['_id']
+            except IndexError:
+                user_data = None
 
-        if permission:  # If bot has permission to 'Manage Roles'
-            guild_roles = ctx.guild.roles  # List of roles in guild
-            for role in guild_roles:  # Checks if role already exists in guild
-                if role.name == "Auto Remind":  # If role exists
-                    break  # Break out of for loop
-            else:  # If role doesn't exist
-                await ctx.guild.create_role(name='Auto Remind', reason='Auto Remind didn\'t exist')  # Create 'Auto Remind' role in guild
-
-        if args == 'off' or args == 'cancel':  # If user wants to turn off Auto Remind
-            if id_exists == '':  # If user doesn't exist in database
-                embed = discord.Embed(title='Auto Remind', description='You don\'t have Auto Remind setup {0.mention}!'.format(ctx.message.author), colour=0xff5252)  # Create embed
-            else:  # If user exists
-                sed_statement = 'sed -i.bak ' + id_exists + 'd autoremind.txt'  # sed statement
-                subprocess.Popen(sed_statement, shell=True)  # Run sed statement
-                if permission:  # If bot has permission to 'Manage Roles'
-                    await ctx.author.remove_roles(discord.utils.get(guild_roles, name='Auto Remind'), reason='User disabled Auto Remind.')  # Remove role from user
-                    embed = discord.Embed(title='Auto Remind', description='You have been removed from the Auto Remind role.', colour=0x4ba139)  # Create embed
-                else:  # If bot doesn't have permission to 'Manage Roles'
-                    embed = discord.Embed(title='Auto Remind', description='You have been removed from the Auto Remind.', colour=0x4ba139)  # Create embed
-
+            if user_data is not None:
+                await collection.delete_one({'_id': user_object_id})
+                await ctx.send('Your Auto Remind has been turned off successfully.')
+            else:
+                await ctx.send("You don't have an Auto Remind setup!")
         else:  # If user is setting an Auto Remind
-            valid = False
-            if args == '':  # If no arguments provided
-                embed = discord.Embed(title='Auto Remind', description='You didn\'t input a time!', colour=0xff5252)  # Create embed
-            elif args.isdigit():  # If the input is a digit
-                valid = True
-            else:  # If the input isn't a digit
-                args = args[:-1]  # Remove the minute marker
-                if args.isdigit():  # If the input is a digit now
-                    valid = True
-                else:  # If input is still not digit
-                    embed = discord.Embed(title='Auto Remind', description='That is not a valid time!', colour=0xff5252)  # Create embed
+            time = re.findall(r'^(\d{1,2})m?$', args)  # Get the requested Auto Remind time
+            if time:  # If user provided a valid time
+                time = int(time[0])  # Convert the time into an integer
+                if time > 60:
+                    await ctx.send('That time is too far!')
+                else:
+                    cursor = collection.find({'user_id': str(ctx.author.id)})  # Get document of user
+                    user_data = await cursor.to_list(length=1)
+                    try:
+                        user_data = user_data[0]
+                        user_object_id = user_data['_id']
+                    except IndexError:
+                        user_data = None
 
-            if valid:  # If inputted time was valid
-                if int(args) > 60:  # If time is bigger than 60 minutes
-                    embed = discord.Embed(title='Auto Remind', description='That time is too far!', colour=0xff5252)  # Create embed
-                else:  # If time is less than 60 minutes
-                    if id_exists != '':  # If user has already set an Auto Remind
-                        embed = discord.Embed(title='Auto Remind', description='You already have Auto Remind setup!'.format(ctx.message.author), colour=0xff5252)  # Create embed
-                    else:  # If user doesn't have an Auto Remind setup
-                        text = f'{ctx.message.guild.id} {ctx.message.channel.id} {ctx.message.author.id} {args}' + '\n'  # Write in the format 'GUILD_ID CHANNEL_ID USER_ID REMIND_TIME'
-                        with open('autoremind.txt', 'a+') as file:  # Open autoremind.txt
-                            file.write(text)  # Write the text
+                    if user_data is not None:
+                        if int(user_data['channel_id']) == ctx.channel.id:
+                            old_time = user_data['remind_time']
+                            await collection.update_one({'_id': user_object_id}, {'$set': {'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'remind_time': time}})
+                            await ctx.send(f'Your Auto Remind has been updated from {old_time} minute{"" if old_time == 1 else "s"} to {time} minute{"" if time == 1 else "s"}!')
 
-                        if permission:  # If bot has 'Manage Roles' permission
-                            await ctx.author.add_roles(discord.utils.get(guild_roles, name='Auto Remind'), reason='User enabled Auto Remind.')  # Add user to Auto Remind role
+                        else:
+                            description = (f'You already have a {user_data["remind_time"]} minute Auto Remind setup at <#{user_data["channel_id"]}>!\n'  # You aleady have a X minute Auto Remind setup at #channel!
+                                           'Are you sure you want to overwrite it to this channel?')
+                            embed = discord.Embed(title='Auto Remind', description=description, colour=0xff5252)
+                            await ctx.send(embed=embed)
 
-                        message = 'Will ping you ' + args + ' minutes before the pound opens!'
-                        embed = discord.Embed(title='Auto Remind', description=message, colour=0x4ba139)  # Create embed
+                            def predicate(m):
+                                return m.author == ctx.author and m.channel == ctx.channel
 
-        await ctx.send(embed=embed)  # Send embed
+                            try:
+                                msg = await self.bot.wait_for('message', check=predicate, timeout=10.0)
+                            except asyncio.TimeoutError:
+                                await ctx.send("Operation timed out.")
+                            else:
+                                lowered = msg.content.lower()
+                                if lowered in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
+                                    await collection.update_one({'_id': user_object_id}, {'$set': {'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'remind_time': time}})
+                                    await ctx.send(f'Will remind you {time} minute{"" if time == 1 else "s"} before the pound opens!')
+                                else:
+                                    await ctx.send("Operation cancelled.")
+                    else:
+                        await collection.insert_one({'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'user_id': str(ctx.author.id), 'remind_time': time})
+                        await ctx.send(f'Your Auto Remind has been set for {time} minute{"" if time == 1 else "s"}!')
+                    new_times = await update_autoremind_times()
+                    print(new_times)
+            elif args == '':  # If no arguments provided
+                await ctx.send("You didn't provide a time!")
+            else:
+                await ctx.send("You didn't provide a valid time!")
 
 
 def setup(bot):
     bot.add_cog(AutoRemind(bot))
-    bot.loop.create_task(pound_countdown(bot))
+    # bot.loop.create_task(pound_countdown(bot))
