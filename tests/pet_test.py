@@ -4,6 +4,7 @@ from chickensmoothie import pet
 
 loop = asyncio.get_event_loop()
 
+
 def test_results():
     assert loop.run_until_complete(pet('http://static.chickensmoothie.com/archive/34&petid=22.jpg')) is None  # Test invalid pet link
 
