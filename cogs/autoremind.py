@@ -87,4 +87,4 @@ class AutoRemind:
 
 def setup(bot):
     bot.add_cog(AutoRemind(bot))
-    # bot.loop.create_task(pound_countdown(bot))
+    bot.loop.create_task(pound_countdown(bot))
