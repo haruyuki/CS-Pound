@@ -13,9 +13,7 @@ class Support:
         try:
             await ctx.author.send(Constants.support_link)  # PM Discord link to the CS-Pound Development Server to user
             embed = discord.Embed(title='Support', description='A PM has been sent to you!', colour=0x4ba139)  # Create embed
-            if ctx.message.guild is None:
-                pass
-            else:
+            if ctx.message.guild:
                 await ctx.send(embed=embed)  # Send embed
         except discord.errors.Forbidden:  # If cannot send PM to user
             embed = discord.Embed(title='Support', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Create embed
