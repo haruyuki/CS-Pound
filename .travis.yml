@@ -21,4 +21,5 @@ script:
 
 after_success:
   - coveralls
+  - codecov
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then python verify.py; fi'
