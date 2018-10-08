@@ -1,8 +1,8 @@
 # CS Pound Discord Bot
 
-[![Build Status](https://travis-ci.com/haruyuki/CS-Pound.svg?branch=master)](https://travis-ci.com/haruyuki/CS-Pound)
-[![Coverage Status](https://coveralls.io/repos/github/haruyuki/CS-Pound/badge.svg?branch=master)](https://coveralls.io/github/haruyuki/CS-Pound?branch=master)
-[![Requirements Status](https://requires.io/github/haruyuki/CS-Pound/requirements.svg?branch=master)](https://requires.io/github/haruyuki/CS-Pound/requirements/?branch=master)
+[![Build Status](https://img.shields.io/travis/com/haruyuki/CS-Pound.svg)](https://travis-ci.com/haruyuki/CS-Pound)
+[![Coverage Status](https://img.shields.io/codecov/c/github/haruyuki/CS-Pound.svg)](https://codecov.io/gh/haruyuki/CS-Pound)
+[![Requirements Status](https://img.shields.io/requires/github/haruyuki/CS-Pound.svg)](https://requires.io/github/haruyuki/CS-Pound/requirements/?branch=master)
 [![Discord.py Rewrite](https://img.shields.io/badge/discord.py-rewrite-blue.svg)](https://github.com/Rapptz/discord.py)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/github/license/haruyuki/CS-Pound.svg)](https://github.com/haruyuki/CS-Pound/blob/master/LICENSE)
