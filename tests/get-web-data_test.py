@@ -1,4 +1,5 @@
 import asyncio
+
 import lxml.html
 
 from chickensmoothie import _get_web_data

@@ -1,7 +1,7 @@
+import asyncio
 from collections import Counter
 import re
 
-import asyncio
 import cv2
 import motor.motor_asyncio as amotor
 from osuapi import OsuApi, AHConnector, enums

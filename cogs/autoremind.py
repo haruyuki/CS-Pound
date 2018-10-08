@@ -1,6 +1,6 @@
+import asyncio
 import re
 
-import asyncio
 import discord
 from discord.ext import commands
 import motor.motor_asyncio as amotor
