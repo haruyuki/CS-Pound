@@ -22,6 +22,5 @@ script:
   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then pytest --ignore=tests/get-osu-user_test.py; fi'
 
 after_success:
-  - coveralls
   - codecov
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then python verify.py; fi'
