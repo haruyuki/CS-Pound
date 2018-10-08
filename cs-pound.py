@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from os import listdir
 from os.path import isfile, join
@@ -6,10 +7,12 @@ import traceback
 
 import discord
 from discord.ext import commands
+import uvloop
 
 from constants import Constants
 from library import update_autoremind_times
 
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')  # Remove default help command to add custom one
 logger = logging.getLogger('discord')  # Create logger
