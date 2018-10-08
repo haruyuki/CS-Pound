@@ -10,7 +10,8 @@ import urllib.error
 import urllib.request
 
 from constants import Constants
-from library import get_dominant_colour, get_user
+from library import get_dominant_colour
+from osu import get_user
 
 client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 db = client['cs_pound']
