@@ -12,11 +12,11 @@ def test_results():
     database = mongo_client[Constants.database_name]
     collection = database[Constants.autoremind_collection_name]
 
-    objectid = loop.run_until_complete(collection.insert_one({'server_id': 'Travis CI Py.test prepare-message', 'channel_id': '1234567890', 'user_id': 'Haruyuki', 'remind_time': 0}))
-    message = loop.run_until_complete(prepare_message(1234567890, 0))
+    objectid = loop.run_until_complete(collection.insert_one({'server_id': 'Travis CI Py.test prepare-message', 'channel_id': '1234567890', 'user_id': 'Haruyuki', 'remind_time': -1}))
+    message = loop.run_until_complete(prepare_message(1234567890, -1))
 
     assert message == '0 minutes until pound opens! <@Haruyuki>'
 
     loop.run_until_complete(collection.delete_one({'_id': objectid.inserted_id}))
-    message = loop.run_until_complete(prepare_message('1234567890', 0))
+    message = loop.run_until_complete(prepare_message('1234567890', -1))
     assert message is None
