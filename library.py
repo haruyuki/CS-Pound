@@ -182,13 +182,10 @@ async def prepare_message(channel_id, time):
 async def send_message(bot, time):
     if time in autoremind_times:
         channel_ids = await get_sending_channels(time)
-        if not None:
-            for channel in channel_ids:
-                sending_channel = bot.get_channel(channel)
-                message = await prepare_message(channel, time)
-                await sending_channel.send(message)
-        else:
-            pass
+        for channel in channel_ids:
+            sending_channel = bot.get_channel(channel)
+            message = await prepare_message(channel, time)
+            await sending_channel.send(message)
 
 
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
@@ -230,8 +227,6 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
                             print('Minute in text')
                             sleep_amount = 0
                             cooldown = True
-                        elif 'second' in text:  # If second in pound opening time
-                            pass
                     elif len(value) == 2:  # If there are two numbers
                         if 'hour' and 'minute' in text:
                             print('Hour and minute in text')
