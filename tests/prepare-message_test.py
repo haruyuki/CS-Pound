@@ -15,7 +15,7 @@ def test_results():
     objectid = loop.run_until_complete(collection.insert_one({'server_id': 'Travis CI Py.test prepare-message', 'channel_id': '1234567890', 'user_id': 'Haruyuki', 'remind_time': -1}))
     message = loop.run_until_complete(prepare_message(1234567890, -1))
 
-    assert message == '0 minutes until pound opens! <@Haruyuki>'
+    assert message == '-1 minutes until pound opens! <@Haruyuki>'
 
     loop.run_until_complete(collection.delete_one({'_id': objectid.inserted_id}))
     message = loop.run_until_complete(prepare_message('1234567890', -1))
