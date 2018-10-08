@@ -1,9 +1,15 @@
 language: python
 cache: pip
 
-python: 3.7
-dist: xenial
-sudo: true
+matrix:
+  include:
+    - name: 'Python 3.6 Test'
+      python: 3.6
+    - name: 'Python 3.7 Test'
+      python: 3.7
+      dist: xenial
+      sudo: true
+
 
 env: PYTHONPATH=$TRAVIS_BUILD_DIR
 
