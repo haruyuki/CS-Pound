@@ -1,6 +1,6 @@
 import asyncio
 
-from library import get_user
+from osu import get_user
 
 loop = asyncio.get_event_loop()
 
