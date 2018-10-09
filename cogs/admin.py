@@ -12,7 +12,7 @@ class Admin:
         self.last_result = None
 
     def cleanup_code(self, content):
-        if content.startswith('```'):
+        if content.startswith('```') and content.endswith('```'):
             return '\n'.join(content.split('\n')[1:-1])
         return content.strip('` \n')
 
