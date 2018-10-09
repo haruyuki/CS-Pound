@@ -21,4 +21,4 @@ def test_results():
 
     loop.run_until_complete(collection.delete_one({'_id': objectid.inserted_id}))
     document = loop.run_until_complete(get_sending_channels(0))
-    assert document is set()
+    assert document == set()
