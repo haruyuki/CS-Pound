@@ -234,8 +234,6 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
                             value = 60
                             text = 'minute'
                             cooldown = True
-                        elif 'minute' and 'second' in text:
-                            print('Minute and second in text')
                     elif len(value) == 0:  # If there are no times i.e. Pound recently closed or not opening anytime soon
                         print('No time')
                         sleep_amount = 3600  # 1 hour
