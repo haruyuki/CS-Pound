@@ -161,9 +161,7 @@ async def get_sending_channels(time):
     if documents is not None:
         for document in documents:
             channel_ids.add(int(document['channel_id']))
-        return channel_ids
-    else:
-        return None
+    return channel_ids
 
 
 async def prepare_message(channel_id, time):
