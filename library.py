@@ -158,11 +158,14 @@ async def get_autoremind_documents(time):  # Get documents of users with specifi
 
 
 async def get_sending_channels(time):
+    print('Get sending channels...')
     channel_ids = set()
     documents = await get_autoremind_documents(time)
     if documents is not None:
+        print('Documents retrieved')
         for document in documents:
             channel_ids.add(int(document['channel_id']))
+    print(f"Channel ID's Set: {channel_ids}")
     return channel_ids
 
 
@@ -180,16 +183,19 @@ async def prepare_message(channel_id, time):
 
 
 async def send_message(bot, time):
+    print(f'Requested time: {time}')
+    print(f'Auto Remind times: {autoremind_times}')
     if time in autoremind_times:
         channel_ids = await get_sending_channels(time)
+        print(f"Channel ID's: {channel_ids}")
         for channel in channel_ids:
             sending_channel = bot.get_channel(channel)
             message = await prepare_message(channel, time)
             await sending_channel.send(message)
+            print('Message sent.')
 
 
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
-
     global cooldown
     print('Started pound countdown function')
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
