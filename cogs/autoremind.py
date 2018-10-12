@@ -57,7 +57,7 @@ class AutoRemind:
 
                         else:
                             description = (f'You already have a {user_data["remind_time"]} minute Auto Remind setup at <#{user_data["channel_id"]}>!\n'  # You aleady have a X minute Auto Remind setup at #channel!
-                                           'Are you sure you want to overwrite it to this channel?')
+                                           'Are you sure you want to overwrite it to this channel? (yes/no) (No `,` prefix needed!)')
                             embed = discord.Embed(title='Auto Remind', description=description, colour=0xff5252)
                             await ctx.send(embed=embed)
 
