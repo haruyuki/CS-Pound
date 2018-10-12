@@ -191,7 +191,10 @@ async def send_message(bot, time):
         for channel in channel_ids:
             sending_channel = bot.get_channel(channel)
             message = await prepare_message(channel, time)
-            await sending_channel.send(message)
+            try:
+                await sending_channel.send(message)
+            except AttributeError:
+                pass
             print('Message sent.')
 
 
