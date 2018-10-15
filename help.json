@@ -1,161 +1,161 @@
 {
-    "warning": {
-        "icon": "pencil",
-        "description": "To know about command usage or examples, use: ,help <command>"
+  "warning": {
+    "icon": "pencil",
+    "description": "To know about command usage or examples, use: ,help <command>"
+  },
+
+  "categories": {
+    "Chicken Smoothie": {
+      "icon": "dog",
+      "commands": {
+        "Image": {
+          "usage": ",image <link>",
+          "short": "Displays a 'screenshot' of your pet",
+          "description": "Displays an image of how you would see the pet in your 'My Pets' groups.",
+          "examples": {
+            "1": ",image https://www.chickensmoothie.com/viewpet.php?id=11214536",
+            "2": ",image https://www.chickensmoothie.com/viewpet.php?id=11818645",
+            "3": ",image https://www.chickensmoothie.com/viewpet.php?id=18249055"
+          },
+          "aliases": {
+            "1": ",img"
+          }
+        },
+
+        "Oekaki": {
+          "usage": ",oekaki <link>",
+          "short": "Displays Oekaki drawing",
+          "description": "Displays Oekaki drawing, along with artist name and profile picture. Do not confuse this with dressup scenes! This command will not work with dressup scene links!",
+          "examples": {
+            "1": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=30&t=3843428",
+            "2": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993",
+            "3": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=74&t=2918702"
+          },
+          "aliases": {}
+        },
+
+        "Pet": {
+          "usage": ",pet <link>",
+          "short": "Displays pet information",
+          "description": "Displays information about the pet. Unlike the image command, this command shows all available information about the pet, such as ID, age, and who it's given by.",
+          "examples": {
+            "1": ",pet http://www.chickensmoothie.com/viewpet.php?id=54685939",
+            "2": ",pet https://www.chickensmoothie.com/viewpet.php?id=2957856",
+            "3": ",pet https://www.chickensmoothie.com/viewpet.php?id=3539003"
+          },
+          "aliases": {}
+        },
+
+        "Time": {
+          "usage": ",time",
+          "short": "Tells you how long before the pound opens",
+          "description": "Tells you how long is left before the pound opens.",
+          "examples": {},
+          "aliases": {
+            "1": ",pound"
+          }
+        },
+
+        "Trade": {
+          "usage": ",trade <link>",
+          "short": "~~Displays trade information~~ (***Under Development***)",
+          "description": "Displays the C$, Pets, and/or items being offered on each side. Make sure to use the sharing link or it won't work!",
+          "examples": {
+            "1": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73520120&userid=841634&signature=E_q5KzBvdwclqa5I0vx64Q",
+            "2": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73510216&userid=841634&signature=Bmkf6bFhCNBwgA32PoR-_g",
+            "3": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73233628&userid=841634&signature=EpJNgoMFtLk8VUccVDFZPA"
+          },
+          "aliases": {}
+        }
+      }
     },
 
-    "categories": {
-        "Chicken Smoothie": {
-            "icon": "dog",
-            "commands": {
-                "Image": {
-                    "usage": ",image <link>",
-                    "short": "Displays a 'screenshot' of your pet",
-                    "description": "Displays an image of how you would see the pet in your 'My Pets' groups.",
-                    "examples": {
-                        "1": ",image https://www.chickensmoothie.com/viewpet.php?id=11214536",
-                        "2": ",image https://www.chickensmoothie.com/viewpet.php?id=11818645",
-                        "3": ",image https://www.chickensmoothie.com/viewpet.php?id=18249055"
-                    },
-                    "aliases": {
-                        "1": ",img"
-                    }
-                },
-
-                "Oekaki": {
-                    "usage": ",oekaki <link>",
-                    "short": "Displays Oekaki drawing",
-                    "description": "Displays Oekaki drawing, along with artist name and profile picture. Do not confuse this with dressup scenes! This command will not work with dressup scene links!",
-                    "examples": {
-                        "1": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=30&t=3843428",
-                        "2": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993",
-                        "3": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=74&t=2918702"
-                    },
-                    "aliases": {}
-                },
-
-                "Pet": {
-                    "usage": ",pet <link>",
-                    "short": "Displays pet information",
-                    "description": "Displays information about the pet. Unlike the image command, this command shows all available information about the pet, such as ID, age, and who it's given by.",
-                    "examples": {
-                        "1": ",pet http://www.chickensmoothie.com/viewpet.php?id=54685939",
-                        "2": ",pet https://www.chickensmoothie.com/viewpet.php?id=2957856",
-                        "3": ",pet https://www.chickensmoothie.com/viewpet.php?id=3539003"
-                    },
-                    "aliases": {}
-                },
-
-                "Time": {
-                    "usage": ",time",
-                    "short": "Tells you how long before the pound opens",
-                    "description": "Tells you how long is left before the pound opens.",
-                    "examples": {},
-                    "aliases": {
-                        "1": ",pound"
-                    }
-                },
-
-                "Trade": {
-                    "usage": ",trade <link>",
-                    "short": "~~Displays trade information~~ (***Under Development***)",
-                    "description": "Displays the C$, Pets, and/or items being offered on each side. Make sure to use the sharing link or it won't work!",
-                    "examples": {
-                        "1": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73520120&userid=841634&signature=E_q5KzBvdwclqa5I0vx64Q",
-                        "2": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73510216&userid=841634&signature=Bmkf6bFhCNBwgA32PoR-_g",
-                        "3": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73233628&userid=841634&signature=EpJNgoMFtLk8VUccVDFZPA"
-                    },
-                    "aliases": {}
-                }
-            }
+    "General": {
+      "icon": "file_folder",
+      "commands": {
+        "Auto Remind": {
+          "usage": ",autoremind <time/off>",
+          "short": "Auto ping X minutes before the pound opens",
+          "description": "Allows you to set an Auto Remind to ping you at a time you set before the pound opens. The furthest you can set an Auto Remind for at the moment is 60 minutes.",
+          "examples": {
+            "1": ",autoremind 5m",
+            "2": ",autoremind 60m",
+            "3": ",autoremind off"
+          },
+          "aliases": {}
         },
 
-        "General": {
-            "icon": "file_folder",
-            "commands": {
-                "Auto Remind": {
-                    "usage": ",autoremind <time/off>",
-                    "short": "Auto ping X minutes before the pound opens",
-                    "description": "Allows you to set an Auto Remind to ping you at a time you set before the pound opens. The furthest you can set an Auto Remind for at the moment is 60 minutes.",
-                    "examples": {
-                        "1": ",autoremind 5m",
-                        "2": ",autoremind 60m",
-                        "3": ",autoremind off"
-                    },
-                    "aliases": {}
-                },
-
-                "RemindMe": {
-                    "usage": ",remindme <time>",
-                    "short": "Pings you after specified amount of time",
-                    "description": "Pings you after a specified amount of time that you set. The maximum reminding time allowed is 24 hours.",
-                    "examples": {
-                        "1": ",remindme 1h6m23s",
-                        "2": ",remindme 12m",
-                        "3": ",remindme 1h10s"
-                    },
-                    "aliases": {
-                        "1": ",rm"
-                    }
-                },
-
-                "Giveaway": {
-                    "usage": ",giveaway <time> [winners] <description>",
-                    "short": "Create a giveaway",
-                    "description": "Allows you to setup and create a giveaway for a specified time. If a pet link is provided a image of the pet is displayed.",
-                    "examples": {
-                        "1": ",giveaway 3h Just a normal giveaway with one winner",
-                        "2": ",giveaway 1d 2w A two winner giveaway that gives away something!",
-                        "3": ",giveaway 10m 5w 10 pets from my non-existent group."
-                    },
-                    "aliases": {
-                        "1": ",g"
-                    }
-                }
-            }
+        "RemindMe": {
+          "usage": ",remindme <time>",
+          "short": "Pings you after specified amount of time",
+          "description": "Pings you after a specified amount of time that you set. The maximum reminding time allowed is 24 hours.",
+          "examples": {
+            "1": ",remindme 1h6m23s",
+            "2": ",remindme 12m",
+            "3": ",remindme 1h10s"
+          },
+          "aliases": {
+            "1": ",rm"
+          }
         },
 
-        "Informational": {
-            "icon": "wrench",
-            "commands": {
-                "Help": {
-                    "usage": ",help <command>",
-                    "short": "Get more information about a command",
-                    "description": "Gives you information on usage and examples of a command. If no command is provided, it will send you the command list with general descriptions of each command.",
-                    "examples": {
-                        "1": ",help help",
-                        "2": ",help autoremind",
-                        "3": ",help remindme"
-                    },
-                    "aliases": {}
-                },
-
-                "Invite": {
-                    "usage": ",invite",
-                    "short": "PM's you the website to get the bot invite link",
-                    "description": "",
-                    "examples": {},
-                    "aliases": {}
-                },
-
-                "Statistics": {
-                    "usage": ",statistics",
-                    "short": "Displays hardware information about the bot and system",
-                    "description": "Displays information about the system and the bot. Useful to see the current version of the bot or how many servers/users are using this bot.",
-                    "examples": {},
-                    "aliases": {
-                        "1": ",stats"
-                    }
-                },
-
-                "Support": {
-                    "usage": ",support",
-                    "short": "PM's you a link to the CS Pound Development Server",
-                    "description": "Want to contribute to the bot development? This command will PM you a link to the CS Pound Development Server, where you can watch development take place.",
-                    "examples": {},
-                    "aliases": {}
-                }
-            }
+        "Giveaway": {
+          "usage": ",giveaway <time> [winners] <description>",
+          "short": "Create a giveaway",
+          "description": "Allows you to setup and create a giveaway for a specified time. If a pet link is provided a image of the pet is displayed.",
+          "examples": {
+            "1": ",giveaway 3h Just a normal giveaway with one winner",
+            "2": ",giveaway 1d 2w A two winner giveaway that gives away something!",
+            "3": ",giveaway 10m 5w 10 pets from my non-existent group."
+          },
+          "aliases": {
+            "1": ",g"
+          }
         }
+      }
+    },
+
+    "Informational": {
+      "icon": "wrench",
+      "commands": {
+        "Help": {
+          "usage": ",help <command>",
+          "short": "Get more information about a command",
+          "description": "Gives you information on usage and examples of a command. If no command is provided, it will send you the command list with general descriptions of each command.",
+          "examples": {
+            "1": ",help help",
+            "2": ",help autoremind",
+            "3": ",help remindme"
+          },
+          "aliases": {}
+        },
+
+        "Invite": {
+          "usage": ",invite",
+          "short": "PM's you the website to get the bot invite link",
+          "description": "",
+          "examples": {},
+          "aliases": {}
+        },
+
+        "Statistics": {
+          "usage": ",statistics",
+          "short": "Displays hardware information about the bot and system",
+          "description": "Displays information about the system and the bot. Useful to see the current version of the bot or how many servers/users are using this bot.",
+          "examples": {},
+          "aliases": {
+            "1": ",stats"
+          }
+        },
+
+        "Support": {
+          "usage": ",support",
+          "short": "PM's you a link to the CS Pound Development Server",
+          "description": "Want to contribute to the bot development? This command will PM you a link to the CS Pound Development Server, where you can watch development take place.",
+          "examples": {},
+          "aliases": {}
+        }
+      }
     }
+  }
 }
