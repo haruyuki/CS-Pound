@@ -1,7 +1,7 @@
 import io
 import math
 import re
-from urllib.parse import urlparse, parse_qsl
+from urllib.parse import urlparse, parse_qs, parse_qsl
 
 import aiohttp
 import discord
@@ -121,7 +121,13 @@ async def image(link):
         if 'trans' in pet_image:  # If pet image is transparent (i.e. Pet has items)
             pet_image = 'http://www.chickensmoothie.com' + pet_image  # Pet image link
             transparent = True
+            rgba = (225, 246, 179, 255)
         else:
+            hex = parse_qs(pet_image)['bg'][0]
+            rgb = tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
+            rgba = list(rgb)
+            rgba = rgba.append(255)
+            rgba = tuple(rgba)
             transparent = False
 
         if titles[0] == 'PPS':  # If pet is PPS
@@ -185,7 +191,7 @@ async def image(link):
         if max_width < current_width:
             max_width = current_width * 2
 
-        canvas = Image.new('RGBA', (max_width, total_height), (225, 246, 179, 255))  # Create an RGBA image of max_width x total_height, with colour 225, 246, 179
+        canvas = Image.new('RGBA', (max_width, total_height), rgba)  # Create an RGBA image of max_width x total_height
         draw = ImageDraw.Draw(canvas)  # Draw the image to PIL
 
         y_offset = 0  # Offset for vertically stacking images
