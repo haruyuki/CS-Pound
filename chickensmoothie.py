@@ -125,8 +125,8 @@ async def image(link):
         else:
             hex = parse_qs(pet_image)['bg'][0]
             rgb = tuple(int(hex[i:i + 2], 16) for i in (0, 2, 4))
-            rgba = list(rgb)
-            rgba = rgba.append(255)
+            temp = list(rgb)
+            rgba = temp.append(255)
             rgba = tuple(rgba)
             transparent = False
 
