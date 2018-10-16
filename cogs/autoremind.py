@@ -65,7 +65,7 @@ class AutoRemind:
                                 return m.author == ctx.author and m.channel == ctx.channel
 
                             try:
-                                msg = await self.bot.wait_for('message', check=predicate, timeout=10.0)
+                                msg = await self.bot.wait_for('message', check=predicate, timeout=30.0)
                             except asyncio.TimeoutError:
                                 await ctx.send("Operation timed out.")
                             else:
