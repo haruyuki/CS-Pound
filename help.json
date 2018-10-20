@@ -97,20 +97,6 @@
           "aliases": {
             "1": ",rm"
           }
-        },
-
-        "Giveaway": {
-          "usage": ",giveaway <time> [winners] <description>",
-          "short": "Create a giveaway",
-          "description": "Allows you to setup and create a giveaway for a specified time. If a pet link is provided a image of the pet is displayed.",
-          "examples": {
-            "1": ",giveaway 3h Just a normal giveaway with one winner",
-            "2": ",giveaway 1d 2w A two winner giveaway that gives away something!",
-            "3": ",giveaway 10m 5w 10 pets from my non-existent group."
-          },
-          "aliases": {
-            "1": ",g"
-          }
         }
       }
     },
@@ -154,6 +140,37 @@
           "description": "Want to contribute to the bot development? This command will PM you a link to the CS Pound Development Server, where you can watch development take place.",
           "examples": {},
           "aliases": {}
+        }
+      }
+    },
+
+    "Fun": {
+      "icon": "game_die",
+      "commands": {
+        "Osu": {
+          "usage": ",osu link <Username|ID|URL>\n,osu profile [Username|ID|URL]",
+          "short": "View user osu! stats",
+          "description": "View user's osu! stats, and be able to link your own profile.",
+          "examples": {
+            "1": ",osu link Arita",
+            "2": ",osu profile",
+            "3": ",osu profile 7109858"
+          },
+          "aliases": {}
+        },
+
+        "Giveaway": {
+          "usage": ",giveaway <time> [winners] <description>",
+          "short": "Create a giveaway",
+          "description": "Allows you to setup and create a giveaway for a specified time. If a pet link is provided a image of the pet is displayed.",
+          "examples": {
+            "1": ",giveaway 3h Just a normal giveaway with one winner",
+            "2": ",giveaway 1d 2w A two winner giveaway that gives away something!",
+            "3": ",giveaway 10m 5w 10 pets from my non-existent group."
+          },
+          "aliases": {
+            "1": ",g"
+          }
         }
       }
     }
