@@ -1,4 +1,6 @@
 LICENSE
 README.md
 setup.cfg
+pr_setup.cfg
+tests/
 verify.py
