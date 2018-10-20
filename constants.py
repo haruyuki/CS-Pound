@@ -3,6 +3,7 @@ import os
 
 class Constants:
     prefix = ','  # The prefix used to call the bot
+    owner_id = 277398425044123649
     discord_token = os.environ.get('discord', None)  # The Discord bot token
     osu_key = os.environ.get('osu', None)  # The osu! API key
     support_link = 'https://invite.gg/cspound'  # Link to support server

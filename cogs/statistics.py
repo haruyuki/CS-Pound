@@ -25,7 +25,6 @@ class Statistics:
             d = datetime(1, 1, 1) + timedelta(seconds=int(seconds))  # Create tuple of date values
             return d.day - 1, d.hour, d.minute, d.second  # Return tuple of date values
 
-        owner_id = self.bot.owner_id
         bot_id = self.bot.user.id
         python_version = f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}'
         discord_py_version = f'{discord.__version__}'
@@ -46,7 +45,7 @@ class Statistics:
 
         description = f'''`Created by Peko#7955. CS: haruyuki`
 
-**Owner ID:** `{owner_id}`
+**Owner ID:** `{Constants.owner_id}`
 **CS-Pound ID:** `{bot_id}`
 
 **Running on:** `{guild_count}`
