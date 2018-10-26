@@ -75,8 +75,6 @@ def time_extractor(time):  # Convert given time into seconds
 
 
 def resolver(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
-    day_section = ''
-
     def pluralise(string, value, and_placement=''):  # Correctly prefix or suffix ',' or 'and' placements
         if value == 0:  # If given time has no value
             return ''
@@ -88,22 +86,35 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
             # If value is larger than 1 then pluralise the time
             # If 'and_placement' is set to suffix add 'and' otherwise add a ',' instead if 'and_placement' is set to comma otherwise leave blank
 
-    if day != 0 and ((hour == 0 and minute == 0) or (hour == 0 and second == 0) or (minute == 0 and second == 0)):
-        # If there are day(s) but:
-        # No hours or minutes
-        # No hours or seconds
-        # No minutes or seconds
-        day_section = pluralise('day', day, 'suf')  # Pluralise the day section with a suffixed 'and' placement
+    suffix = False
+    comma = False
+    if day != 0:
+        if hour == 0 and minute == 0:  # If there are no hours or minutes
+            suffix = True
+        elif hour == 0 and second == 0:  # If there are no hours or seconds
+            suffix = True
+        elif minute == 0 and second == 0:  # If there are no minutes or seconds
+            suffix = True
+        elif hour != 0 and minute != 0 and second != 0:  # If there are hours and minutes and seconds
+            comma = True
+        elif hour != 0 and minute == 0:  # If there are hours but no minutes
+            comma = True
+        elif hour != 0 and second == 0:  # If there are hours but no seconds
+            comma = True
+        elif minute != 0 and hour == 0:  # If there are minutes but no hours
+            comma = True
+        elif minute != 0 and second == 0:  # If there are minutes but no seconds
+            comma = True
+        elif second != 0 and hour == 0:  # If there are seconds but no hours
+            comma = True
+        elif second != 0 and minute == 0:  # If there are seconds but no minutes
+            comma = True
+    else:
+        day_section = ''
 
-    elif day != 0 and ((hour != 0 and minute != 0 and second != 0) or (hour != 0 and minute == 0) or (hour != 0 and second == 0) or (minute != 0 and second == 0) or (hour == 0 and minute != 0) or (hour == 0 and second != 0) or (minute == 0 and second != 0)):
-        # If there are day(s) but:
-        # There are hour(s) and minute(s) and second(s)
-        # There are hour(s) but no minutes
-        # There are hour(s) but no seconds
-        # There are minute(s) but no hours
-        # There are minute(s) but no seconds
-        # There are second(s) but no hours
-        # There are second(s) but no minutes
+    if suffix:
+        day_section = pluralise('day', day, 'suf')  # Pluralise the day section with a suffixed 'and' placement
+    elif comma:
         day_section = pluralise('day', day, 'com')  # Pluralise the day section with a suffixed ',' placement
 
     if minute == 0:  # If there are no minutes
