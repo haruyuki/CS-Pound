@@ -28,10 +28,10 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 
 ## Prerequisites
 
-*  Python 3.6 and above.
-*  A [Discord](https://discordapp.com) account.
-*  Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is highly recommended.
-*  The [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana) font family.
+* Python 3.6 and above.
+* A [Discord](https://discordapp.com) account.
+* Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is highly recommended.
+* The [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana) font family.
 
 ## Installation
 * Install all Python requirements using: `pip install -r requirements.txt`.
@@ -48,16 +48,16 @@ python3 cs-pound.py
 
 ## Built With
 
-*  [Python](https://www.python.org/downloads/release/python-370/) 3.7.0
-*  [Discord.py](https://pypi.org/project/discord.py/) 1.0.0a
-*  [lxml](https://pypi.org/project/lxml/) 4.2.3
-*  [Pillow](https://pypi.org/project/Pillow/) 5.2.0
-*  [psutil](https://pypi.org/project/psutil/) 5.4.6
-*  [uvloop](https://pypi.org/project/uvloop/) 0.11.0
+* [Python](https://www.python.org/downloads/release/python-370/) 3.7.0
+* [Discord.py](https://pypi.org/project/discord.py/) 1.0.0a
+* [lxml](https://pypi.org/project/lxml/) 4.2.3
+* [Pillow](https://pypi.org/project/Pillow/) 5.2.0
+* [psutil](https://pypi.org/project/psutil/) 5.4.6
+* [uvloop](https://pypi.org/project/uvloop/) 0.11.0
 
 ## Contributors
 
-*  [**@ev-ev**](https://github.com/ev-ev) => edited README.MD
+* [**@ev-ev**](https://github.com/ev-ev) => edited README.MD
 
 ## License
 
@@ -65,8 +65,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) f
 
 ## Acknowledgements
 
-*  [Chicken Smoothie](http://www.chickensmoothie.com)
-*  [discord.py](https://github.com/Rapptz/discord.py)
-*  [DigitalOcean](https://www.digitalocean.com)
-*  [BlobGivingBot](https://github.com/BlobEmoji/blobgivingbot)
-*  [GiveawayBot](https://github.com/jagrosh/GiveawayBot)
+* [Chicken Smoothie](http://www.chickensmoothie.com)
+* [discord.py](https://github.com/Rapptz/discord.py)
+* [DigitalOcean](https://www.digitalocean.com)
+* [BlobGivingBot](https://github.com/BlobEmoji/blobgivingbot)
+* [GiveawayBot](https://github.com/jagrosh/GiveawayBot)
