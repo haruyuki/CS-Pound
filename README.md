@@ -17,9 +17,9 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,autoremind   | Setup an autoreminder for when the pound opens                            | ,autoremind 5m                                                                |
 | ,giveaway     | Create a giveaway                                                         | ,giveaway 10m 5w 10 pets from my non-existent group.                          |
 | ,help         | Displays the help message of all or a specific command.                   | ,help autoremind    OR  ,help                                                 |
-| ,image        | Displays the pet as you would see it in "My Pets" group                   | ,image http://www.chickensmoothie.com/viewpet.php?id=54685939                 |
-| ,oekaki       | Displays Oekaki drawing from the link                                     | ,oekaki http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993     |
-| ,pet          | Displays information about the pet from the link                          | ,pet http://www.chickensmoothie.com/viewpet.php?id=54685939                   |
+| ,image        | Displays the pet as you would see it in "My Pets" group                   | ,image <http://www.chickensmoothie.com/viewpet.php?id=54685939>               |
+| ,oekaki       | Displays Oekaki drawing from the link                                     | ,oekaki <http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993>   |
+| ,pet          | Displays information about the pet from the link                          | ,pet <http://www.chickensmoothie.com/viewpet.php?id=54685939>                 |
 | ,remindme     | Pings you after specified amount of time. Maximum reminding time is 24h   | ,remindme 1h6m23s<br>,remindme 12m<br>,remindme 1h10s                         |
 | ,statistics   | Displays CS Pound bot statistics                                          | ,statistics                                                                   |
 | ,support      | PM's you the link to the CS Pound Development Server                      | ,support                                                                      |
