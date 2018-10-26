@@ -35,7 +35,7 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 
 ## Installation
 * Install all Python requirements using: `pip install -r requirements.txt`.
-Please refer to the wiki for [Server](https://github.com/Tesshin/CS-Pound/wiki/Server-Installation) or [User](https://github.com/Tesshin/CS-Pound/wiki/User-Installation) installation
+* Set environment variables as used in constants.py
 
 ## Running
 
