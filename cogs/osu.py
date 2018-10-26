@@ -83,10 +83,10 @@ class Osu:
                 image = np.asarray(bytearray(resp.read()), dtype='uint8')  # Convert image into array
                 image = cv2.imdecode(image, cv2.IMREAD_COLOR)  # Convert into openCV-friendly format
                 rgb = get_dominant_colour(image)
-                hex_colour = eval('0x%02x%02x%02x' % (int(rgb[0]), int(rgb[1]), int(rgb[2])))  # Convert RGB into hex colour
+                hex_colour = '0x%02x%02x%02x' % (int(rgb[0]), int(rgb[1]), int(rgb[2]))  # Convert RGB into hex colour
             except urllib.error.HTTPError:
                 user_icon = 'https://osu.ppy.sh/images/layout/avatar-guest.png'
-                hex_colour = eval('0xfefefe')
+                hex_colour = 0xfefefe
 
             title = f'{self.osu_emoji} Stats for {data.username} (Lvl. {math.floor(data.level)})'
             seconds_played = data.total_seconds_played
