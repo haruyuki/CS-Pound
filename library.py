@@ -103,12 +103,6 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
             comma = True
         elif minute != 0 and hour == 0:  # If there are minutes but no hours
             comma = True
-        elif minute != 0 and second == 0:  # If there are minutes but no seconds
-            comma = True
-        elif second != 0 and hour == 0:  # If there are seconds but no hours
-            comma = True
-        elif second != 0 and minute == 0:  # If there are seconds but no minutes
-            comma = True
     else:
         day_section = ''
 
