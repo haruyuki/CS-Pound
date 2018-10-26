@@ -10,7 +10,7 @@
 
 A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://www.chickensmoothie.com). With this bot you can view information on pets and pound opening times straight from Discord without accessing the website.
 
-### Features
+## Features
 
 | Command       | Description                                                               | Example                                                                       |
 |-------------  |-------------------------------------------------------------------------  |---------------------------------------------------------------------------    |
@@ -25,18 +25,18 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,support      | PM's you the link to the CS Pound Development Server                      | ,support                                                                      |
 | ,time         | Tells you how long before the pound opens                                 | ,time                                                                         |
 
-### Prerequisites
+## Prerequisites
 
 * Python 3.6 and above.
 * A [Discord](https://discordapp.com) account.
 * Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is highly recommended.
 * The [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana) font family.
 
-### Installation
+## Installation
 * Install all Python requirements using: `pip install -r requirements.txt`.
 Please refer to the wiki for [Server](https://github.com/Tesshin/CS-Pound/wiki/Server-Installation) or [User](https://github.com/Tesshin/CS-Pound/wiki/User-Installation) installation
 
-### Running
+## Running
 
 To start the bot run either of the following commands:
 ```bash
