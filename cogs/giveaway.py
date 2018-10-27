@@ -6,7 +6,7 @@ import re
 import discord
 from discord.ext import commands
 
-from library import parse_short_time
+from library import parse_time
 import chickensmoothie as cs
 
 
@@ -41,8 +41,8 @@ class Giveaway:
                 read_message_history = role.permissions.read_message_history
 
         if add_reactions and read_message_history:
-            duration = parse_short_time(length)
-            if duration == -1:
+            duration = parse_time(length)
+            if duration[0] == 0:
                 cross_emoji = u"\u274C"
                 await ctx.send(f'{cross_emoji} Failed to parse time from `{length}`')
             else:

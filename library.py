@@ -18,60 +18,31 @@ database = mongo_client[Constants.database_name]
 
 
 # -------------------- FUNCTIONS --------------------
-def parse_short_time(time):  # A function to parse a single short time format (1d, 2h, 3m, 4s) into seconds
+def parse_time(time):  # A function to parse a short time formats (1d, 2h, 3m, 4s) into seconds
     timestr = time.lower()
-    if not re.findall(r'\d{1,8}[smhd]', timestr):
-        return -1
-    multiplier = 1
-    for i in range(len(timestr)):
-        if timestr[i] == 'd':
-            multiplier *= 86400
-        elif timestr[i] == 'h':
-            multiplier *= 3600
-        elif timestr[i] == 'm':
-            multiplier *= 60
-        elif timestr[i] == 's':
-            timestr = timestr[:-1]
-    return multiplier * int(''.join([x for x in timestr if x.isdigit()]))
+    times = re.findall(r'\d{1,8}[smhd]', timestr)
+    total = 0
+    day_total = 0
+    hour_total = 0
+    minute_total = 0
+    second_total = 0
 
+    for time in times:
+        split = list(time)
+        if split[1] == 'd':
+            day_total = int(split[0])
+            total += day_total * 86400
+        elif split[1] == 'h':
+            hour_total = int(split[0])
+            total += hour_total * 3600
+        elif split[1] == 'm':
+            minute_total = int(split[0])
+            total += minute_total * 60
+        elif split[1] == 's':
+            second_total = int(split[0])
+            total += second_total * 1
 
-def time_extractor(time):  # Convert given time into seconds
-    time = time.lower()  # Change all letters to lowercase
-    htotal = 0
-    mtotal = 0
-    stotal = 0
-    if 'h' not in time and 'm' not in time and 's' not in time:  # If there is no time at all
-        pass
-    elif 'h' in time or 'hr' in time:  # If hours in input
-        htotal = time.split('h')[0]  # Split input and get number of hours
-        if 'm' in time:  # If minutes in input
-            temp = time.split('h')[1]  # Split input and get leftover time (minutes and seconds)
-            mtotal = temp.split('m')[0]  # Split temp and get number of minutes
-            if 's' in time:  # If seconds in input
-                temp = time.split('h')[1]  # Split input and get leftover time (minutes and seconds)
-                temp2 = temp.split('m')[1]  # Split temp and get leftover time (seconds)
-                stotal = temp2.split('s')[0]  # Split temp2 and get number of seconds
-        else:  # If no minutes in input
-            if 's' in time:  # If seconds in input
-                temp = time.split('h')[1]  # Split input and get leftover time (seconds)
-                stotal = temp.split('s')[0]  # Split temp and get number of seconds
-    else:  # If no hours in input
-        if 'm' in time:  # If minutes in input
-            mtotal = time.split('m')[0]  # Split input and get number of minutes
-            if 's' in time:  # If seconds in input
-                temp = time.split('m')[1]  # Split input and get leftover time (seconds)
-                stotal = temp.split('s')[0]  # Split temp and get number of seconds
-        else:  # If no minutes in input
-            if 's' in time:  # If seconds in input
-                stotal = time.split('s')[0]  # Split input and get number of seconds
-    htotal = int(htotal)  # Convert 'htotal' into integer
-    mtotal = int(mtotal)  # Convert 'mtotal' into integer
-    stotal = int(stotal)  # Convert 'stotal' into integer
-    if htotal == 0 and mtotal == 0 and stotal == 0:  # If hours, minutes and seconds is 0
-        finaltotal = 0
-    else:  # If values in hours, minutes or seconds
-        finaltotal = int((htotal * 60 * 60) + (mtotal * 60) + stotal)  # Total time in seconds
-    return finaltotal, htotal, mtotal, stotal  # Return a tuple
+    return total, day_total, hour_total, minute_total, second_total
 
 
 def resolver(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
@@ -88,7 +59,7 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
 
     suffix = False
     comma = False
-    if day != 0:
+    if day != 0:  # If there are days
         if hour == 0 and minute == 0:  # If there are no hours or minutes
             suffix = True
         elif hour == 0 and second == 0:  # If there are no hours or seconds
