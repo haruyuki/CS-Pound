@@ -41,6 +41,6 @@ async def on_ready():  # When Client is loaded
     print(f'You are running {bot.user.name} v{Constants.version}')
     print('Created by Peko#7955')
     await update_autoremind_times()
-    await bot.change_presence(activity=discord.Game(',help | By: Peko#7955'), status=discord.Status.online)
+    await bot.change_presence(activity=discord.Game(Constants.playing_text), status=discord.Status.online)
 
 bot.run(Constants.discord_token, bot=True, reconnect=True)
