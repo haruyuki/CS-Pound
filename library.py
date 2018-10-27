@@ -60,7 +60,9 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
     suffix = False
     comma = False
     if day != 0:  # If there are days
-        if hour == 0 and minute == 0:  # If there are no hours or minutes
+        if hour == 0 and minute == 0 and second == 0:
+            pass
+        elif hour == 0 and minute == 0:  # If there are no hours or minutes
             suffix = True
         elif hour == 0 and second == 0:  # If there are no hours or seconds
             suffix = True
@@ -74,13 +76,13 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
             comma = True
         elif minute != 0 and hour == 0:  # If there are minutes but no hours
             comma = True
-    else:
-        day_section = ''
 
     if suffix:
         day_section = pluralise('day', day, 'suf')  # Pluralise the day section with a suffixed 'and' placement
     elif comma:
         day_section = pluralise('day', day, 'com')  # Pluralise the day section with a suffixed ',' placement
+    else:
+        day_section = pluralise('day', day, '')  # Pluralise the day section with no placements
 
     if minute == 0:  # If there are no minutes
         hour_section = pluralise('hour', hour)  # Pluralise the hour section
