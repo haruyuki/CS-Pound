@@ -8,7 +8,7 @@ secondary_colour = (251, 230, 124)
 # Multiple values to account for k-means entropy
 image_1_colours = {(69, 82, 81), (68, 82, 81)}
 image_2_colours = {(196, 189, 178), (197, 190, 179), (197, 189, 179), (198, 191, 180)}
-image_3_colours = {(244, 241, 239)}
+image_3_colours = {(244, 241, 239), (245, 241, 240)}
 
 
 class TestClass:
