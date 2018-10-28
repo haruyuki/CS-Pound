@@ -230,8 +230,10 @@ async def pound_text():
         text = data[1].xpath('//h2/text()')  # Get all H2 elements in the data
         try:
             text = text[1]  # Try and get pound opening text
+            text = text.replace('Sorry, the pound is closed at the moment.', '').replace('\n', '').replace('\t', '') + '.'  # Remove extra formatting from text
         except IndexError:  # If there isn't any pound opening text
             text = 'Pound is currently open!'
+
         return text
     else:
         return None
