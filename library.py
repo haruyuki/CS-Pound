@@ -7,7 +7,7 @@ import motor.motor_asyncio as amotor
 from sklearn.cluster import KMeans
 import uvloop
 
-from chickensmoothie import _get_web_data
+from chickensmoothie import pound_text
 from constants import Constants
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -172,74 +172,55 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
     global cooldown
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
     value = 0
-    text = ''
+    time = ''
     while not bot.is_closed():  # While bot is still running
         sleep_amount = 0
         if not cooldown:  # If command is not on cooldown
-            data = await _get_web_data('https://www.chickensmoothie.com/pound.php')  # Get pound data
-            print('Received web data')
-            if data[0]:  # If pound data is valid and contains content
-                print('Data was sucessful')
-                text = data[1].xpath('//h2/text()')  # List all texts with H2 element
-                print(f'Texts with h2 element: {text}')
-                try:  # Try getting pound opening text
-                    print('Trying to get pound text')
-                    text = text[1]  # Grab the pound opening time text
-                    print(f'Received text: {text}')
-                    value = [int(s) for s in text.split() if s.isdigit()]  # Extract the numbers in the text
-                    print(f'Values in text: {value}')
-                    if len(value) == 1:  # If there is only one number
-                        value = value[0]
-                        if 'hour' in text:  # If hour in pound opening time
-                            print('Hour in text')
-                            if value == 1:  # If there is one hour left
-                                cooldown = True
-                                value = 60  # Start countdown from 60 minutes
-                                sleep_amount = 0
-                            else:  # If there is more than one hour
-                                sleep_amount = (value - 2) * 3600  # -1 hour and convert into seconds
-                        elif 'minute' in text:  # If minute in pound opening time
-                            print('Minute in text')
+            time = await pound_text()  # Get pound text
+            value = [int(s) for s in time.split() if s.isdigit()]  # Extract numbers in text
+            if value:  # If valid time
+                if len(value) == 1:
+                    value = value[0]
+                    if 'hour' in time:
+                        if value == 1:
+                            cooldown = True
+                            value = 60  # Start countdown from 60 minutes
                             sleep_amount = 0
-                            cooldown = True
-                    elif len(value) == 2:  # If there are two numbers
-                        if 'hour' and 'minute' in text:
-                            print('Hour and minute in text')
-                            sleep_amount = value[1] * 60  # Get the minutes and convert to seconds
-                            value = 60
-                            text = 'minute'
-                            cooldown = True
-                    elif len(value) == 0:  # If there are no times i.e. Pound recently closed or not opening anytime soon
-                        sleep_amount = 3600  # 1 hour
-                except IndexError:  # Pound is currently open
-                    print('Pound open')
-                    sleep_amount = 3600  # 1 hour
-            else:  # If pound data isn't valid
-                sleep_amount = 11400  # 3 hours 10 minutes
-        else:  # If command is on cooldown
-            if 'hour' in text:  # If hour in text
+                        else:
+                            sleep_amount = (value - 2) * 3600  # -1 hour and convert into seconds
+                    elif 'minute' in time:
+                        sleep_amount = 0
+                        cooldown = True
+                elif len(value) == 2:
+                    if 'hour' and 'minute' in time:
+                        sleep_amount = value[1] * 60  # Get the minutes and convert to seconds
+                        value = 60   # Start countdown from 60 minutes
+                        time = 'minute'
+                        cooldown = True
+            else:  # If no times (i.e. Pound currently open or not opening anytime soon)
+                sleep_amount = 3600  # 1 hour
+
+        else:
+            if 'hour' in time:
                 if value != 0:  # If minutes left is not zero
-                    await send_message(bot, value)  # Run minute check
+                    await send_message(bot, value)  # Check if any messages need to be sent
                     value -= 1  # Remove one minute
                     sleep_amount = 60  # 1 minute
                 else:  # If time ran out (i.e. Pound is now open)
                     cooldown = False
                     sleep_amount = 10800  # 3 hours
-            elif 'minute' and 'second' in text:  # If minute and second in text
-                sleep_amount = value[1]
+            elif 'minute' and 'second' in time:
+                sleep_amount = value[1]  # Sleep for the remaining seconds
                 value = 1
-            elif 'minute' in text:  # If minute in text
+            elif 'minute' in time:
                 if value > 0:  # If minutes left is not zero
-                    await send_message(bot, value)  # Run minute check
+                    await send_message(bot, value)  # Check if any messages need to be sent
                     value -= 1  # Remove one minute
                     sleep_amount = 60  # 1 minute
                 else:  # If time ran out (i.e. Pound is now open)
                     cooldown = False
                     sleep_amount = 10800  # 3 hours
-            elif 'second' in text:  # If second in text
-                pass
             else:
                 sleep_amount = 10800  # 3 hours
+
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
-        print(f'Slept for: {sleep_amount}')
-        print(f'Command is on cooldown: {cooldown}')
