@@ -17,10 +17,17 @@ os: linux
 
 install: pip install -r requirements.txt
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then pytest; fi'
   - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then pytest -c pr_setup.cfg; fi'
 
 after_success:
   - codecov
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - python-codacy-coverage
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then python verify.py; fi'
