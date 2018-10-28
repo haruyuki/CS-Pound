@@ -1,4 +1,5 @@
 aiohttp>=3.4.4
+codacy-coverage
 codecov
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
 dnspython
