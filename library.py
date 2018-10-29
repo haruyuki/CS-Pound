@@ -42,7 +42,7 @@ def parse_time(time):  # A function to parse a short time formats (1d, 2h, 3m, 4
             total += second_total * 1
         else:
             minute_total = int(time[0])
-            total += second_total * 60
+            total += minute_total * 60
 
     return total, day_total, hour_total, minute_total, second_total
 
