@@ -104,7 +104,6 @@ async def pet(link):
                     elif key == 'age':
                         try:
                             value = int(re.findall(r'(\d) days?', value)[0])  # Extract the age number
-                            value = int(value[:-5])  # Get the age of the pet
                         except (ValueError, IndexError):  # If no number found (i.e Pet is less than a day old)
                             value = 0
 
