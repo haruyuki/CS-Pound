@@ -110,9 +110,19 @@ class TestClass:
         assert parse_time('100d') == (8640000, 100, 0, 0, 0)
         assert parse_time('200d') == (17280000, 200, 0, 0, 0)
 
-    def test_invalid_times(self):
-        assert parse_time('1') == (0, 0, 0, 0, 0)
-        assert parse_time('2') == (0, 0, 0, 0, 0)
+    def test_no_letter_single_times(self):
+        assert parse_time('1') == (60, 0, 0, 1, 0)
+        assert parse_time('2') == (120, 0, 0, 2, 0)
+
+    def test_no_letter_double_times(self):
+        assert parse_time('10') == (600, 0, 0, 10, 0)
+        assert parse_time('20') == (1200, 0, 0, 20, 0)
+
+    def test_no_letter_triple_times(self):
+        assert parse_time('100') == (6000, 0, 0, 100, 0)
+        assert parse_time('200') == (12000, 0, 0, 200, 0)
+
+    def test_empty_times(self):
         assert parse_time('0s') == (0, 0, 0, 0, 0)
         assert parse_time('0m') == (0, 0, 0, 0, 0)
         assert parse_time('0h') == (0, 0, 0, 0, 0)
