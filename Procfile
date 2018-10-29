@@ -1,1 +1,1 @@
-worker: python cs-pound.py
+worker: python cs_pound.py
