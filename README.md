@@ -42,9 +42,9 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 
 To start the bot run either of the following commands:
 ```bash
-python cs-pound.py
+python cs_pound.py
 
-python3 cs-pound.py
+python3 cs_pound.py
 ```
 
 ## Built With
