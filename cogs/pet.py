@@ -42,7 +42,10 @@ class Pet:
                                 key = 'Pet\'s name'
                         elif key == 'age':
                             key = 'Age'
-                            value = f'{value} days'
+                            if value == 0:
+                                value = 'Less than a day old'
+                            else:
+                                value = f'{value} days'
                         elif key == 'given':
                             if value == '':
                                 continue
