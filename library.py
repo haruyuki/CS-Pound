@@ -20,7 +20,7 @@ database = mongo_client[Constants.database_name]
 # -------------------- FUNCTIONS --------------------
 def parse_time(time):  # A function to parse a short time formats (1d, 2h, 3m, 4s) into seconds
     timestr = time.lower()
-    times = re.findall(r'(\d{1,8})([smhd])', timestr)
+    times = re.findall(r'(\d{1,8})([smhd]?)', timestr)
     total = 0
     day_total = 0
     hour_total = 0
@@ -40,6 +40,9 @@ def parse_time(time):  # A function to parse a short time formats (1d, 2h, 3m, 4
         elif time[1] == 's':
             second_total = int(time[0])
             total += second_total * 1
+        else:
+            minute_total = int(time[0])
+            total += second_total * 60
 
     return total, day_total, hour_total, minute_total, second_total
 
