@@ -3,7 +3,7 @@ import asyncio
 import discord
 from discord.ext import commands
 
-from library import parse_time, resolver
+from library import parse_time, formatter
 
 
 class RemindMe:
@@ -21,7 +21,7 @@ class RemindMe:
             embed = discord.Embed(title='Remind Me', description='That time is too long!', colour=0xff5252)  # Create embed
             await ctx.send(embed=embed)  # Send embed
         else:  # If time is valid
-            before_message = f'A reminder has been set for {ctx.message.author.mention} in {resolver(finaltotal[1], finaltotal[2], finaltotal[3], finaltotal[4])}.'  # A reminder has been set for USER in X hours, Y minutes, and Z seconds.
+            before_message = f'A reminder has been set for {ctx.message.author.mention} in {formatter(finaltotal[1], finaltotal[2], finaltotal[3], finaltotal[4])}.'  # A reminder has been set for USER in X hours, Y minutes, and Z seconds.
             embed = discord.Embed(title='Remind Me', description=before_message, colour=0x4ba139)   # Create embed
             await ctx.send(embed=embed)  # Send embed
             after_message = f'Reminder for {ctx.message.author.mention}!'  # Reminder for USER!

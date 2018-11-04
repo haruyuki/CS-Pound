@@ -47,7 +47,7 @@ def parse_time(time):  # A function to parse a short time formats (1d, 2h, 3m, 4
     return total, day_total, hour_total, minute_total, second_total
 
 
-def resolver(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
+def formatter(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
     def pluralise(string, value, and_placement=''):  # Correctly prefix or suffix ',' or 'and' placements
         if value == 0:  # If given time has no value
             return ''
@@ -100,6 +100,15 @@ def resolver(day, hour, minute, second):  # Pretty format time layout given days
     else:  # If there are no hours or minutes
         second_section = pluralise('second', second)  # Pluralise the second section
     return f'{day_section}{hour_section}{minute_section}{second_section}'  # Return the formatted text
+
+
+def resolver(seconds):  # Pretty format time given seconds
+    day, hour = divmod(seconds, 86400)
+    hour, minute = divmod(hour, 3600)
+    minute, second = divmod(minute, 60)
+
+    formatted_string = formatter(day, hour, minute, second)
+    return formatted_string
 
 
 def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
