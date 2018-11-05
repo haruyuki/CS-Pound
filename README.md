@@ -45,15 +45,6 @@ To start the bot run the following command:
 python3 cs_pound.py
 ```
 
-## Built With
-
-* [Python](https://www.python.org/downloads/release/python-370/) 3.7.0
-* [Discord.py](https://pypi.org/project/discord.py/) 1.0.0a
-* [lxml](https://pypi.org/project/lxml/) 4.2.3
-* [Pillow](https://pypi.org/project/Pillow/) 5.2.0
-* [psutil](https://pypi.org/project/psutil/) 5.4.6
-* [uvloop](https://pypi.org/project/uvloop/) 0.11.0
-
 ## Contributors
 
 * [**@ev-ev**](https://github.com/ev-ev) => edited README.MD
