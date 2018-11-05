@@ -98,7 +98,7 @@ class Giveaway:
         try:
             reaction = next(x for x in message.reactions if x.emoji == self.emoji)
         except StopIteration:
-            raise NoWinnerFound('Coundn\'t find giveaway emoji on specified message')
+            raise NoWinnerFound("Couldn't find giveaway emoji on specified message")
 
         users = await reaction.users().filter(lambda x: not x.bot).flatten()
         if not users:

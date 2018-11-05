@@ -16,7 +16,7 @@ class Support:
             if ctx.message.guild is not None:
                 await ctx.send(embed=embed)  # Send embed
         except discord.errors.Forbidden:  # If cannot send PM to user
-            embed = discord.Embed(title='Support', description='A PM couldn\'t be sent to you, it may be that you have \'Allow direct messages from server members\' disabled in your privacy settings.', colour=0xff5252)  # Create embed
+            embed = discord.Embed(title='Support', description="A PM couldn't be sent to you, it may be that you have 'Allow direct messages from server members' disabled in your privacy settings.", colour=0xff5252)  # Create embed
             await ctx.send(embed=embed)  # Send embed
 
 
