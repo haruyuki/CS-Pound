@@ -11,8 +11,8 @@ osuapi
 Pillow
 psutil
 pytest
+pytest-codestyle
 pytest-cov
-pytest-pep8
 scipy
 sklearn
 uvloop
