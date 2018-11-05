@@ -10,6 +10,7 @@ import uvloop
 from chickensmoothie import pound_text
 from constants import Constants
 
+seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400}
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 autoremind_times = set()
 cooldown = False
@@ -18,33 +19,15 @@ database = mongo_client[Constants.database_name]
 
 
 # -------------------- FUNCTIONS --------------------
-def parse_time(time):  # A function to parse a short time formats (1d, 2h, 3m, 4s) into seconds
-    timestr = time.lower()
-    times = re.findall(r'(\d{1,8})([smhd]?)', timestr)
+def parse_time(timestr):  # A function to parse a short time formats (1d, 2h, 3m, 4s) into seconds
+    timestr = timestr.lower()
+    times = re.findall(r'(\d{1,8}[smhd]?)', timestr)
     total = 0
-    day_total = 0
-    hour_total = 0
-    minute_total = 0
-    second_total = 0
-
     for time in times:
-        if time[1] == 'd':
-            day_total = int(time[0])
-            total += day_total * 86400
-        elif time[1] == 'h':
-            hour_total = int(time[0])
-            total += hour_total * 3600
-        elif time[1] == 'm':
-            minute_total = int(time[0])
-            total += minute_total * 60
-        elif time[1] == 's':
-            second_total = int(time[0])
-            total += second_total * 1
-        else:
-            minute_total = int(time[0])
-            total += minute_total * 60
-
-    return total, day_total, hour_total, minute_total, second_total
+        if time.isdigit():
+            time += 'm'
+        total += int(time[:-1]) * seconds_per_unit[time[-1]]
+    return total
 
 
 def formatter(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
