@@ -28,6 +28,7 @@ class AutoRemind:
                 user_object_id = user_data['_id']
             except IndexError:
                 user_data = None
+                user_object_id = None
 
             if user_data is not None:
                 await collection.delete_one({'_id': user_object_id})
