@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands
 import motor.motor_asyncio as amotor
 
-from constants import Constants
+from constants import Constants, Strings
 from library import pound_countdown, update_autoremind_times
 
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
@@ -32,9 +32,9 @@ class AutoRemind:
 
             if user_data is not None:
                 await collection.delete_one({'_id': user_object_id})
-                await ctx.send('Your Auto Remind has been turned off successfully.')
+                await ctx.send(Strings.autoremind_off_successful)
             else:
-                await ctx.send("You don't have an Auto Remind setup!")
+                await ctx.send(Strings.autoremind_not_set)
         else:  # If user is setting an Auto Remind
             time = re.findall(r'^(\d{1,2})m?$', args)  # Get the requested Auto Remind time
             if time:  # If user provided a valid time
@@ -68,22 +68,22 @@ class AutoRemind:
                             try:
                                 msg = await self.bot.wait_for('message', check=predicate, timeout=30.0)
                             except asyncio.TimeoutError:
-                                await ctx.send("Operation timed out.")
+                                await ctx.send(Strings.autoremind_update_timeout)
                             else:
                                 lowered = msg.content.lower()
                                 if lowered in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
                                     await collection.update_one({'_id': user_object_id}, {'$set': {'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'remind_time': time}})
                                     await ctx.send(f'Will remind you {time} minute{"" if time == 1 else "s"} before the pound opens!')
                                 else:
-                                    await ctx.send("Operation cancelled.")
+                                    await ctx.send(Strings.autoremind_update_cancel)
                     else:
                         await collection.insert_one({'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'user_id': str(ctx.author.id), 'remind_time': time})
                         await ctx.send(f'Your Auto Remind has been set for {time} minute{"" if time == 1 else "s"}!')
                     await update_autoremind_times()
             elif args == '':  # If no arguments provided
-                await ctx.send("You didn't provide a time!")
+                await ctx.send(Strings.no_time)
             else:
-                await ctx.send("You didn't provide a valid time!")
+                await ctx.send(Strings.invalid_time)
 
 
 def setup(bot):

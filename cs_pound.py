@@ -14,7 +14,7 @@ bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), 
 bot.remove_command('help')  # Remove default help command to add custom one
 logger = logging.getLogger('discord')  # Create logger
 logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
-handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')  # Set logging file
+handler = logging.FileHandler(filename=Constants.discord_log_filename, encoding='utf-8', mode='w')  # Set logging file
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s'))  # Set logging format
 logger.addHandler(handler)  # Start logger
 
