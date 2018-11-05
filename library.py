@@ -103,6 +103,7 @@ def formatter(day, hour, minute, second):  # Pretty format time layout given day
 
 
 def resolver(seconds):  # Pretty format time given seconds
+    seconds = int(seconds)
     day, hour = divmod(seconds, 86400)
     hour, minute = divmod(hour, 3600)
     minute, second = divmod(minute, 60)
