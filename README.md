@@ -51,12 +51,12 @@ python3 cs_pound.py
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgements
 
 * [Chicken Smoothie](http://www.chickensmoothie.com)
 * [discord.py](https://github.com/Rapptz/discord.py)
-* [DigitalOcean](https://www.digitalocean.com)
+* [Heroku](https://www.heroku.com)
 * [BlobGivingBot](https://github.com/BlobEmoji/blobgivingbot)
 * [GiveawayBot](https://github.com/jagrosh/GiveawayBot)
