@@ -43,7 +43,7 @@ class Giveaway:
 
         if add_reactions and read_message_history:
             duration = parse_time(length)
-            if duration[0] == 0:
+            if duration == 0:
                 cross_emoji = u"\u274C"
                 await ctx.send(f'{cross_emoji} Failed to parse time from `{length}`')
             else:
