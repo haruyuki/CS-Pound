@@ -40,10 +40,8 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 
 ## Running
 
-To start the bot run either of the following commands:
+To start the bot run the following command:
 ```bash
-python cs_pound.py
-
 python3 cs_pound.py
 ```
 
