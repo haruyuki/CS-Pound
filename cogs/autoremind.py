@@ -37,7 +37,7 @@ class AutoRemind:
                 await ctx.send(Strings.autoremind_not_set)
         else:  # If user is setting an Auto Remind
             time = re.findall(r'^(\d{1,2})m?$', args)  # Get the requested Auto Remind time
-            if time:  # If user provided a valid time
+            if time != 0:  # If user provided a valid time
                 time = int(time[0])  # Convert the time into an integer
                 if time > 60:
                     await ctx.send('That time is too far!')
