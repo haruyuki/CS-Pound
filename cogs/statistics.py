@@ -69,6 +69,9 @@ class Statistics:
             embed.add_field(name='CS-Pound Stats', value=description)
             await ctx.send(embed=embed)  # Send embed
 
+        else:
+            pass
+
 
 def setup(bot):
     bot.add_cog(Statistics(bot))
