@@ -24,7 +24,7 @@ before_script:
 
 script:
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then pytest; fi'
-  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then pytest -c pr_setup.cfg; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then pytest -c setup_pr.cfg; fi'
 
 after_success:
   - codecov
