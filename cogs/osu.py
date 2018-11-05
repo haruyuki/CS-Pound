@@ -109,10 +109,12 @@ Play Time: {seconds_played}
             embed.set_thumbnail(url=user_icon)
             embed.add_field(name=f'**PP: {round(data.pp_raw)}pp　(#{data.pp_rank})　:flag_{data.country.lower()}: #{data.pp_country_rank}**', value=description)
 
-            ameobea_link = 'https://ameobea.me/osutrack/user/' + data.username
-            osuskills_link = 'http://osuskills.tk/user/' + data.username
+            username_formatted = data.username.replace(' ', '%20')
+            print(username_formatted)
+            ameobea_link = 'https://ameobea.me/osutrack/user/' + username_formatted
+            osuskills_link = 'http://osuskills.tk/user/' + username_formatted
             osuchan_link = 'https://syrin.me/osuchan/u/' + str(data.user_id)
-            ppplus_link = 'https://syrin.me/pp+/u/' + data.username
+            ppplus_link = 'https://syrin.me/pp+/u/' + username_formatted
 
             if mode == 'taiko':
                 ameobea_link += '/taiko'
