@@ -3,6 +3,8 @@ import discord
 from discord.ext import commands
 import lxml.html
 
+from constants import Strings
+
 
 class Time:
     def __init__(self, bot):
@@ -23,7 +25,7 @@ class Time:
             else:  # If any other text in text
                 output = text[1].replace('Sorry, the pound is closed at the moment.', '').replace('\n', r'').replace('\t', r'') + '.'
         except IndexError:  # If text doesn't exist
-            output = 'Pound is currently open!'
+            output = Strings.pound_opened
 
         embed = discord.Embed(title='Time', description=output, colour=0x4ba139)  # Create embed
         await ctx.send(embed=embed)  # Send embed

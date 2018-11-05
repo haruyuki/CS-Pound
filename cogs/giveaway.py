@@ -6,6 +6,7 @@ import re
 import discord
 from discord.ext import commands
 
+from constants import Strings
 from library import parse_time
 import chickensmoothie as cs
 
@@ -91,7 +92,7 @@ class Giveaway:
                     await message.channel.send(f'Congratulations {congrats_description}! You won **{giveaway_title}**')
 
         else:
-            embed = discord.Embed(title='Giveaway', description='I don\'t have permission to create giveaways! Please ask the owner or admin to enable \'Add Reactions\' and \'Read Message History\'!')
+            embed = discord.Embed(title='Giveaway', description=Strings.giveaway_no_permission)
             await ctx.send(embed=embed)
 
     async def roll_user(self, message: discord.Message, number_of_winners):
@@ -118,7 +119,7 @@ class Giveaway:
     @giveaway.error
     async def giveaway_handler(self, ctx, error):
         if isinstance(error, discord.ext.commands.errors.CheckFailure):
-            embed = discord.Embed(title='Support', description='You don\'t have permission to run this command!', colour=0xff5252)
+            embed = discord.Embed(title='Support', description=Strings.giveaway_user_no_permission, colour=0xff5252)
             await ctx.send(embed=embed)
 
 
