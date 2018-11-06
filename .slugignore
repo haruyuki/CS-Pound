@@ -1,6 +1,10 @@
+hooks/
+tests/
+.travis.yml
+counter.json
+counter.py
 LICENSE
 README.md
 setup.cfg
-pr_setup.cfg
-tests/
+setup_pr.cfg
 verify.py
