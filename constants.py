@@ -2,21 +2,21 @@ import os
 
 
 class Constants:
-    prefix = ','  # The prefix used to call the bot
-    owner_id = 277398425044123649
-    discord_token = os.environ.get('discord', None)  # The Discord bot token
-    discord_log_filename = 'discord.log'
-    osu_key = os.environ.get('osu', None)  # The osu! API key
+    prefix = ','  # Prefix used to call bot
+    owner_id = 277398425044123649  # User ID of bot owner
+    discord_token = os.environ.get('discord', None)  # Discord bot token from environment variables
+    discord_log_filename = 'discord.log'  # Name of logging file
+    osu_key = os.environ.get('osu', None)  # osu! API key from environment variables
     support_link = 'https://invite.gg/cspound'  # Link to support server
-    version = '2018.1105.25'  # Current version of the bot
-    invite_link = 'https://www.tailstar.us/'  # Link to website or direct link to invite the bot
-    mongodb_uri = os.environ.get('mongodb', None)  # The MongoDB connection URI
-    database_name = 'cs_pound'  # The name of the MongoDB database to use
-    osu_collection_name = 'osu_profiles'  # The name of the collection for osu! user linking
-    autoremind_collection_name = 'auto_remind'  # The name of the collection for Auto Remind users
-    autoremind_fetch_limit = 300  # The amount of documents to buffer. Should update as collection gets bigger
-    cogs_dir = 'cogs'  # The directory where your cogs are placed
-    playing_text = ',help | CS: haruyuki'  # The text that the bot is playing
+    version = '2018.1106.0'  # Current version of bot
+    invite_link = 'https://www.tailstar.us/'  # Link to invite the bot
+    mongodb_uri = os.environ.get('mongodb', None)  # MongoDB connection URI from environment variables
+    database_name = 'cs_pound'  # Name of MongoDB database
+    osu_collection_name = 'osu_profiles'  # Collection name for osu! user linking
+    autoremind_collection_name = 'auto_remind'  # Collection name for Auto Remind users
+    autoremind_fetch_limit = 300  # Amount of documents to buffer. Should update as collection gets bigger
+    cogs_dir = 'cogs'  # Directory where cogs are placed
+    playing_text = ',help | CS: haruyuki'  # Bot playing text
 
 
 class Strings:
