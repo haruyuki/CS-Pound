@@ -30,4 +30,3 @@ after_success:
   - codecov
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
   - python-codacy-coverage
-  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then python verify.py; fi'
