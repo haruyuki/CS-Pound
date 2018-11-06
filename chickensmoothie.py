@@ -13,15 +13,15 @@ from constants import Constants
 
 async def _get_web_data(link):  # Get web data from link
     success = False
-    dom = ''
-    connection = ''
+    dom = None
+    connection = None
 
-    if 'static' in link:
+    if 'static' in link:  # If user provided direct link to pet image
         return success
 
     headers = {  # HTTP request headers
         'User-Agent': 'CS Pound Discord Bot Agent ' + Constants.version,  # Connecting User-Agent
-        'From': 'jumpy12359@gmail.com'  # Contact email
+        'From': 'cspoundbot@gmail.com'  # Contact email
     }
     parameters = {}
     components = urlparse(link)
@@ -31,11 +31,11 @@ async def _get_web_data(link):  # Get web data from link
     base_link = f'{components.scheme}://{components.hostname}{components.path}'
     async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
         async with session.post(base_link, data=parameters, headers=headers) as response:  # POST the variables to the base php link
-            if response.status == 200:
+            if response.status == 200:  # If received response is OK
                 success = True
-                connection = await response.text()  # Request HTML page data
-                dom = lxml.html.fromstring(connection)  # Extract HTML from site
-    return success, dom, connection  # Return whether connection was successful and DOM data
+                connection = await response.text()  # Get text HTML of site
+                dom = lxml.html.fromstring(connection)  # Convert into DOM
+    return success, dom, connection
 
 
 async def pet(link):
