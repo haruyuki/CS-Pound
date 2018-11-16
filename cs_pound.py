@@ -1,4 +1,4 @@
-import logging
+import logging.handlers
 from os import listdir
 from os.path import isfile, join
 import sys
@@ -12,11 +12,12 @@ from library import update_autoremind_times
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')  # Remove default help command to add custom one
+
 logger = logging.getLogger('discord')  # Create logger
-logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
-handler = logging.FileHandler(filename=Constants.discord_log_filename, encoding='utf-8', mode='w')  # Set logging file
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s: %(message)s'))  # Set logging format
-logger.addHandler(handler)  # Start logger
+logger.setLevel(logging.DEBUG)
+handler = logging.handlers.RotatingFileHandler(Constants.discord_log_filename, maxBytes=2097152, backupCount=1, encoding='utf-8')  # Set logging file
+handler.setFormatter(logging.Formatter('[%(asctime)s] [%(levelname)s]: %(message)s'))  # Set logging format
+logger.addHandler(handler)
 
 if __name__ == '__main__':
     for extension in [f.replace('.py', '') for f in listdir(Constants.cogs_dir) if isfile(join(Constants.cogs_dir, f))]:
