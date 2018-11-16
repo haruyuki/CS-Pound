@@ -3,4 +3,4 @@
 # A hook script to a python file that automatically updates the version
 # number in constants.py on commit.
 
-python3 counter.py
+python3 counter.py update
