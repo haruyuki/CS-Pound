@@ -9,7 +9,7 @@ from discord.ext import commands
 import psutil
 
 from constants import Constants
-from library import formatter, resolver
+from library import resolver
 
 start_time = datetime.now()  # The time the script started running
 
