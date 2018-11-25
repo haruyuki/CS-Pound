@@ -4,7 +4,6 @@
 # number in constants.py on commit.
 BRANCH_NAME=$(git symbolic-ref --short HEAD)
 
-if [$BRANCH_NAME == 'master']
-then
-	python3 counter.py update
+if [[ "$BRANCH_NAME" == "master" ]]; then
+    python3 counter.py update
 fi
