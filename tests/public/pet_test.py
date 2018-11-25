@@ -158,7 +158,7 @@ class TestClass:
         data = loop.run_until_complete(pet('https://www.chickensmoothie.com/viewpet.php?id=36239046'))
 
         assert data['pps'] is False
-        assert data['image']  == 'https://www.chickensmoothie.com/pet/36239046&trans=1.jpg'
+        assert data['image'] == 'https://www.chickensmoothie.com/pet/36239046&trans=1.jpg'
         assert data['owner'] == 'haruyuki'
         assert 'https://www.chickensmoothie.com/Forum/memberlist.php?mode=viewprofile&u=841634' in data['owner_link']  # A unique session ID is appended to end of URL
         assert data['id'] == 36239046
