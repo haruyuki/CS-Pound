@@ -17,9 +17,9 @@ class TestClass:
         assert embed['color'] == 16732754
 
     def test_valid_link(self):
-        data = loop.run_until_complete(image('https://www.chickensmoothie.com/viewpet.php?id=149733321'))
+        data = loop.run_until_complete(image('https://www.chickensmoothie.com/viewpet.php?id=277461516'))
         assert isinstance(data, io.BytesIO)
 
     def test_pet_with_items(self):
-        data = loop.run_until_complete(image('https://www.chickensmoothie.com/viewpet.php?id=54685939'))
+        data = loop.run_until_complete(image('https://www.chickensmoothie.com/viewpet.php?id=275516239'))
         assert isinstance(data, io.BytesIO)
