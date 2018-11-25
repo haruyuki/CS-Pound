@@ -2,5 +2,9 @@
 #
 # A hook script to a python file that automatically updates the version
 # number in constants.py on commit.
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
 
-python3 counter.py update
+if [BRANCH_NAME = master]
+then
+	python3 counter.py update
+fi
