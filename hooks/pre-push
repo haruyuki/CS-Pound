@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # A hook script to a python file that automatically updates the version
-# number in constants.py on commit.
+# number in constants.py on push if on master branch.
 BRANCH_NAME=$(git symbolic-ref --short HEAD)
 
 if [[ "$BRANCH_NAME" == "master" ]]; then
