@@ -72,36 +72,36 @@ async def pet(link):
         }
 
         table = data[1].xpath('//table[@class="spine"]/tr')
-        for i in range(len(table)):
-            if i == 0:
-                pet_data['image'] = table[i].xpath('td/img/@src')[0]
+        for index, row in enumerate(table):
+            if index == 0:
+                pet_data['image'] = row.xpath('td/img/@src')[0]
                 if 'trans' in pet_data['image']:
                     pet_data['image'] = 'https://www.chickensmoothie.com' + pet_data['image']
 
             else:
                 value = ''
-                key = key_process(table[i].xpath('td[1]/text()')[0])
-                if i == 1:
+                key = key_process(row.xpath('td[1]/text()')[0])
+                if index == 1:
                     if 'PPS' in data[2]:
-                        i += 1
-                    value = table[i].xpath('td[2]/a/text()')[0]
-                    link = 'https://www.chickensmoothie.com/' + table[i].xpath('td[2]/a/@href')[0]
+                        index += 1
+                    value = table[index].xpath('td[2]/a/text()')[0]
+                    link = 'https://www.chickensmoothie.com/' + table[index].xpath('td[2]/a/@href')[0]
                     pet_data['owner_link'] = link
-                elif len(table) - i == 2 or len(table) - i == 1:
+                elif len(table) - index == 2 or len(table) - index == 1:
                     if key == 'rarity':
-                        value = table[i].xpath('td[2]/img/@alt')[0]
+                        value = row.xpath('td[2]/img/@alt')[0]
                     if key == 'growth':
-                        value = table[i].xpath('td[2]/text()')[0]
+                        value = row.xpath('td[2]/text()')[0]
                     if 'given' in key:
                         key = 'given'
-                        value = table[i].xpath('td[2]/a/text()')[0]
+                        value = row.xpath('td[2]/a/text()')[0]
                         pet_data[key] = value
                         key = 'given_link'
-                        value = 'https://www.chickensmoothie.com/' + table[i].xpath('td[2]/a/@href')[0]
+                        value = 'https://www.chickensmoothie.com/' + row.xpath('td[2]/a/@href')[0]
                 else:
-                    value = table[i].xpath('td[2]/text()')[0]
+                    value = row.xpath('td[2]/text()')[0]
                     if key == 'owner':
-                        value = table[i].xpath('td[2]/a/text()')[0]
+                        value = row.xpath('td[2]/a/text()')[0]
                     elif key == 'id':
                         value = int(value)
                     elif key == 'age':
