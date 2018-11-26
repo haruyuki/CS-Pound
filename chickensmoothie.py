@@ -187,7 +187,7 @@ async def image(link):
         total_height = sum(heights) + (15 * len(information))  # Total height of images
         current_width = 0
 
-        for key, value in information.items():  # For each item in information
+        for _, value in information.items():  # For each item in information
             if 'rarities/' in value:
                 temp_width = 106
             else:
