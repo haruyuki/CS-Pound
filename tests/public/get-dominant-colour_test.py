@@ -34,16 +34,16 @@ class TestClass:
         assert get_dominant_colour(image_array) == list(secondary_colour)
 
     def test_real_images_1_colour(self):
-        im = Image.open('tests/public/test-images/7109858.jpeg')
+        im = Image.open('tests/public/assets/7109858.jpeg')
         image_array = np.array(im)
         assert tuple(get_dominant_colour(image_array)) in image_1_colours  # Converted to tuple for easier finding
 
     def test_real_images_2_colour(self):
-        im = Image.open('tests/public/test-images/2070907.jpeg')
+        im = Image.open('tests/public/assets/2070907.jpeg')
         image_array = np.array(im)
         assert tuple(get_dominant_colour(image_array)) in image_2_colours  # Converted to tuple for easier finding
 
     def test_real_images_3_colour(self):
-        im = Image.open('tests/public/test-images/10778583.jpeg')
+        im = Image.open('tests/public/assets/10778583.jpeg')
         image_array = np.array(im)
         assert tuple(get_dominant_colour(image_array)) in image_3_colours
