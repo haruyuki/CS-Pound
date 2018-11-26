@@ -8,7 +8,7 @@ class Constants:
     discord_log_filename = 'discord.log'  # Name of logging file
     osu_key = os.environ.get('osu', None)  # osu! API key from environment variables
     support_link = 'https://invite.gg/cspound'  # Link to support server
-    version = '2018.1126.3'  # Current version of bot
+    version = '2018.1126.4'  # Current version of bot
     invite_link = 'https://haruyuki.moe/CS-Pound'  # Link to invite the bot
     mongodb_uri = os.environ.get('mongodb', None)  # MongoDB connection URI from environment variables
     database_name = 'cs_pound'  # Name of MongoDB database
