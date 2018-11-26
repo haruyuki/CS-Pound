@@ -1,6 +1,7 @@
 import asyncio
 from collections import Counter
 import re
+import zlib
 
 import cv2
 import motor.motor_asyncio as amotor
@@ -19,6 +20,13 @@ database = mongo_client[Constants.database_name]
 
 
 # -------------------- FUNCTIONS --------------------
+def crc(file):
+    prev = 0
+    for line in open(file, 'rb'):
+        prev = zlib.crc32(line, prev)
+    return '%X' % (prev & 0xFFFFFFFF)
+
+
 def parse_time(timestr):  # A function to parse short time formats (1d, 2h, 3m, 4s) into seconds
     timestr = timestr.lower()
     times = re.findall(r'(\d{1,8}[smhd]?)', timestr)

@@ -1,16 +1,16 @@
-import hashlib
 import json
 
 import discord
 from discord.ext import commands
 
 from constants import Strings
+from library import crc
 
 
 class Help:
     def __init__(self, bot):
         self.bot = bot
-        self.current_hash = ''  # Current hash of help.json
+        self.current_crc = ''  # Current hash of help.json
         self.help_list = {}  # Dictionary of all commands and their usage
         self.command_list = []  # List of available commands
 
@@ -18,9 +18,9 @@ class Help:
     async def help(self, ctx, args: str = '', public=''):
         embed = discord.Embed(colour=0x4ba139)  # Create empty embed
 
-        new_hash = hashlib.md5(open('help.json').read().encode()).hexdigest()  # MD5 hash of help.json
-        if self.current_hash != new_hash:  # If help.json has been changed
-            self.current_hash = new_hash  # Set hash to the new changes
+        new_crc = crc('help.json')  # CRC of help.json
+        if self.current_crc != new_crc:  # If help.json has been changed
+            self.current_crc = new_crc  # Set hash to the new changes
             with open('help.json') as f:  # Open help.json
                 self.help_list = json.load(f)  # Load the JSON data
             for key, value in self.help_list['categories'].items():
