@@ -75,13 +75,14 @@ async def pet(link):
         for i in range(len(table)):
             if i == 0:
                 pet_data['image'] = table[i].xpath('td/img/@src')[0]
+                if 'trans' in pet_data['image']:
+                    pet_data['image'] = 'https://www.chickensmoothie.com' + pet_data['image']
 
             else:
                 value = ''
                 key = key_process(table[i].xpath('td[1]/text()')[0])
                 if i == 1:
                     if 'PPS' in data[2]:
-                        pet_data['pps'] = True
                         i += 1
                     value = table[i].xpath('td[2]/a/text()')[0]
                     link = 'https://www.chickensmoothie.com/' + table[i].xpath('td[2]/a/@href')[0]
@@ -89,6 +90,8 @@ async def pet(link):
                 elif len(table) - i == 2 or len(table) - i == 1:
                     if key == 'rarity':
                         value = table[i].xpath('td[2]/img/@alt')[0]
+                    if key == 'growth':
+                        value = table[i].xpath('td[2]/text()')[0]
                     if 'given' in key:
                         key = 'given'
                         value = table[i].xpath('td[2]/a/text()')[0]
@@ -105,9 +108,11 @@ async def pet(link):
                         try:
                             value = int(re.findall(r'(\d*) days?', value)[0])  # Extract the age number
                         except (ValueError, IndexError):  # If no number found (i.e Pet is less than a day old)
-                            value = 0
+                            value = 'Less than a day old'
 
                 pet_data[key] = value
+        if 'PPS' in data[2]:
+            pet_data['pps'] = True
         return pet_data
 
     else:
