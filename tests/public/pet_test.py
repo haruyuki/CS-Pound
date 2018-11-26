@@ -34,7 +34,7 @@ class TestClass:
         assert data['owner'] == 'haruyuki'
         assert 'https://www.chickensmoothie.com/Forum/memberlist.php?mode=viewprofile&u=841634' in data['owner_link']  # A unique session ID is appended to end of URL
         assert data['id'] == 275517241
-        assert data['name'] == ''
+        assert data['name'] == 'Telly'
         assert data['adopted'] == '2018-09-01'
         assert data['age'] > 0  # As age constantly increases
         assert data['growth'] == 'Full-grown'
