@@ -233,7 +233,7 @@ async def image(link):
         return embed
 
 
-async def pound_text():
+async def get_pound_time():
     data = await _get_web_data('https://www.chickensmoothie.com/pound.php')  # Get web data
     if data[0]:  # If the data is valid
         text = data[1].xpath('//h2/text()')  # Get all H2 elements in the data
@@ -244,5 +244,3 @@ async def pound_text():
             text = 'Pound is currently open!'
 
         return text
-    else:
-        return None
