@@ -8,7 +8,7 @@ import motor.motor_asyncio as amotor
 from sklearn.cluster import KMeans
 import uvloop
 
-from chickensmoothie import get_pound_time
+from chickensmoothie import get_pound_string
 from constants import Constants
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400}
@@ -180,7 +180,7 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
     while not bot.is_closed():  # While bot is still running
         sleep_amount = 0
         if not cooldown:  # If command is not on cooldown
-            time = await get_pound_time()  # Get pound text
+            time = await get_pound_string()  # Get pound text
             value = [int(s) for s in time.split() if s.isdigit()]  # Extract numbers in text
             if value:  # If valid time
                 if len(value) == 1:

@@ -9,6 +9,7 @@ import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
 from constants import Constants
+from library import parse_time
 
 
 async def _get_web_data(link):  # Get web data from link
@@ -233,7 +234,7 @@ async def image(link):
         return embed
 
 
-async def get_pound_time():
+async def get_pound_string():
     data = await _get_web_data('https://www.chickensmoothie.com/pound.php')  # Get web data
     if data[0]:  # If the data is valid
         text = data[1].xpath('//h2/text()')  # Get all H2 elements in the data
@@ -244,3 +245,19 @@ async def get_pound_time():
             text = 'Pound is currently open!'
 
         return text
+
+
+def get_pound_time(string):
+    sleep_amount = 0
+    times = [int(n) for n in string.split() if n.isdigit()]  # Extract numbers from string
+    if times:  # If numbers in string
+        if 'hour' in string and 'minute' in string:  # If both times are present (< 2 hours left)
+            to_parse = f'{times[0]}h{times[1]}m'  # XhXm
+        elif 'hour' in string:
+            to_parse = f'{times[0]}h'  # Xh
+        elif 'minute' in string:
+            to_parse = f'{times[0]}m'  # Xm
+        else:  # If no times (i.e. Pound currently open or not opening anytime soon)
+            to_parse = '1h'
+        sleep_amount = parse_time(to_parse)
+    return sleep_amount
