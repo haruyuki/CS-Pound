@@ -248,17 +248,19 @@ async def get_pound_string():
 
 
 def get_pound_time(string):
-    sleep_amount = 0
-    times = [int(n) for n in string.split() if n.isdigit()]  # Extract numbers from string
+    to_parse = ''
+    times = [n for n in string.split() if n.isdigit()]  # Extract numbers from string
     if times:  # If numbers in string
-        if 'hour' in string and 'minute' in string:  # If both times are present (< 2 hours left)
-            to_parse = f'{times[0]}h{times[1]}m'  # XhXm
-        elif 'hour' in string:
-            to_parse = f'{times[0]}h'  # Xh
-        elif 'minute' in string:
-            to_parse = f'{times[0]}m'  # Xm
-        else:
-            to_parse = '1h'
+        if 'hour' in string:
+            hours = times[0]
+            to_parse = f'{hours}h'
+
+        if 'minute' in string:
+            try:  # Assume string contains hours and minutes
+                minutes = times[1]
+            except IndexError:  # Otherwise minute only
+                minutes = times[0]
+            to_parse += f'{minutes}m'
     else:  # If no times (i.e. Pound currently open or not opening anytime soon)
         to_parse = '1h'
 
