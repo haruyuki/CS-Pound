@@ -1,10 +1,5 @@
 # CS Pound Discord Bot
 
-[![Build Status](https://img.shields.io/travis/com/haruyuki/CS-Pound.svg)](https://travis-ci.com/haruyuki/CS-Pound)
-[![Coverage Status](https://img.shields.io/codecov/c/github/haruyuki/CS-Pound.svg)](https://codecov.io/gh/haruyuki/CS-Pound)
-[![Requirements Status](https://img.shields.io/requires/github/haruyuki/CS-Pound.svg)](https://requires.io/github/haruyuki/CS-Pound/requirements/?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b67c35ebe69c4f308c521d3e9bf397a4)](https://www.codacy.com/app/haruyuki/CS-Pound)
-[![Maintainability](https://api.codeclimate.com/v1/badges/e1711e225711d4f33ec7/maintainability)](https://codeclimate.com/github/haruyuki/CS-Pound/maintainability)
 [![Discord.py Rewrite](https://img.shields.io/badge/discord.py-rewrite-blue.svg)](https://github.com/Rapptz/discord.py)
 [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/github/license/haruyuki/CS-Pound.svg)](https://github.com/haruyuki/CS-Pound/blob/master/LICENSE)
@@ -47,16 +42,16 @@ python3 cs_pound.py
 
 ## Contributors
 
-* [**@ev-ev**](https://github.com/ev-ev) => edited README.MD
+* [**@ev-ev**](https://github.com/ev-ev) -> Edited README.md
+* [**@Zenrac**](https://github.com/Zenrac) -> Code optimisations
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
-## Acknowledgements
-
-* [Chicken Smoothie](http://www.chickensmoothie.com)
-* [discord.py](https://github.com/Rapptz/discord.py)
-* [Heroku](https://www.heroku.com)
-* [BlobGivingBot](https://github.com/BlobEmoji/blobgivingbot)
-* [GiveawayBot](https://github.com/jagrosh/GiveawayBot)
+## Development Status
+[![Build Status](https://img.shields.io/travis/com/haruyuki/CS-Pound.svg)](https://travis-ci.com/haruyuki/CS-Pound)
+[![Coverage Status](https://img.shields.io/codecov/c/github/haruyuki/CS-Pound.svg)](https://codecov.io/gh/haruyuki/CS-Pound)
+[![Requirements Status](https://img.shields.io/requires/github/haruyuki/CS-Pound.svg)](https://requires.io/github/haruyuki/CS-Pound/requirements/?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b67c35ebe69c4f308c521d3e9bf397a4)](https://www.codacy.com/app/haruyuki/CS-Pound)
+[![Maintainability](https://api.codeclimate.com/v1/badges/e1711e225711d4f33ec7/maintainability)](https://codeclimate.com/github/haruyuki/CS-Pound/maintainability)
