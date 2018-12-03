@@ -9,7 +9,7 @@ import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
 from constants import Constants
-from library import parse_time
+import library
 
 
 async def _get_web_data(link):  # Get web data from link
@@ -257,7 +257,10 @@ def get_pound_time(string):
             to_parse = f'{times[0]}h'  # Xh
         elif 'minute' in string:
             to_parse = f'{times[0]}m'  # Xm
-        else:  # If no times (i.e. Pound currently open or not opening anytime soon)
+        else:
             to_parse = '1h'
-        sleep_amount = parse_time(to_parse)
+    else:  # If no times (i.e. Pound currently open or not opening anytime soon)
+        to_parse = '1h'
+
+    sleep_amount = library.parse_time(to_parse)
     return sleep_amount
