@@ -1,5 +1,7 @@
 from datetime import datetime
+from git import Repo
 import json
+import os
 import re
 import sys
 
@@ -20,6 +22,15 @@ def write_update():
 
     f.seek(0)
     json.dump(data, f, indent=2)
+    return new_version
+
+
+def add_and_commit(version):
+    repo = Repo(os.getcwd())
+    repo.git.add('constants.py')
+    repo.git.add('counter.json')
+    repo.git.add('counter.py')
+    repo.git.commit('-S', '-m', f'Updated to version {version}')
 
 
 if sys.argv[1] == 'startup':
@@ -29,12 +40,12 @@ if sys.argv[1] == 'startup':
         if data['version'] != datetime.today().strftime('%Y.%m%d'):
             data['version'] = datetime.today().strftime('%Y.%m%d')
             data['build'] = 0
-        write_update()
+        new_version = write_update()
         f.truncate()
 
 if sys.argv[1] == 'update':
     with open('counter.json', 'r+') as f:
         data = json.load(f)
         data['build'] += 1
-        write_update()
+        new_version = write_update()
         f.truncate()
