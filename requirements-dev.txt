@@ -1,0 +1,6 @@
+codacy-coverage
+codecov
+gitpython
+pytest
+pytest-codestyle
+pytest-cov

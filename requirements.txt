@@ -1,6 +1,4 @@
 aiohttp>=3.4.4
-codacy-coverage
-codecov
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
 dnspython
 lxml
@@ -10,9 +8,6 @@ opencv-python
 osuapi
 Pillow
 psutil
-pytest
-pytest-codestyle
-pytest-cov
 scipy
 sklearn
 uvloop
