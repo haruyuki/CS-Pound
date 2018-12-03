@@ -261,8 +261,6 @@ def get_pound_time(string):
             except IndexError:  # Otherwise minute only
                 minutes = times[0]
             to_parse += f'{minutes}m'
-    else:  # If no times (i.e. Pound currently open or not opening anytime soon)
-        to_parse = '1h'
 
     sleep_amount = library.parse_time(to_parse)
     return sleep_amount

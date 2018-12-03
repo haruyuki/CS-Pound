@@ -135,6 +135,6 @@ class TestClass:
         assert get_pound_time('Sorry, the pound is closed at the moment. The pound will open within 1 hour and 1 minute') == 3660
 
     def test_no_times(self):
-        assert get_pound_time('Sorry, the pound is closed at the moment.The pound closed less than three hours ago! The pound opens at totally random times of day, so check back later to try again :)') == 3600
-        assert get_pound_time('Sorry, the pound is closed at the moment.The pound closed less than two hours ago! The pound opens at totally random times of day, so check back later to try again :)') == 3600
-        assert get_pound_time('Sorry, the pound is closed at the moment.The pound closed less than one hour ago! The pound opens at totally random times of day, so check back later to try again :)') == 3600
+        assert get_pound_time('Sorry, the pound is closed at the moment.The pound closed less than three hours ago! The pound opens at totally random times of day, so check back later to try again :)') == 0
+        assert get_pound_time('Sorry, the pound is closed at the moment.The pound closed less than two hours ago! The pound opens at totally random times of day, so check back later to try again :)') == 0
+        assert get_pound_time('Sorry, the pound is closed at the moment.The pound closed less than one hour ago! The pound opens at totally random times of day, so check back later to try again :)') == 0
