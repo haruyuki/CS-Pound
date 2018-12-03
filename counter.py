@@ -33,26 +33,20 @@ def add_and_commit(version):
     repo.git.commit('-S', '-m', f'Updated to version {version}')
 
 
-if sys.argv[1] == 'startup':
-    with open('counter.json', 'r+') as f:
-        data = json.load(f)
+changes_made = False
+with open('counter.json', 'r+') as f:
+    data = json.load(f)
 
+    if sys.argv[1] == 'startup':
         if data['version'] != datetime.today().strftime('%Y.%m%d'):
             changes_made = True
             data['version'] = datetime.today().strftime('%Y.%m%d')
             data['build'] = 0
-        else:
-            changes_made = False
-
-        new_version = write_update()
-        f.truncate()
-        if changes_made:
-            add_and_commit(new_version)
-
-if sys.argv[1] == 'update':
-    with open('counter.json', 'r+') as f:
-        data = json.load(f)
+    elif sys.argv[1] == 'update':
+        changes_made = True
         data['build'] += 1
-        new_version = write_update()
-        f.truncate()
-        add_and_commit(new_version)
+
+    current_version = write_update()
+    f.truncate()
+    if changes_made:
+        add_and_commit(current_version)
