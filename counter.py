@@ -38,10 +38,16 @@ if sys.argv[1] == 'startup':
         data = json.load(f)
 
         if data['version'] != datetime.today().strftime('%Y.%m%d'):
+            changes_made = True
             data['version'] = datetime.today().strftime('%Y.%m%d')
             data['build'] = 0
+        else:
+            changes_made = False
+
         new_version = write_update()
         f.truncate()
+        if changes_made:
+            add_and_commit(new_version)
 
 if sys.argv[1] == 'update':
     with open('counter.json', 'r+') as f:
@@ -49,3 +55,4 @@ if sys.argv[1] == 'update':
         data['build'] += 1
         new_version = write_update()
         f.truncate()
+        add_and_commit(new_version)
