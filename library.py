@@ -4,6 +4,7 @@ import re
 import zlib
 
 import cv2
+import discord
 import motor.motor_asyncio as amotor
 from sklearn.cluster import KMeans
 import uvloop
@@ -168,7 +169,7 @@ async def send_message(bot, time):
             message = await prepare_message(channel, time)
             try:
                 await sending_channel.send(message)
-            except AttributeError:
+            except (AttributeError, discord.errors.Forbidden):
                 pass
 
 
