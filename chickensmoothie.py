@@ -216,11 +216,8 @@ async def image(link):
         except KeyError:
             pass
 
-        try:
-            draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Adopted'], font=font)[0])) / 2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
-            y_offset += 15  # Add offset of 15
-        except KeyError:
-            pass
+        draw.text((math.floor(((max_width - math.floor(draw.textsize(information['Adopted'], font=font)[0])) / 2)), y_offset), information['Adopted'], fill=(0, 0, 0), font=font)  # Paste text at (((MAX_WIDTH - (TEXT_WIDTH) / 2)) - (TEXT_WIDTH / 2) - 5, y_offset) with colour (0, 0, 0) and font
+        y_offset += 15  # Add offset of 15
 
         canvas.paste(images[1], (math.floor((max_width - images[1].size[0]) / 2), y_offset), images[1])  # Paste first image at ((MAX_WIDTH - IMAGE_WIDTH) / 2) using the mask from images[1]
 
