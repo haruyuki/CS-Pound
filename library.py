@@ -175,56 +175,30 @@ async def send_message(bot, time):
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
     global cooldown
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
-    value = 0
-    time = ''
     while not bot.is_closed():  # While bot is still running
         sleep_amount = 0
         if not cooldown:  # If command is not on cooldown
-            time = await cs.get_pound_string()  # Get pound text
-            value = [int(s) for s in time.split() if s.isdigit()]  # Extract numbers in text
-            if value:  # If valid time
-                if len(value) == 1:
-                    value = value[0]
-                    if 'hour' in time:
-                        if value == 1:
-                            cooldown = True
-                            value = 60  # Start countdown from 60 minutes
-                            sleep_amount = 0
-                        else:
-                            sleep_amount = (value - 2) * 3600  # -1 hour and convert into seconds
-                    elif 'minute' in time:
-                        sleep_amount = 0
-                        cooldown = True
-                elif len(value) == 2:
-                    if 'hour' and 'minute' in time:
-                        sleep_amount = value[1] * 60  # Get the minutes and convert to seconds
-                        value = 60   # Start countdown from 60 minutes
-                        time = 'minute'
-                        cooldown = True
-            else:  # If no times (i.e. Pound currently open or not opening anytime soon)
-                sleep_amount = 3600  # 1 hour
-
-        else:
-            if 'hour' in time:
-                if value != 0:  # If minutes left is not zero
-                    await send_message(bot, value)  # Check if any messages need to be sent
-                    value -= 1  # Remove one minute
-                    sleep_amount = 60  # 1 minute
-                else:  # If time ran out (i.e. Pound is now open)
+            string = await cs.get_pound_string()  # Get pound text
+            seconds = cs.get_pound_time(string)
+            if seconds == 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
+                sleep_amount = 3600
+            elif seconds > 7200:  # If over 2 hours remaining
+                sleep_amount = seconds - 7200
+            elif seconds > 3600:  # If over 1 hour but less than 2 hours remaining
+                sleep_amount = seconds - 3600
+                cooldown = True
+                seconds = 3600
+            elif seconds < 3600:  # If less than 1 hour remaining
+                cooldown = True
+                sleep_amount = 0
+        else:  # If command is on cooldown
+            if seconds <= 3600:
+                if seconds > 0:
+                    await send_message(bot, int(seconds/60))
+                    seconds -= 60
+                    sleep_amount = 60
+                else:
                     cooldown = False
-                    sleep_amount = 10800  # 3 hours
-            elif 'minute' and 'second' in time:
-                sleep_amount = value[1]  # Sleep for the remaining seconds
-                value = 1
-            elif 'minute' in time:
-                if value > 0:  # If minutes left is not zero
-                    await send_message(bot, value)  # Check if any messages need to be sent
-                    value -= 1  # Remove one minute
-                    sleep_amount = 60  # 1 minute
-                else:  # If time ran out (i.e. Pound is now open)
-                    cooldown = False
-                    sleep_amount = 10800  # 3 hours
-            else:
-                sleep_amount = 10800  # 3 hours
+                    sleep_amount = 10800
 
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
