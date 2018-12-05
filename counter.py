@@ -29,7 +29,6 @@ def add_and_commit(version):
     repo = Repo(os.getcwd())
     repo.git.add('constants.py')
     repo.git.add('counter.json')
-    repo.git.add('counter.py')
     repo.git.commit('-S', '-m', f'Updated to version {version}')
 
 
