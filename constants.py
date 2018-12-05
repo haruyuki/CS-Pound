@@ -19,6 +19,10 @@ class Constants:
     playing_text = ',help | CS: haruyuki'  # Bot playing text
 
 
+class Variables:
+    cooldown = False
+
+
 class Strings:
     invalid_pet_link = "That is not a valid pet link!"
 
