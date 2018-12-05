@@ -171,11 +171,11 @@ def calculate_sleep_amount(seconds):
                 Variables.cooldown = False  # Put command off cooldown
                 sleep_amount = 10800  # Sleep for 3 hours
     else:  # If command not on cooldown
-        if seconds == 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
+        if seconds <= 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
             sleep_amount = 3600  # Sleep for 1 hour
-        elif seconds > 7200:  # If over 2 hours remain
+        elif seconds >= 7200:  # If over 2 hours remain
             sleep_amount = seconds - 7200  # Sleep until 2 hours remain
-        elif seconds > 3600:  # If over 1 hour but less than 2 hours remain
+        elif seconds >= 3600:  # If over 1 hour but less than 2 hours remain
             sleep_amount = seconds - 3600  # Sleep until 1 hour remains
             Variables.cooldown = True  # Put command on cooldown
             seconds = 3600  # Set countdown to begin exactly at 1 hour
@@ -195,7 +195,7 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
         seconds, sleep_amount, send_msg = calculate_sleep_amount(seconds)
 
         if send_msg:  # If sending message is needed
-            time = int(seconds / 60)
+            time = round(seconds / 60)
             if time in Variables.autoremind_times:
                 channel_ids = await get_sending_channels(time)
                 for channel in channel_ids:
