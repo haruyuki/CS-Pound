@@ -177,35 +177,25 @@ def calculate_sleep_amount(seconds):
     global cooldown
     send_msg = False
     sleep_amount = 0
-    print('Calculating Sleep Amount')
     if not cooldown:
-        print('Command not on CD')
         if seconds == 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
             sleep_amount = 3600
-            print(f'Pound open, sleeping for {sleep_amount}')
         elif seconds > 7200:  # If over 2 hours remaining
             sleep_amount = seconds - 7200
-            print(f'Over 2 hours remaining, sleeping for {sleep_amount}')
         elif seconds > 3600:  # If over 1 hour but less than 2 hours remaining
             sleep_amount = seconds - 3600
             cooldown = True
             seconds = 3600
-            print(f'<1, >2 remaining, sleeping for {sleep_amount}. On CD now.')
         elif seconds < 3600:  # If less than 1 hour remaining
             cooldown = True
             sleep_amount = 0
-            print(f'<1 remaining, on CD now.')
     else:
-        print('Command on CD')
         if seconds <= 3600:
-            print('< 1 hour remaining')
             if seconds > 0:
-                print(f'Still {seconds} remaining, sending message')
                 send_msg = True
                 seconds -= 60
                 sleep_amount = 60
             else:
-                print('No time left, pound open, sleeping for 10800')
                 cooldown = False
                 sleep_amount = 10800
 
@@ -215,24 +205,14 @@ def calculate_sleep_amount(seconds):
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
     global cooldown
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
-    print('Bot is ready')
     while not bot.is_closed():  # While bot is still running
         if not cooldown:  # If command is not on cooldown
-            print('Command not on CD')
             string = await cs.get_pound_string()  # Get pound text
             seconds = cs.get_pound_time(string)
-            print(string)
-            print(f'Retrieved time of: {seconds}')
 
         seconds, sleep_amount, send_msg = calculate_sleep_amount(seconds)
-        print(f'Calculation Results: {seconds}, {sleep_amount}, {send_msg}')
 
         if send_msg:
-            print('Send message is true.')
-            print(autoremind_times)
-            print(seconds/60)
-            print(int(seconds/60))
-            print(str(int(seconds/60)))
             await send_message(bot, int(seconds / 60))
 
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
