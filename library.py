@@ -159,19 +159,6 @@ async def prepare_message(channel_id, time):
     else:
         return None
 
-
-async def send_message(bot, time):
-    if time in autoremind_times:
-        channel_ids = await get_sending_channels(time)
-        for channel in channel_ids:
-            sending_channel = bot.get_channel(channel)
-            message = await prepare_message(channel, time)
-            try:
-                await sending_channel.send(message)
-            except (AttributeError, discord.errors.Forbidden):
-                pass
-
-
 def calculate_sleep_amount(seconds):
     send_msg = False  # Assume no message needs to be sent
     sleep_amount = 0
@@ -209,6 +196,15 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
         seconds, sleep_amount, send_msg = calculate_sleep_amount(seconds)
 
         if send_msg:  # If sending message is needed
-            await send_message(bot, int(seconds / 60))
+            time = int(seconds / 60)
+            if time in autoremind_times:
+                channel_ids = await get_sending_channels(time)
+                for channel in channel_ids:
+                    sending_channel = bot.get_channel(channel)
+                    message = await prepare_message(channel, time)
+                    try:
+                        await sending_channel.send(message)
+                    except (AttributeError, discord.errors.Forbidden):
+                        pass
 
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
