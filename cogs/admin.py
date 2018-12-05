@@ -38,7 +38,7 @@ class Admin:
 
         try:
             self.bot.load_extension(cog)
-        except Exception as e:
+        except Exception:
             await ctx.send(f'```py\n{traceback.format_exc()}\n```')
         else:
             await ctx.message.add_reaction('\u2705')
@@ -49,7 +49,7 @@ class Admin:
 
         try:
             self.bot.unload_extension(cog)
-        except Exception as e:
+        except Exception:
             await ctx.send(f'```py\n{traceback.format_exc()}\n```')
         else:
             await ctx.message.add_reaction('\u2705')
@@ -61,7 +61,7 @@ class Admin:
         try:
             self.bot.unload_extension(cog)
             self.bot.load_extension(cog)
-        except Exception as e:
+        except Exception:
             await ctx.send(f'```py\n{traceback.format_exc()}\n```')
         else:
             await ctx.message.add_reaction('\u2705')
