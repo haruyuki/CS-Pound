@@ -195,7 +195,7 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
         else:  # If command is on cooldown
             if seconds <= 3600:
                 if seconds > 0:
-                    await send_message(bot, int(seconds/60))
+                    await send_message(bot, str(int(seconds/60)))
                     seconds -= 60
                     sleep_amount = 60
                 else:
