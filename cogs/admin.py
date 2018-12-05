@@ -5,57 +5,69 @@ import traceback
 
 from discord.ext import commands
 
+from constants import Constants
+
 
 class Admin:
     def __init__(self, bot):
         self.bot = bot
-        self.last_result = None
+        self._last_result = None
+        self.sessions = set()
 
-    def cleanup_code(self, content):
+    @staticmethod
+    def cleanup_code(content):
+        # remove ```py\n```
         if content.startswith('```') and content.endswith('```'):
             return '\n'.join(content.split('\n')[1:-1])
+
+        # remove `foo`
         return content.strip('` \n')
 
-    @commands.command()
-    @commands.is_owner()
-    async def load(self, ctx, *, cog: str):
-        cog = 'cogs.' + cog
+    async def __local_check(self, ctx):
+        return await self.bot.is_owner(ctx.author)
+
+    @staticmethod
+    def get_syntax_error(e):
+        if e.text is None:
+            return f'```py\n{e.__class__.__name__}: {e}\n```'
+        return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
+
+    @commands.command(hidden=True)
+    async def load(self, ctx, *, cog):
+        cog = Constants.cogs_dir + cog
 
         try:
             self.bot.load_extension(cog)
         except Exception as e:
-            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+            await ctx.send(f'```py\n{traceback.format_exc()}\n```')
         else:
-            await ctx.send(f'**`SUCCESS`**')
+            await ctx.message.add_reaction('\u2705')
 
     @commands.command()
-    @commands.is_owner()
     async def unload(self, ctx, *, cog: str):
-        cog = 'cogs.' + cog
+        cog = Constants.cogs_dir + cog
 
         try:
             self.bot.unload_extension(cog)
         except Exception as e:
-            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+            await ctx.send(f'```py\n{traceback.format_exc()}\n```')
         else:
-            await ctx.send(f'**`SUCCESS`**')
+            await ctx.message.add_reaction('\u2705')
 
     @commands.command()
-    @commands.is_owner()
     async def reload(self, ctx, *, cog: str):
-        cog = 'cogs.' + cog
+        cog = Constants.cogs_dir + cog
 
         try:
             self.bot.unload_extension(cog)
             self.bot.load_extension(cog)
         except Exception as e:
-            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+            await ctx.send(f'```py\n{traceback.format_exc()}\n```')
         else:
-            await ctx.send(f'**`SUCCESS`**')
+            await ctx.message.add_reaction('\u2705')
 
-    @commands.command()
-    @commands.is_owner()
-    async def eval(self, ctx, *, body: str):
+    @commands.command(hidden=True, name='eval')
+    async def _eval(self, ctx, *, body: str):
         env = {
             'bot': self.bot,
             'ctx': ctx,
@@ -63,7 +75,7 @@ class Admin:
             'author': ctx.author,
             'guild': ctx.guild,
             'message': ctx.message,
-            '_': self.last_result
+            '_': self._last_result
         }
 
         env.update(globals())
