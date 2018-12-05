@@ -14,7 +14,6 @@ from constants import Constants, Variables
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400}
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
-autoremind_times = set()
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client[Constants.database_name]
 
@@ -116,13 +115,12 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
 
 
 async def update_autoremind_times():
-    global autoremind_times
-    autoremind_times = set()
+    Variables.autoremind_times = set()
     autoremind_collection = database[Constants.autoremind_collection_name]
     cursor = autoremind_collection.find({})
     for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
-        autoremind_times.add(document['remind_time'])
-    return autoremind_times
+        Variables.autoremind_times.add(document['remind_time'])
+    return Variables.autoremind_times
 
 
 async def get_autoremind_documents(time):  # Get documents of users with specified Auto Remind time
@@ -158,6 +156,7 @@ async def prepare_message(channel_id, time):
         return message
     else:
         return None
+
 
 def calculate_sleep_amount(seconds):
     send_msg = False  # Assume no message needs to be sent
@@ -197,7 +196,7 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
 
         if send_msg:  # If sending message is needed
             time = int(seconds / 60)
-            if time in autoremind_times:
+            if time in Variables.autoremind_times:
                 channel_ids = await get_sending_channels(time)
                 for channel in channel_ids:
                     sending_channel = bot.get_channel(channel)

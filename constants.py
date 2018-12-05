@@ -21,6 +21,7 @@ class Constants:
 
 class Variables:
     cooldown = False
+    autoremind_times = set()
 
 
 class Strings:
