@@ -10,12 +10,11 @@ from sklearn.cluster import KMeans
 import uvloop
 
 import chickensmoothie as cs
-from constants import Constants
+from constants import Constants, Variables
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400}
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 autoremind_times = set()
-cooldown = False
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client[Constants.database_name]
 
@@ -174,45 +173,42 @@ async def send_message(bot, time):
 
 
 def calculate_sleep_amount(seconds):
-    global cooldown
-    send_msg = False
+    send_msg = False  # Assume no message needs to be sent
     sleep_amount = 0
-    if not cooldown:
-        if seconds == 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
-            sleep_amount = 3600
-        elif seconds > 7200:  # If over 2 hours remaining
-            sleep_amount = seconds - 7200
-        elif seconds > 3600:  # If over 1 hour but less than 2 hours remaining
-            sleep_amount = seconds - 3600
-            cooldown = True
-            seconds = 3600
-        elif seconds < 3600:  # If less than 1 hour remaining
-            cooldown = True
-            sleep_amount = 0
-    else:
-        if seconds <= 3600:
-            if seconds > 0:
+    if Variables.cooldown:  # If command on cooldown
+        if seconds <= 3600:  # If less than an hour remains
+            if seconds > 0:  # If seconds still remain
                 send_msg = True
                 seconds -= 60
-                sleep_amount = 60
-            else:
-                cooldown = False
-                sleep_amount = 10800
+                sleep_amount = 60  # Sleep for 1 minute
+            else:  # If no time remains
+                Variables.cooldown = False  # Put command off cooldown
+                sleep_amount = 10800  # Sleep for 3 hours
+    else:  # If command not on cooldown
+        if seconds == 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
+            sleep_amount = 3600  # Sleep for 1 hour
+        elif seconds > 7200:  # If over 2 hours remain
+            sleep_amount = seconds - 7200  # Sleep until 2 hours remain
+        elif seconds > 3600:  # If over 1 hour but less than 2 hours remain
+            sleep_amount = seconds - 3600  # Sleep until 1 hour remains
+            Variables.cooldown = True  # Put command on cooldown
+            seconds = 3600  # Set countdown to begin exactly at 1 hour
+        elif seconds < 3600:  # If less than 1 hour remaining
+            Variables.cooldown = True  # Put command on cooldown
 
-    return seconds, sleep_amount, send_msg
+    return seconds, sleep_amount, send_msg  # Return seconds remaining, sleep amount, whether sending message is needed
 
 
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
-    global cooldown
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
     while not bot.is_closed():  # While bot is still running
-        if not cooldown:  # If command is not on cooldown
+        if not Variables.cooldown:  # If command is not on cooldown
             string = await cs.get_pound_string()  # Get pound text
-            seconds = cs.get_pound_time(string)
+            seconds = cs.get_pound_time(string)  # Extract total seconds
 
         seconds, sleep_amount, send_msg = calculate_sleep_amount(seconds)
 
-        if send_msg:
+        if send_msg:  # If sending message is needed
             await send_message(bot, int(seconds / 60))
 
         await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
