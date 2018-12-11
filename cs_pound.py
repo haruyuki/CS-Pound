@@ -22,8 +22,6 @@ logger.addHandler(handler)
 if __name__ == '__main__':
     for extension in [f.replace('.py', '') for f in os.listdir(Constants.cogs_dir) if isfile(join(Constants.cogs_dir, f))]:
         try:
-            if extension == 'converter':
-                continue
             bot.load_extension(f'{Constants.cogs_dir}.{extension}')
         except (discord.ClientException, ModuleNotFoundError):
             if extension == '.DS_Store':
@@ -45,6 +43,5 @@ async def on_ready():  # When Client is loaded
     print('Created by Peko#7955')
     await update_autoremind_times()
     await bot.change_presence(activity=discord.Game(Constants.playing_text), status=discord.Status.online)
-    bot.load_extension(f'{Constants.cogs_dir}.converter')
 
 bot.run(Constants.discord_token, bot=True, reconnect=True)
