@@ -36,7 +36,7 @@ async def _get_web_data(link):  # Get web data from link
                 success = True
                 connection = await response.text()  # Get text HTML of site
                 dom = lxml.html.fromstring(connection)  # Convert into DOM
-    return success, dom, connection
+    return success, dom
 
 
 async def pet(link):
@@ -59,6 +59,7 @@ async def pet(link):
     if data[0]:
         pet_data = {
             'pps': False,
+            'store_pet': False,
             'image': '',
             'owner': '',
             'owner_link': '',
@@ -73,6 +74,13 @@ async def pet(link):
         }
 
         table = data[1].xpath('//table[@class="spine"]/tr')
+        keys = []
+        for element in table:
+            temp = element.xpath('td[1]/text()')
+            if temp:
+                keys.append(temp[0])
+        keys = ' '.join(keys)
+
         for index, row in enumerate(table):
             if index == 0:
                 pet_data['image'] = row.xpath('td/img/@src')[0]
@@ -83,14 +91,18 @@ async def pet(link):
                 value = ''
                 key = key_process(row.xpath('td[1]/text()')[0])
                 if index == 1:
-                    if 'PPS' in data[2]:
+                    if 'PPS' in keys:
+                        index += 1
+                    if 'Store' in keys:
                         index += 1
                     value = table[index].xpath('td[2]/a/text()')[0]
                     link = 'https://www.chickensmoothie.com/' + table[index].xpath('td[2]/a/@href')[0]
                     pet_data['owner_link'] = link
+
                 elif len(table) - index == 2 or len(table) - index == 1:
                     if key == 'rarity':
                         value = row.xpath('td[2]/img/@alt')[0]
+                        pet_data['rarity_link'] = 'rarities/' + row.xpath('td[2]/img/@src')[0][12:]
                     if key == 'growth':
                         value = row.xpath('td[2]/text()')[0]
                     if 'given' in key:
@@ -100,6 +112,8 @@ async def pet(link):
                         key = 'given_link'
                         value = 'https://www.chickensmoothie.com/' + row.xpath('td[2]/a/@href')[0]
                 else:
+                    if index == 2 and 'Store' in keys:
+                        continue
                     value = row.xpath('td[2]/text()')[0]
                     if key == 'owner':
                         value = row.xpath('td[2]/a/text()')[0]
@@ -112,8 +126,10 @@ async def pet(link):
                             value = 'Less than a day old'
 
                 pet_data[key] = value
-        if 'PPS' in data[2]:
+        if 'PPS' in keys:
             pet_data['pps'] = True
+        if 'Store' in keys:
+            pet_data['store_pet'] = True
         return pet_data
 
     else:
