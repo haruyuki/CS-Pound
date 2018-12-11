@@ -2,6 +2,7 @@ import json
 import logging.handlers
 import os
 from os.path import isfile, join
+import pygsheets
 import sys
 import traceback
 
@@ -14,6 +15,7 @@ from library import update_autoremind_times
 with open('client.json', 'w') as f:
     temp = json.loads(os.environ.get('gsheets', '{}'))
     json.dump(temp, f)
+    Constants.google_sheets_api = pygsheets.authorize(service_file='client.json')
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')  # Remove default help command to add custom one
