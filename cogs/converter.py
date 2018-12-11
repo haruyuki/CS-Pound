@@ -16,7 +16,7 @@ class Converter:
     def authorisation():
         scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
         credentials_raw = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', '{}')
-        service_account_info = json.loads(credentials_raw)
+        service_account_info = json.loads(json.loads(credentials_raw))
         credentials = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
         return gspread.authorize(credentials)
 
