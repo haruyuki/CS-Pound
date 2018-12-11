@@ -8,6 +8,7 @@ opencv-python
 osuapi
 Pillow
 psutil
+pygsheets
 scipy
 sklearn
 uvloop

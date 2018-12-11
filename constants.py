@@ -1,5 +1,15 @@
 import os
 
+import pygsheets
+
+
+def google_sheets_authorisation():
+    with open('client.json', 'w') as f:
+        f.write(os.environ.get('gsheets', None))
+    gc = pygsheets.authorize(service_file='client.json')
+    os.remove('client.json')
+    return gc
+
 
 class Constants:
     prefix = ','  # Prefix used to call bot
@@ -17,6 +27,7 @@ class Constants:
     autoremind_fetch_limit = 300  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
+    service_account_json = google_sheets_authorisation()  # The JSON for the Google API Service Account
 
 
 class Variables:
