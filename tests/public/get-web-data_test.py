@@ -13,4 +13,3 @@ def test_results():
     data = loop.run_until_complete(_get_web_data('https://www.chickensmoothie.com/viewpet.php?id=277461516'))
     assert data[0] is True  # Test data is valid
     assert isinstance(data[1], lxml.html.HtmlElement)  # DOM is an HtmlElement
-    assert isinstance(data[2], str)  # The connection HTML is string
