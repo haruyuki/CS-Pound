@@ -1,5 +1,4 @@
 import os
-import pygsheets
 
 
 class Constants:
@@ -18,7 +17,7 @@ class Constants:
     autoremind_fetch_limit = 300  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
-    google_sheets_api = pygsheets.authorize(service_file='client.json')
+    google_sheets_api = None
 
 
 class Variables:
