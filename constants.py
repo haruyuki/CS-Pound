@@ -1,7 +1,5 @@
 import os
 
-import pygsheets
-
 
 class Constants:
     prefix = ','  # Prefix used to call bot
@@ -19,7 +17,6 @@ class Constants:
     autoremind_fetch_limit = 300  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
-    service_account_json = pygsheets.authorize(service_file='client.json')  # The JSON for the Google API Service Account
 
 
 class Variables:

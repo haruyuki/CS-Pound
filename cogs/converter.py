@@ -1,15 +1,15 @@
-import math
 import textwrap
 
 from discord.ext import commands
+import pygsheets
 
-from constants import Constants
+gc = pygsheets.authorize(service_file='client.json')
 
 
 class Converter:
     def __init__(self, bot):
         self.bot = bot
-        self.spreadsheet = Constants.service_account_json.open_by_key('1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc')
+        self.spreadsheet = gc.open_by_key('1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc')
 
     def calculate_cs_to_gems(self, cs):
         worksheet = self.spreadsheet.sheet1
