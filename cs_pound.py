@@ -1,5 +1,5 @@
 import logging.handlers
-from os import listdir
+import os
 from os.path import isfile, join
 import sys
 import traceback
@@ -9,6 +9,9 @@ from discord.ext import commands
 
 from constants import Constants
 from library import update_autoremind_times
+
+with open('client.json', 'w') as f:
+    f.write(os.environ.get('gsheets', None))
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')  # Remove default help command to add custom one
@@ -20,7 +23,7 @@ handler.setFormatter(logging.Formatter('[%(asctime)s] [%(levelname)s]: %(message
 logger.addHandler(handler)
 
 if __name__ == '__main__':
-    for extension in [f.replace('.py', '') for f in listdir(Constants.cogs_dir) if isfile(join(Constants.cogs_dir, f))]:
+    for extension in [f.replace('.py', '') for f in os.listdir(Constants.cogs_dir) if isfile(join(Constants.cogs_dir, f))]:
         try:
             bot.load_extension(f'{Constants.cogs_dir}.{extension}')
         except (discord.ClientException, ModuleNotFoundError):
