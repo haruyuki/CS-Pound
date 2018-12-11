@@ -26,19 +26,12 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 
 * Python 3.6 and above.
 * A [Discord](https://discordapp.com) account.
+* A Google account with access to Google Drive and Sheets.
 * Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is highly recommended.
 * The [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana) font family.
 
 ## Installation
-* Install all Python requirements using: `pip install -r requirements.txt`.
-* Set environment variables as used in constants.py
-
-## Running
-
-To start the bot run the following command:
-```bash
-python3 cs_pound.py
-```
+I would prefer if you don't run an instance of my bot. Just head to the link in the repository description to invite the bot to your Discord server.
 
 ## Contributors
 
