@@ -1,24 +1,14 @@
-import json
-import os
 import textwrap
 
 from discord.ext import commands
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+
+from constants import Constants
 
 
 class Converter:
     def __init__(self, bot):
         self.bot = bot
-        self.spreadsheet = self.authorisation().open_by_key('1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc')
-
-    @staticmethod
-    def authorisation():
-        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-        credentials_raw = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', '{}')
-        service_account_info = json.loads(json.loads(credentials_raw))
-        credentials = ServiceAccountCredentials.from_json_keyfile_dict(service_account_info, scope)
-        return gspread.authorize(credentials)
+        self.spreadsheet = Constants.google_sheets_api.open_by_key('1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc')
 
     def calculate_cs_to_gems(self, cs):
         worksheet = self.spreadsheet.sheet1
