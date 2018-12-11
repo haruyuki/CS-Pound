@@ -1,13 +1,16 @@
 aiohttp>=3.4.4
 git+https://github.com/Rapptz/discord.py@rewrite#egg=discord.py
 dnspython
+gspread
 lxml
 motor
 numpy
+oauth2client
 opencv-python
 osuapi
 Pillow
 psutil
+PyOpenSSL
 scipy
 sklearn
 uvloop
