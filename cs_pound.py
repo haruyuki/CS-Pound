@@ -1,3 +1,4 @@
+import json
 import logging.handlers
 import os
 from os.path import isfile, join
@@ -11,7 +12,8 @@ from constants import Constants
 from library import update_autoremind_times
 
 with open('client.json', 'w') as f:
-    f.write(os.environ.get('gsheets', None))
+    temp = json.loads(os.environ.get('gsheets', '{}'))
+    json.dump(temp, f)
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or(Constants.prefix), description='The Discord bot for all your ChickenSmoothie needs.', pm_help=False, case_insensitive=True)
 bot.remove_command('help')  # Remove default help command to add custom one
