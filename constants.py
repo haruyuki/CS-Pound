@@ -1,12 +1,4 @@
-import json
 import os
-
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-
-scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-client_secret = json.loads(os.environ.get('gsheets', '{}'))
-credentials = ServiceAccountCredentials.from_json_keyfile_dict(client_secret, scope)
 
 
 class Constants:
@@ -25,7 +17,6 @@ class Constants:
     autoremind_fetch_limit = 300  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
-    google_sheets_api = gspread.authorize(credentials)
 
 
 class Variables:
