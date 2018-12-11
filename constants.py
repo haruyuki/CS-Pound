@@ -1,12 +1,7 @@
 import json
 import os
 
-from google.oauth2 import service_account
 import pygsheets
-
-scopes = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
-client_secret = json.loads(os.environ.get('gsheets', '{}'))
-credentials = service_account.Credentials.from_service_account_info(client_secret, scopes=scopes)
 
 
 class Constants:
@@ -25,7 +20,7 @@ class Constants:
     autoremind_fetch_limit = 300  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
-    google_sheets_api = pygsheets.authorize(custom_credentials=credentials)
+    google_sheets_api = None
 
 
 class Variables:
@@ -56,3 +51,9 @@ class Strings:
 
     pm_successful = 'A PM has been sent to you!'
     pm_unsuccessful = "A PM couldn't be sent to you, it may be that you have 'Allow direct messages from server members' disabled in your privacy settings."
+
+
+with open('sheets.googleapis.com-python.json', 'w') as f:
+    client_secret = json.loads(os.environ.get('gsheets', '{}'))
+    json.dump(client_secret, f)
+Constants.google_sheets_api = pygsheets.authorize()
