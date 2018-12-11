@@ -37,7 +37,7 @@ class Admin:
 
     @commands.command(hidden=True)
     async def load(self, ctx, *, cog):
-        cog = Constants.cogs_dir + cog
+        cog = Constants.cogs_dir + '.' + cog
 
         try:
             self.bot.load_extension(cog)
@@ -48,7 +48,7 @@ class Admin:
 
     @commands.command()
     async def unload(self, ctx, *, cog: str):
-        cog = Constants.cogs_dir + cog
+        cog = Constants.cogs_dir + '.' + cog
 
         try:
             self.bot.unload_extension(cog)
@@ -59,7 +59,7 @@ class Admin:
 
     @commands.command()
     async def reload(self, ctx, *, cog: str):
-        cog = Constants.cogs_dir + cog
+        cog = Constants.cogs_dir + '.' + cog
 
         try:
             self.bot.unload_extension(cog)
