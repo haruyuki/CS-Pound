@@ -12,38 +12,38 @@ class Converter:
 
     def calculate_cs_to_gems(self, cs):  # Function to calculate exchange rate from C$ to gems
         worksheet = self.spreadsheet.sheet1
-        cs_exchange_rate = float(worksheet.acell('E10').value)
-        gem_exchange_rate = float(worksheet.acell('F10').value)
+        cs_exchange_rate = float(worksheet.get_value('E10'))
+        gem_exchange_rate = float(worksheet.get_value('F10'))
         return (cs / cs_exchange_rate) * gem_exchange_rate
 
     def calculate_cs_to_treasure(self, cs):  # Function to calculate exchange rate from C$ to treasure
         worksheet = self.spreadsheet.sheet1
-        cs_exchange_rate = float(worksheet.acell('E10').value)
-        gem_exchange_rate = float(worksheet.acell('F10').value)
-        treasure_exchange_rate = float(worksheet.acell('G10').value)
+        cs_exchange_rate = float(worksheet.get_value('E10'))
+        gem_exchange_rate = float(worksheet.get_value('F10'))
+        treasure_exchange_rate = float(worksheet.get_value('G10'))
         return ((cs / cs_exchange_rate) * gem_exchange_rate) * treasure_exchange_rate
 
     def calculate_gems_to_cs(self, gems):  # Function to calculate exchange rate from gems to C$
         worksheet = self.spreadsheet.sheet1
-        gem_exchange_rate = float(worksheet.acell('F10').value)
-        cs_exchange_rate = float(worksheet.acell('E10').value)
+        gem_exchange_rate = float(worksheet.get_value('F10'))
+        cs_exchange_rate = float(worksheet.get_value('E10'))
         return (gems / gem_exchange_rate) * cs_exchange_rate
 
     def calculate_gems_to_treasure(self, gems):  # Function to calculate exchange rate from gems to treasure
         worksheet = self.spreadsheet.sheet1
-        treasure_exchange_rate = float(worksheet.acell('G10').value)
+        treasure_exchange_rate = float(worksheet.get_value('G10'))
         return gems * treasure_exchange_rate
 
     def calculate_treasure_to_cs(self, treasure):  # Function to calculate exchange rate from treasure to C$
         worksheet = self.spreadsheet.sheet1
-        treasure_exchange_rate = float(worksheet.acell('G10').value)
-        gem_exchange_rate = float(worksheet.acell('F10').value)
-        cs_exchange_rate = float(worksheet.acell('E10').value)
+        treasure_exchange_rate = float(worksheet.get_value('G10'))
+        gem_exchange_rate = float(worksheet.get_value('F10'))
+        cs_exchange_rate = float(worksheet.get_value('E10'))
         return ((treasure / treasure_exchange_rate) / gem_exchange_rate) * cs_exchange_rate
 
     def calculate_treasure_to_gems(self, treasure):  # Function to calculate exchange rate from treasure to gems
         worksheet = self.spreadsheet.sheet1
-        treasure_exchange_rate = float(worksheet.acell('G10').value)
+        treasure_exchange_rate = float(worksheet.get_value('G10'))
         return treasure / treasure_exchange_rate
 
     @commands.command()
