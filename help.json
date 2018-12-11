@@ -104,6 +104,18 @@
     "Informational": {
       "icon": "wrench",
       "commands": {
+        "C$ to FR Gems and Treasure Converter": {
+          "usage": ",cs <amount>",
+          "short": "Get C$ exchange values to FR currency",
+          "description": "Calculates the exchange rate for Flight Rising gems and treasure given the amount of C$",
+          "examples": {
+            "1": ",cs 1",
+            "2": ",cs 326",
+            "3": ",cs 1257"
+          },
+          "aliases": {}
+        },
+
         "Help": {
           "usage": ",help <command>",
           "short": "Get more information about a command",
@@ -114,6 +126,20 @@
             "3": ",help remindme"
           },
           "aliases": {}
+        },
+
+        "Gems to C$ and Treasure Converter": {
+          "usage": ",gems <amount>",
+          "short": "Get gem exchange values to C$ and treasure",
+          "description": "Calculates the exchange rate for Chicken Smoothie C$ and treasure given the amount of gems",
+          "examples": {
+            "1": ",gems 24",
+            "2": ",gems 158",
+            "3": ",gems 527"
+          },
+          "aliases": {
+            "1": ",fr"
+          }
         },
 
         "Invite": {
@@ -140,6 +166,20 @@
           "description": "Want to contribute to the bot development? This command will PM you a link to the CS Pound Development Server, where you can watch development take place.",
           "examples": {},
           "aliases": {}
+        },
+
+        "Treasure to C$ and Gems Converter": {
+          "usage": ",treasure <amount>",
+          "short": "Get treasure exchange values to C$ and gems",
+          "description": "Calculates the exchange rate for Chicken Smoothie C$ and gems given the amount of treasure",
+          "examples": {
+            "1": ",treasure 1",
+            "2": ",treasure 326",
+            "3": ",treasure 1257"
+          },
+          "aliases": {
+            "1": ",tr"
+          }
         }
       }
     },
