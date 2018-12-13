@@ -4,12 +4,10 @@ import re
 import zlib
 
 import cv2
-import discord
 import motor.motor_asyncio as amotor
 from sklearn.cluster import KMeans
 import uvloop
 
-import chickensmoothie as cs
 from constants import Constants, Variables
 
 seconds_per_unit = {"s": 1, "m": 60, "h": 3600, "d": 86400}
@@ -183,27 +181,3 @@ def calculate_sleep_amount(seconds):
             Variables.cooldown = True  # Put command on cooldown
 
     return seconds, sleep_amount, send_msg  # Return seconds remaining, sleep amount, whether sending message is needed
-
-
-async def pound_countdown(bot):  # Background task to countdown to when the pound opens
-    await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
-    while not bot.is_closed():  # While bot is still running
-        if not Variables.cooldown:  # If command is not on cooldown
-            string = await cs.get_pound_string()  # Get pound text
-            seconds = cs.get_pound_time(string)  # Extract total seconds
-
-        seconds, sleep_amount, send_msg = calculate_sleep_amount(seconds)
-
-        if send_msg:  # If sending message is needed
-            time = round(seconds / 60)
-            if time in Variables.autoremind_times:
-                channel_ids = await get_sending_channels(time)
-                for channel in channel_ids:
-                    sending_channel = bot.get_channel(channel)
-                    message = await prepare_message(channel, time)
-                    try:
-                        await sending_channel.send(message)
-                    except (AttributeError, discord.errors.Forbidden):
-                        pass
-
-        await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
