@@ -20,6 +20,7 @@ class Giveaway:
         self.bot = bot
         self.emoji = u'\U0001F389'  # Reaction emoji
 
+    @staticmethod
     def has_permission():
         def predicate(ctx):
             roles_list = [role.name for role in ctx.author.roles]
