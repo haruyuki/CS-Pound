@@ -5,8 +5,9 @@ import discord
 from discord.ext import commands
 import motor.motor_asyncio as amotor
 
-from constants import Constants, Strings
-from library import pound_countdown, update_autoremind_times
+from constants import Constants, Strings, Variables
+import chickensmoothie as cs
+import library
 
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client[Constants.database_name]
@@ -79,7 +80,7 @@ class AutoRemind:
                     else:
                         await collection.insert_one({'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'user_id': str(ctx.author.id), 'remind_time': time})
                         await ctx.send(f'Your Auto Remind has been set for {time} minute{"" if time == 1 else "s"}!')
-                    await update_autoremind_times()
+                    await library.update_autoremind_times()
             elif args == '':  # If no arguments provided
                 await ctx.send(Strings.no_time)
             else:
@@ -89,3 +90,27 @@ class AutoRemind:
 def setup(bot):
     bot.add_cog(AutoRemind(bot))
     bot.loop.create_task(pound_countdown(bot))
+
+
+async def pound_countdown(bot):  # Background task to countdown to when the pound opens
+    await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
+    while not bot.is_closed():  # While bot is still running
+        if not Variables.cooldown:  # If command is not on cooldown
+            string = await cs.get_pound_string()  # Get pound text
+            seconds = cs.get_pound_time(string)  # Extract total seconds
+
+        seconds, sleep_amount, send_msg = library.calculate_sleep_amount(seconds)
+
+        if send_msg:  # If sending message is needed
+            time = round(seconds / 60)
+            if time in Variables.autoremind_times:
+                channel_ids = await library.get_sending_channels(time)
+                for channel in channel_ids:
+                    sending_channel = bot.get_channel(channel)
+                    message = await library.prepare_message(channel, time)
+                    try:
+                        await sending_channel.send(message)
+                    except (AttributeError, discord.errors.Forbidden):
+                        pass
+
+        await asyncio.sleep(sleep_amount)  # Sleep for sleep amount
