@@ -8,10 +8,7 @@ import pygsheets
 def authorisation():
     scopes = ('https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive')
     credentials_raw = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS', '{}')
-    if os.environ.get('HEROKU', None):
-        service_account_info = json.loads(json.loads(credentials_raw))
-    else:
-        service_account_info = json.loads(credentials_raw)
+    service_account_info = json.loads(credentials_raw)
     credentials = service_account.Credentials.from_service_account_info(service_account_info, scopes=scopes)
     return pygsheets.authorize(custom_credentials=credentials)
 
