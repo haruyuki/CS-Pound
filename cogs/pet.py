@@ -31,7 +31,7 @@ class Pet:
                         value = f'[{pet["owner"]}]({pet["owner_link"]})'
                         embed.add_field(name=key.capitalize(), value=value, inline=False)
                 else:
-                    if key == 'image' or key == 'owner_link' or key == 'given_link':
+                    if key == 'image' or key == 'owner_link' or key == 'given_link' or key == 'rarity_link':
                         pass
                     else:
                         if key == 'id':
