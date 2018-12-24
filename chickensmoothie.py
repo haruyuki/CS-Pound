@@ -250,10 +250,5 @@ async def get_announcements():
         news_articles = data[1].xpath('//div[@class="newsitem"]')
         for article in news_articles:
             index = news_articles.index(article)
-            try:
-                news_articles[index] = article.xpath('div[@class="newscontent"]/p')[0]
-            except IndexError:
-                return None
+            news_articles[index] = article.xpath('div[@class="newscontent"]/p')[0]
         return news_articles
-    else:
-        return None
