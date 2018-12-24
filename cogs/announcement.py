@@ -1,9 +1,12 @@
+import aiohttp
+import io
 import re
 
 import discord
 from discord.ext import commands
 import html2text
 import lxml.html
+from PIL import Image
 
 import chickensmoothie as cs
 
@@ -39,17 +42,57 @@ class Announcement:
 
         # 3) Check for main image, and if exists get link and remove tag. If more than 1, create PIL image
         image_link = None  # Assume announcement has no images
+        images = None
+        multiple_images = False
         if latest.find('a/img[@alt="Image"]') is not None:  # If announcement has click-able images
-            if len(latest.findall('a/img[@alt="Image"]')) < 1:
+            if len(latest.findall('a/img[@alt="Image"]')) <= 1:
                 image_tag = latest.find('a/img[@alt="Image"]')  # Get the 'img' tag
                 image_link = image_tag.xpath('@src')[0]  # Extract image link for use in embed later
                 parent = image_tag.getparent()  # Get parent tag of 'img', which is 'a' tag
                 latest.remove(parent)  # Remove the 'a' tag so it won't be converted to Markdown
+            else:
+                images = latest.findall('a/img[@alt="Image"]')
+                multiple_images = True
         elif latest.find('img[@alt="Image"]') is not None:  # If the announcement has static images instead
-            if len(latest.findall('img[@alt="Image"]')) < 1:
+            if len(latest.findall('img[@alt="Image"]')) <= 1:
                 image_tag = latest.find('img[@alt="Image"]')  # Get the 'img' tag
                 image_link = image_tag.xpath('@src')[0]  # Extract image link for use in embed later
                 latest.remove(image_tag)  # Remove the 'img' tag so it won't be parsed later
+            else:
+                image_tags = latest.findall('img[@alt="Image"]')
+                image_links = [element.xpath('@src')[0] for element in image_tags]
+                image_links = [url.replace('//', 'https://') for url in image_links]
+
+                images = []
+                async with aiohttp.ClientSession() as session:
+                    for link in image_links:
+                        async with session.get(link) as response:
+                            connection = await response.read()
+                            images.append(io.BytesIO(connection))
+                multiple_images = True
+
+        if multiple_images:
+            pil_images = map(Image.open, images)
+            print(pil_images)
+            total_rows = 1
+            max_width = 550
+            base_height = 0
+            base_width = 0
+            for image in pil_images:
+                base_height = image.height
+                base_width += image.width
+                if base_width >= max_width:
+                    current_width = 0
+                    total_rows += 1
+            print(total_rows)
+
+            offset = 5
+            canvas = Image.new('RGBA', (max_width, total_rows * base_height))
+            current_width = 0
+            current_height = 0
+            for image in pil_images:
+                canvas.paste(image, current_width)
+
 
         # 4) Convert remaining HTML into Markdown
         text = lxml.html.tostring(latest)
