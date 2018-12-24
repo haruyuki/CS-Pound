@@ -41,7 +41,7 @@ class Identify:
             pet_id = dict(parse_qsl(components.query))['k']
         else:
             pet_id = await self.get_system_pet_id(link)
-        try:
+
         conn = self.create_connection(sqlite_database)
         c = conn.cursor()
         c.execute(f'SELECT {column2} FROM {table_name} WHERE {column1}="{pet_id}"')
