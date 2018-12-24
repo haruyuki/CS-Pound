@@ -242,3 +242,18 @@ def get_pound_time(string):
 
     sleep_amount = library.parse_time(to_parse)
     return sleep_amount
+
+
+async def get_announcements():
+    data = await _get_web_data('https://www.chickensmoothie.com/news/news.php')
+    if data[0]:
+        news_articles = data[1].xpath('//div[@class="newsitem"]')
+        for article in news_articles:
+            index = news_articles.index(article)
+            try:
+                news_articles[index] = article.xpath('div[@class="newscontent"]/p')[0]
+            except IndexError:
+                return None
+        return news_articles
+    else:
+        return None
