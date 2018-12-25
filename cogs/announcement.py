@@ -15,7 +15,7 @@ class Announcement:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(aliases=['announce', 'am'])
+    @commands.group(aliases=['announce', 'news'])
     @commands.guild_only()
     async def announcement(self, ctx):
         pass
