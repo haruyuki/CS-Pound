@@ -8,6 +8,35 @@
     "Chicken Smoothie": {
       "icon": "dog",
       "commands": {
+      	"Announcement": {
+          "usage": ",announcement <on | off | latest>",
+          "short": "Allows you to show or opt in to announcements on the Chicken Smoothie",
+          "description": "Allows you to opt in a channel to automatically post new announcements on Chicken Smoothie, or to just show the latest announcement.",
+          "examples": {
+            "1": ",announcement on",
+            "2": ",announce off",
+            "3": ",news latest"
+          },
+          "aliases": {
+          	"1": ",announce",
+          	"2": ",news"
+          }
+        },
+
+      	"Identify": {
+          "usage": ",identify <Pet Link | Static Image link>",
+          "short": "Tells you the archive page where the pet is located",
+          "description": "Identifies the archive page where the pet you provided is located at. This command won't work for pets with items.",
+          "examples": {
+            "1": ",identify https://www.chickensmoothie.com/viewpet.php?id=149733321",
+            "2": ",id https://www.chickensmoothie.com/viewpet.php?id=5319635",
+            "3": ",id https://static.chickensmoothie.com/pic.php?k=CAD0977E70396057F7A7A78771A16FEC&bg=e6ebf2"
+          },
+          "aliases": {
+          	"1": ",id"
+          }
+        },
+
         "Image": {
           "usage": ",image <link>",
           "short": "Displays a 'screenshot' of your pet",
@@ -104,7 +133,7 @@
     "Informational": {
       "icon": "wrench",
       "commands": {
-        "C$ to FR Gems and Treasure Converter": {
+        "CS": {
           "usage": ",cs <amount>",
           "short": "Get C$ exchange values to FR currency",
           "description": "Calculates the exchange rate for Flight Rising gems and treasure given the amount of C$",
@@ -128,7 +157,7 @@
           "aliases": {}
         },
 
-        "Gems to C$ and Treasure Converter": {
+        "Gems": {
           "usage": ",gems <amount>",
           "short": "Get gem exchange values to C$ and treasure",
           "description": "Calculates the exchange rate for Chicken Smoothie C$ and treasure given the amount of gems",
@@ -168,7 +197,7 @@
           "aliases": {}
         },
 
-        "Treasure to C$ and Gems Converter": {
+        "Treasure": {
           "usage": ",treasure <amount>",
           "short": "Get treasure exchange values to C$ and gems",
           "description": "Calculates the exchange rate for Chicken Smoothie C$ and gems given the amount of treasure",
