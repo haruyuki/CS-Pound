@@ -34,7 +34,7 @@ class Identify:
         components = urlparse(pet_image_link)
         return dict(parse_qsl(components.query))['k']  # Pet ID
 
-    @commands.command()
+    @commands.command(aliases=['id'])
     async def identify(self, ctx, link: str):
         if 'static' in link:
             components = urlparse(link)
