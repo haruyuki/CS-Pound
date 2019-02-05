@@ -139,6 +139,9 @@ async def pet(link):
 async def image(link):
     pet_data = await pet(link)
     if pet_data is not None:
+        if '?1' in pet_data['rarity_link']:  # Very common rarity image link contains a '?1' at the end
+            pet_data['rarity_link'].replace('?1', '')
+
         information = {
             'name': pet_data['name'],
             'adopted': pet_data['adopted'],
