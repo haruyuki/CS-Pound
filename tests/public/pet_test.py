@@ -62,16 +62,16 @@ class TestClass:
         assert 'https://www.chickensmoothie.com/Forum/memberlist.php?mode=viewprofile&u=2887' in data['given_link']  # A unique session ID is appended to end of URL
 
     def test_pps_named_pet(self):
-        data = loop.run_until_complete(pet('https://www.chickensmoothie.com/viewpet.php?id=271278924'))
+        data = loop.run_until_complete(pet('https://www.chickensmoothie.com/viewpet.php?id=283255080'))
 
         assert data['pps'] is True
         assert data['store_pet'] is False
-        assert 'https://static.chickensmoothie.com/pic.php?k=1C1C5F13A70E00B81A17B90FF5EEB441' in data['image']  # The hex colour background parameter changes depending on site events
+        assert 'https://static.chickensmoothie.com/pic.php?k=179D56B1EFF8F3F859C25B8268B51CBB' in data['image']  # The hex colour background parameter changes depending on site events
         assert data['owner'] == 'haruyuki'
         assert 'https://www.chickensmoothie.com/Forum/memberlist.php?mode=viewprofile&u=841634' in data['owner_link']  # A unique session ID is appended to end of URL
-        assert data['id'] == 271278924
-        assert data['name'] == 'Kokoro'
-        assert data['adopted'] == '2018-07-01'
+        assert data['id'] == 283255080
+        assert data['name'] == 'Theo'
+        assert data['adopted'] == '2018-12-05'
         assert data['age'] > 0  # As age constantly increases
         assert data['growth'] == 'Full-grown'
         assert isinstance(data['rarity'], str)  # As rarity can change over time
