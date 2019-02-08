@@ -23,17 +23,8 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,support      | PM's you the link to the CS Pound Development Server                      | ,support                                                                      |
 | ,time         | Tells you how long before the pound opens                                 | ,time                                                                         |
 
-## Prerequisites
-
-* Python 3.6 and above.
-* A [Discord](https://discordapp.com) account.
-* A Google account with access to Google Drive and Sheets.
-* MongoDB database or equivalent.
-* Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is highly recommended.
-* The [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana) font family.
-
-## Installation
-I would prefer if you don't run an instance of my bot. Just head to the link in the repository description to invite the bot to your Discord server.
+## Usage
+I would prefer if you don't run an instance of my bot. Just head to <https://haruyuki.moe/CS-Pound/> and click the button on the top right (or below the title if you're on mobile), to invite the bot to your server.
 
 ## Contributors
 
