@@ -4,7 +4,6 @@ import re
 from urllib.parse import urlparse, parse_qs, parse_qsl
 
 import aiohttp
-import discord
 import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
@@ -15,7 +14,6 @@ import library
 async def _get_web_data(link):  # Get web data from link
     success = False
     dom = None
-    connection = None
 
     if 'static' in link:  # If user provided direct link to pet image
         return success
