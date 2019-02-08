@@ -14,6 +14,7 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,autoremind   | Setup an autoreminder for when the pound opens                            | ,autoremind 5m                                                                |
 | ,giveaway     | Create a giveaway                                                         | ,giveaway 10m 5w 10 pets from my non-existent group.                          |
 | ,help         | Displays the help message of all or a specific command.                   | ,help autoremind    OR  ,help                                                 |
+| ,identify     | Links you the archive page of the provided pet                            | ,identify <https://www.chickensmoothie.com/viewpet.php?id=109085729>          |
 | ,image        | Displays the pet as you would see it in "My Pets" group                   | ,image <http://www.chickensmoothie.com/viewpet.php?id=54685939>               |
 | ,oekaki       | Displays Oekaki drawing from the link                                     | ,oekaki <http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993>   |
 | ,pet          | Displays information about the pet from the link                          | ,pet <http://www.chickensmoothie.com/viewpet.php?id=54685939>                 |
@@ -27,6 +28,7 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 * Python 3.6 and above.
 * A [Discord](https://discordapp.com) account.
 * A Google account with access to Google Drive and Sheets.
+* MongoDB database or equivalent.
 * Though not required, a [Chicken Smoothie](https://www.chickensmoothie.com) account is highly recommended.
 * The [Verdana](https://docs.microsoft.com/en-us/typography/font-list/verdana) font family.
 
