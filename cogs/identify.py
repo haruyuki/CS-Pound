@@ -6,12 +6,14 @@ from discord.ext import commands
 
 import chickensmoothie as cs
 
-sqlite_database = 'cs_archive.sqlite'
-table_name = 'PetDates'
-column1 = 'PetID'
-column2 = 'ArchiveDate'
+sqlite_database = 'cs_archive.sqlite3'
 months = {'January', 'February', 'March', 'April', 'May', 'June',
           'July', 'August', 'September', 'October', 'November', 'December'}
+exceptions = {'3B46301A6C8B850D87A730DA365B0960', 'E5FEFE44A3070BC9FC176503EC1A603F',
+              '0C1AFF9AEAA0953F1B1F9B818C2771C9', '7C912BA5616D2E24E9F700D90E4BA2B6',
+              '905BB7DE4BC4E29D7FD2D1969667B568', '773B14EEB416FA762C443D909FFED344',
+              '1C0DB4785FC78DF4395263D40261C614', '5066110701B0AE95948A158F0B262EBB',
+              '5651A6C10C4D375A1901142C49C5C70C', '8BED72498D055E55ABCA7AD29B180BF4'}
 
 
 class Identify:
@@ -44,25 +46,28 @@ class Identify:
 
         conn = self.create_connection(sqlite_database)
         c = conn.cursor()
-        c.execute(f'SELECT {column2} FROM {table_name} WHERE {column1}="{pet_id}"')
-        try:
-            pet_exists = c.fetchone()[0]
-            items = pet_exists.split('/')
-            items.remove('archive')
-            year, event = filter(None, items)
-            if event in months:
-                message = f'''\
-                The pet is a {event} {year} pet!
-                Archive Link: https://www.chickensmoothie.com{pet_exists}'''
-            else:
-                message = f'''\
-                The pet is a {year} {unquote(event)} pet!
-                Archive Link: https://www.chickensmoothie.com{pet_exists}'''
-            message = textwrap.dedent(message)
-            await ctx.send(message)
-        except TypeError:
-            await ctx.send('CS Pound has no data for that pet :frowning:')
-        conn.close()
+        c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE Pet_ID=?', (pet_id,))
+        if pet_id in exceptions:
+            await ctx.send('This pet is not identifiable at this growth stage :frowning:')
+        else:
+            try:
+                data = c.fetchone()
+                year = data[0]
+                event = data[1]
+                archive_link = data[2]
+                if event in months:
+                    message = f'''\
+                    The pet is a {event} {year} pet!
+                    Archive Link: {archive_link}'''
+                else:
+                    message = f'''\
+                    The pet is a {year} {event} pet!
+                    Archive Link: {archive_link}'''
+                message = textwrap.dedent(message)
+                await ctx.send(message)
+            except TypeError:
+                await ctx.send('There is no data for this pet yet :frowning:')
+            conn.close()
 
     @identify.error  # On error with identify command
     async def command_error(self, ctx, error):
