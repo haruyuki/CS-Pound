@@ -93,7 +93,6 @@ class Announcement:
             for image in pil_images:
                 canvas.paste(image, current_width)
 
-
         # 4) Convert remaining HTML into Markdown
         text = lxml.html.tostring(latest)
         text_decoded = text.decode('utf-8')
