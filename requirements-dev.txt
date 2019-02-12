@@ -4,3 +4,4 @@ gitpython
 pytest
 pytest-codestyle
 pytest-cov
+requests
