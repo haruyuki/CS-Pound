@@ -97,6 +97,12 @@ class Announcement:
         text = lxml.html.tostring(latest)
         text_decoded = text.decode('utf-8')
 
+        # 5) Replace bold <span> tags
+        bold_span_tags = re.findall(r'(<span style="font-weight: bold">([\w\W]+?)</span>)', text_decoded)
+        if bold_span_tags:
+            for tag in bold_span_tags:
+                text_decoded = text_decoded.replace(tag[0], f'%@^{tag[1]}%@^')
+
         # 6) Check if emoji's exist in news content, and remove them
         emoji_list = re.findall(r'\s*<img[\w\W]+?>', text_decoded)
         if emoji_list:
@@ -113,10 +119,10 @@ class Announcement:
         content = html2text.html2text(text_decoded)
 
         # 9) Fix up broken newlines
-        newline = '  \n'
-        content = content.replace(newline, '$#@')
+        content = content.replace('  \n', '$#@')
         content = content.replace('\n', ' ')
         content = content.replace('$#@', '\n')
+        content = content.replace('%@^', '**')
         content = content.replace('\n\n\n', '\n')
 
         # 10) Fix broken Markdown links
