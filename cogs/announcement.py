@@ -44,6 +44,7 @@ class Announcement:
         image_link = None  # Assume announcement has no images
         images = None
         multiple_images = False
+        canvas = None
         if latest.find('a/img[@alt="Image"]') is not None:  # If announcement has click-able images
             if len(latest.findall('a/img[@alt="Image"]')) <= 1:
                 image_tag = latest.find('a/img[@alt="Image"]')  # Get the 'img' tag
@@ -72,26 +73,24 @@ class Announcement:
                 multiple_images = True
 
         if multiple_images:
-            pil_images = map(Image.open, images)
-            print(pil_images)
-            total_rows = 1
-            max_width = 550
-            base_height = 0
-            base_width = 0
-            for image in pil_images:
-                base_height = image.height
-                base_width += image.width
-                if base_width >= max_width:
-                    current_width = 0
-                    total_rows += 1
-            print(total_rows)
+            pil_images = list(map(Image.open, images))
 
-            offset = 5
-            canvas = Image.new('RGBA', (max_width, total_rows * base_height))
             current_width = 0
-            current_height = 0
+            current_heights = []
             for image in pil_images:
-                canvas.paste(image, current_width)
+                current_width += image.width
+                current_heights.append(image.height)
+            max_height = max(current_heights)
+
+            x_offset = 10
+            canvas_width = current_width + (x_offset * len(pil_images))
+            canvas_height = max_height
+
+            canvas = Image.new('RGBA', (canvas_width, canvas_height))
+            temp = 0
+            for image in pil_images:
+                canvas.paste(image, (temp, (max_height - image.height)), image)
+                temp += image.width + x_offset
 
         # 4) Convert remaining HTML into Markdown
         text = lxml.html.tostring(latest)
@@ -133,7 +132,12 @@ class Announcement:
 
         # 11) Send embed
         embed = discord.Embed(title=post_date, description=content, colour=0x4ba139)  # Create embed
-        if image_link is not None:  # If image exists in announcement
+        if multiple_images:
+            output_buffer = io.BytesIO()  # Convert the PIL output into bytes
+            canvas.save(output_buffer, 'png')  # Save the bytes as a PNG format
+            output_buffer.seek(0)  # Move the 'cursor' back to the start
+            await ctx.send(file=discord.File(fp=output_buffer, filename='news.png'))  # Upload the file to the channel where message came from
+        elif image_link is not None:  # If image exists in announcement
             embed.set_image(url=f'https:{image_link}')  # Set embed image
         await ctx.send(embed=embed)  # Send message
 
