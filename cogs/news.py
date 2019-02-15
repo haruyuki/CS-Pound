@@ -11,26 +11,26 @@ from PIL import Image
 import chickensmoothie as cs
 
 
-class Announcement:
+class News:
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(aliases=['announce', 'news'])
+    @commands.group(aliases=['announce', 'announcement'])
     @commands.guild_only()
-    async def announcement(self, ctx):
+    async def news(self, ctx):
         pass
 
-    @announcement.command()
+    @news.command()
     @commands.guild_only()
     async def on(self, ctx):
         pass
 
-    @announcement.command()
+    @news.command()
     @commands.guild_only()
     async def off(self, ctx):
         pass
 
-    @announcement.command()
+    @news.command()
     @commands.guild_only()
     async def latest(self, ctx):
         # 1) Get the latest news item from the news page
@@ -143,4 +143,4 @@ class Announcement:
 
 
 def setup(bot):
-    bot.add_cog(Announcement(bot))
+    bot.add_cog(News(bot))
