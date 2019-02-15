@@ -125,10 +125,12 @@ class News:
             output_buffer = io.BytesIO()  # Convert the PIL output into bytes
             canvas.save(output_buffer, 'png')  # Save the bytes as a PNG format
             output_buffer.seek(0)  # Move the 'cursor' back to the start
-            await ctx.send(file=discord.File(fp=output_buffer, filename='news.png'))  # Upload the file to the channel where message came from
+            await ctx.send(embed=embed, file=discord.File(fp=output_buffer, filename='news.png'))  # Upload the file to the channel where message came from
         elif image_link is not None:  # If image exists in news
             embed.set_image(url=f'https:{image_link}')  # Set embed image
-        await ctx.send(embed=embed)  # Send message
+            await ctx.send(embed=embed)  # Send message
+        else:
+            await ctx.send(embed=embed)  # Send message
 
 
 def setup(bot):
