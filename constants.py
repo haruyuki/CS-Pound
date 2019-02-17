@@ -26,7 +26,7 @@ class Constants:
     database_name = 'cs_pound'  # Name of MongoDB database
     osu_collection_name = 'osu_profiles'  # Collection name for osu! user linking
     autoremind_collection_name = 'auto_remind'  # Collection name for Auto Remind users
-    autoremind_fetch_limit = 300  # Amount of documents to buffer. Should update as collection gets bigger
+    autoremind_fetch_limit = 500  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
     google_sheets_api = authorisation()
