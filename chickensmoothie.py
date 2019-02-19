@@ -7,7 +7,7 @@ import aiohttp
 import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
-from constants import Constants
+from constants import Constants, Strings
 import library
 
 
@@ -214,16 +214,17 @@ async def image(link):
 
 
 async def get_pound_string():
-    data = await _get_web_data('https://www.chickensmoothie.com/pound.php')  # Get web data
+    data = await _get_web_data('https://www.chickensmoothie.com/poundandlostandfound.php')  # Get web data
     if data[0]:  # If the data is valid
         text = data[1].xpath('//h2/text()')  # Get all H2 elements in the data
+        pound_type = text[0][4:]
         try:
             text = text[1]  # Try and get pound opening text
-            text = text.replace('Sorry, the pound is closed at the moment.', '').replace('\n', '').replace('\t', '') + '.'  # Remove extra formatting from text
+            text = text.replace(f'Sorry, the {pound_type} is closed at the moment.', '').replace('\n', '').replace('\t', '') + '.'  # Remove extra formatting from text
         except IndexError:  # If there isn't any pound opening text
-            text = 'Pound is currently open!'
+            text = Strings.pound_opened
 
-        return text
+        return pound_type, text
 
 
 def get_pound_time(string):
