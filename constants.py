@@ -55,7 +55,6 @@ class Strings:
 
     pet_unsuccessful = 'An error has occurred while processing pet link.'
 
-    pound_closed = "Sorry, the pound is closed at the moment. :("
     pound_opened = "Pound is currently open!"
 
     pm_successful = 'A PM has been sent to you!'
