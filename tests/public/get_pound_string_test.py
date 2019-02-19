@@ -7,4 +7,4 @@ loop = asyncio.get_event_loop()
 
 def test_results():
     data = loop.run_until_complete(get_pound_string())
-    assert isinstance(data, str)
+    assert isinstance(data, tuple)
