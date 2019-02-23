@@ -167,7 +167,7 @@ def calculate_sleep_amount(seconds):
                 sleep_amount = 60  # Sleep for 1 minute
             else:  # If no time remains
                 Variables.cooldown = False  # Put command off cooldown
-                sleep_amount = 10800  # Sleep for 3 hours
+                sleep_amount = 3600  # Sleep for 1 hour
     else:  # If command not on cooldown
         if seconds <= 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
             sleep_amount = 3600  # Sleep for 1 hour
