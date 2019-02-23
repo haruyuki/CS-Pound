@@ -44,4 +44,11 @@ async def on_ready():  # When Client is loaded
     await update_autoremind_times()
     await bot.change_presence(activity=discord.Game(Constants.playing_text), status=discord.Status.online)
 
+
+@bot.event
+async def on_command_error(_, error):
+    if isinstance(error, commands.CommandNotFound):
+        return
+    raise error
+
 bot.run(Constants.discord_token, bot=True, reconnect=True)
