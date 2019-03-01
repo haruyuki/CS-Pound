@@ -8,7 +8,7 @@ class TestClass:
         assert calculate_sleep_amount(1) == (-59, 60, True)
         assert calculate_sleep_amount(3599) == (3539, 60, True)
         assert calculate_sleep_amount(3600) == (3540, 60, True)
-        assert calculate_sleep_amount(0) == (0, 10800, False)
+        assert calculate_sleep_amount(0) == (0, 3600, False)
 
     def test_off_cooldown_no_time(self):
         Variables.cooldown = False
