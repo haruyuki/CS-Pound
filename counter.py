@@ -14,9 +14,9 @@ def write_update():
     g.close()
 
     with open('constants.py', 'w') as g:
-        version = re.findall(r'\d{1,4}\.\d{1,4}\.\d{1,3}', lines[25])
+        version = re.findall(r'\d{1,4}\.\d{1,4}\.\d{1,3}', lines[22])
         if version:
-            lines[25] = lines[25].replace(version[0], new_version)
+            lines[22] = lines[22].replace(version[0], new_version)
         for line in lines:
             g.write(line)
 
