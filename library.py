@@ -160,14 +160,13 @@ def calculate_sleep_amount(seconds):
     send_msg = False  # Assume no message needs to be sent
     sleep_amount = 0
     if Variables.cooldown:  # If command on cooldown
-        if seconds <= 3600:  # If less than an hour remains
-            if seconds > 0:  # If seconds still remain
-                send_msg = True
-                seconds -= 60
-                sleep_amount = 60  # Sleep for 1 minute
-            else:  # If no time remains
-                Variables.cooldown = False  # Put command off cooldown
-                sleep_amount = 3600  # Sleep for 1 hour
+        if 0 < seconds <= 3600:  # If less than an hour remains
+            send_msg = True
+            seconds -= 60
+            sleep_amount = 60  # Sleep for 1 minute
+        else:  # If no time remains
+            Variables.cooldown = False  # Put command off cooldown
+            sleep_amount = 3600  # Sleep for 1 hour
     else:  # If command not on cooldown
         if seconds <= 0:  # If no times (i.e. Pound currently open or not opening anytime soon)
             sleep_amount = 3600  # Sleep for 1 hour
