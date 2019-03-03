@@ -34,7 +34,13 @@ class Identify:
         pet = await cs.pet(link)
         pet_image_link = pet['image']
         components = urlparse(pet_image_link)
-        return dict(parse_qsl(components.query))['k']  # Pet ID
+        try:
+            return dict(parse_qsl(components.query))['k']  # Pet ID
+        except KeyError:
+            if 'trans' in link:
+                return 'trans'
+            else:
+                return None
 
     @commands.command(aliases=['id'])
     async def identify(self, ctx, link: str):
@@ -49,6 +55,10 @@ class Identify:
         c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE Pet_ID=?', (pet_id,))
         if pet_id in exceptions:
             await ctx.send('This pet is not identifiable at this growth stage :frowning:')
+        elif pet_id == 'trans':
+            await ctx.sned('Pets with items are unable to be identified :frowning:')
+        elif pet_id is None:
+            await ctx.send('This pet cannot be identified :frowning:')
         else:
             try:
                 data = c.fetchone()
