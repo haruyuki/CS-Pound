@@ -11,7 +11,7 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 
 | Command       | Description                                                               | Example                                                                       |
 |-------------  |-------------------------------------------------------------------------  |---------------------------------------------------------------------------    |
-| ,autoremind   | Setup an autoreminder for when the pound opens                            | ,autoremind 5m                                                                |
+| ,autoremind   | Setup an autoremind for when the pound opens                            | ,autoremind 5m                                                                |
 | ,giveaway     | Create a giveaway                                                         | ,giveaway 10m 5w 10 pets from my non-existent group.                          |
 | ,help         | Displays the help message of all or a specific command.                   | ,help autoremind    OR  ,help                                                 |
 | ,identify     | Links you the archive page of the provided pet                            | ,identify <https://www.chickensmoothie.com/viewpet.php?id=109085729>          |
