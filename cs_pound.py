@@ -40,7 +40,7 @@ async def on_ready():  # When Client is loaded
     print(f'Use this link to invite {bot.user.name}: https://discordapp.com/oauth2/authorize?client_id={bot.user.id}&scope=bot&permissions=268897512')
     print('--------')
     print(f'You are running {bot.user.name} v{Constants.version}')
-    print('Created by Peko#7955')
+    print('Created by Tayo#5263')
     await update_autoremind_times()
     await bot.change_presence(activity=discord.Game(Constants.playing_text), status=discord.Status.online)
 
