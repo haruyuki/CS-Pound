@@ -48,8 +48,8 @@ async def pet(link):
             '\n': ''
         }
 
-        substrs = sorted(replacements, key=len, reverse=True)
-        regexp = re.compile('|'.join(map(re.escape, substrs)))
+        sub_strings = sorted(replacements, key=len, reverse=True)
+        regexp = re.compile('|'.join(map(re.escape, sub_strings)))
 
         return regexp.sub(lambda match: replacements[match.group(0)], string)
 

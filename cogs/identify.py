@@ -1,6 +1,6 @@
 import sqlite3
 import textwrap
-from urllib.parse import urlparse, parse_qsl, unquote
+from urllib.parse import urlparse, parse_qsl
 
 from discord.ext import commands
 
