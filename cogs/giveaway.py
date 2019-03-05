@@ -18,7 +18,12 @@ class NoWinnerFound(Exception):
 class Giveaway:
     def __init__(self, bot):  # Initialise some variables
         self.bot = bot
-        self.emoji = u'\U0001F389'  # Reaction emoji
+        self.reaction_emoji = None
+        bot.loop.create_task(self.load_emoji())
+
+    async def load_emoji(self):
+        await self.bot.wait_until_ready()
+        self.reaction_emoji = discord.utils.get(self.bot.emojis, name='pocky')  # Pocky emoji
 
     def has_permission():
         def predicate(ctx):
@@ -56,7 +61,7 @@ class Giveaway:
 
                 ends_at = ctx.message.created_at + datetime.timedelta(seconds=duration)
 
-                embed = discord.Embed(title=description, description=f'React with {self.emoji} to win!', colour=0x4ba139, timestamp=ends_at)
+                embed = discord.Embed(title=description, description=f'React with {self.reaction_emoji} to win!', colour=0x4ba139, timestamp=ends_at)
                 footer_text = (f'{winners} Winners | ' if winners > 1 else '') + 'Ends at'
                 embed.set_footer(text=footer_text)
 
@@ -70,7 +75,7 @@ class Giveaway:
 
                 until_end = float(ends_at.timestamp()) - datetime.datetime.utcnow().timestamp()
 
-                await message.add_reaction(self.emoji)
+                await message.add_reaction(self.reaction_emoji)
                 await asyncio.sleep(until_end)
 
                 message = await message.channel.get_message(message.id)
@@ -97,7 +102,7 @@ class Giveaway:
 
     async def roll_user(self, message: discord.Message, number_of_winners):
         try:
-            reaction = next(x for x in message.reactions if x.emoji == self.emoji)
+            reaction = next(x for x in message.reactions if x.emoji == self.reaction_emoji)
         except StopIteration:
             raise NoWinnerFound("Couldn't find giveaway emoji on specified message")
 
@@ -119,7 +124,7 @@ class Giveaway:
     @giveaway.error
     async def giveaway_handler(self, ctx, error):
         if isinstance(error, discord.ext.commands.errors.CheckFailure):
-            embed = discord.Embed(title='Support', description=Strings.giveaway_user_no_permission, colour=0xff5252)
+            embed = discord.Embed(title='Giveaway', description=Strings.giveaway_user_no_permission, colour=0xff5252)
             await ctx.send(embed=embed)
 
 
