@@ -30,11 +30,11 @@ class Help:
         if args == '' or args == 'public':
             title = f':{self.help_list["warning"]["icon"]}: __**Note**__'
             content = self.help_list["warning"]["description"] + '\n\n_'
-            embed.add_field(name=title, value=content)  # add Warning help information to embed
+            embed.add_field(name=title, value=content, inline=False)  # add Warning help information to embed
             for key, value in self.help_list['categories'].items():
                 title = f':{value["icon"]}: __**{key} Commands**__'
-                content = '\n\n'.join([f'`{value2["usage"]}` - {value2["short"]}' for key2, value2 in value['commands'].items()]) + '\n\n_'
-                embed.add_field(name=title, value=content)
+                content = '\n'.join([f'`{value2["usage"]}`' for key2, value2 in value['commands'].items()]) + '\n_'
+                embed.add_field(name=title, value=content, inline=False)
 
         else:
             if args in self.command_list:
@@ -47,7 +47,7 @@ class Help:
 
                             if value2['aliases']:  # If there are aliases for the command
                                 content += '\n\n' + '*' + 'Aliases:' + '* ' + ', '.join(['`' + value3 + '`' for key3, value3 in value2['aliases'].items()])  # *Aliases:* `alias1`, `alias2`, `alias3`
-                            embed.add_field(name=key2, value=content)
+                            embed.add_field(name=key2, value=content, inline=False)
 
         if args == 'public' or public == 'public':
             await ctx.send(embed=embed)
