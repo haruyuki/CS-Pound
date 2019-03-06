@@ -20,10 +20,11 @@ class Constants:
     discord_log_filename = 'discord.log'  # Name of logging file
     osu_key = os.environ.get('osu', None)  # osu! API key from environment variables
     support_link = 'https://invite.gg/cspound'  # Link to support server
-    version = '2019.0305.0'  # Current version of bot
+    version = '2019.0306.0'  # Current version of bot
     invite_link = 'https://haruyuki.moe/CS-Pound'  # Link to invite the bot
     mongodb_uri = os.environ.get('mongodb', None)  # MongoDB connection URI from environment variables
     database_name = 'cs_pound'  # Name of MongoDB database
+    giveaways_collection_name = 'giveaways'  # Collection name for giveaways
     osu_collection_name = 'osu_profiles'  # Collection name for osu! user linking
     autoremind_collection_name = 'auto_remind'  # Collection name for Auto Remind users
     autoremind_fetch_limit = 500  # Amount of documents to buffer. Should update as collection gets bigger
