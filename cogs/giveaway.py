@@ -5,10 +5,15 @@ import re
 
 import discord
 from discord.ext import commands
+import motor.motor_asyncio as amotor
 
-from constants import Strings
+from constants import Constants, Strings
 from library import parse_time
 import chickensmoothie as cs
+
+mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
+database = mongo_client[Constants.database_name]
+collection = database[Constants.giveaways_collection_name]
 
 
 class NoWinnerFound(Exception):
@@ -74,10 +79,17 @@ class Giveaway:
                     message = await ctx.send(embed=embed)
 
                 until_end = float(ends_at.timestamp()) - datetime.datetime.utcnow().timestamp()
-
                 await message.add_reaction(self.reaction_emoji)
+                object_id = await collection.insert_one({'channel_id': str(message.channel.id), 'message_id': str(message.id)})
+                object_id = object_id.inserted_id
                 await asyncio.sleep(until_end)
 
+                cursor = collection.find({'_id': object_id})
+                giveaway_data = await cursor.to_list(length=1)
+                if not giveaway_data:
+                    return
+
+                await collection.delete_one({'_id': object_id})
                 message = await message.channel.get_message(message.id)
                 embed = message.embeds[0]
                 giveaway_title = embed.title
@@ -99,6 +111,56 @@ class Giveaway:
         else:
             embed = discord.Embed(title='Giveaway', description=Strings.giveaway_no_permission)
             await ctx.send(embed=embed)
+
+    @commands.command(aliases=['gend'])  # Alternate aliases that can be invoked to call the command
+    @commands.guild_only()  # Can only be run on a server
+    @has_permission()
+    async def giveaway_end(self, ctx, message_id):  # Giveaway command
+        channel = ctx.channel
+        message = await channel.get_message(message_id)
+
+        cursor = collection.find({'channel_id': str(message.channel.id), 'message_id': str(message.id)})
+        giveaway_data = await cursor.to_list(length=1)
+        if not giveaway_data:
+            return
+
+        giveaway_data = giveaway_data[0]
+        object_id = giveaway_data['_id']
+        await collection.delete_one({'_id': object_id})
+
+        if message.author != self.bot.user:
+            await ctx.send("I didn't create that giveaway!")
+            return
+
+        if not message.embeds:  # If there are no embeds
+            await ctx.send('That is not a giveaway!')
+            return
+
+        try:
+            embed = message.embeds[0]
+            giveaway_title = embed.title
+            footer = embed.footer.text
+        except IndexError:
+            await ctx.send('An unknown error has occurred, please try again.')
+
+        try:
+            winners = [int(s) for s in footer.split() if s.isdigit()][0]
+        except IndexError:
+            winners = 1
+
+        try:
+            winners = await self.roll_user(message, winners)
+        except NoWinnerFound:
+            embed.description = 'No one won this giveaway!'
+            await message.edit(embed=embed)
+            await message.channel.send(f'No winner found for **{giveaway_title}**!')
+        else:
+            embed_description = ('\n' if len(winners) > 1 else '') + '\n'.join([winners[x].mention for x in range(len(winners))])
+            embed.description = f'Winner: {embed_description}'
+            await message.edit(embed=embed)
+
+            congrats_description = ', '.join([winners[x].mention for x in range(len(winners))])
+            await message.channel.send(f'Congratulations {congrats_description}! You won **{giveaway_title}**')
 
     async def roll_user(self, message: discord.Message, number_of_winners):
         try:
