@@ -5,8 +5,19 @@ import os
 import re
 import sys
 
+changes_made = False
+with open('counter.json', 'r+') as f:
+    data = json.load(f)
 
-def write_update():
+    if sys.argv[1] == 'startup':
+        if data['version'] != datetime.today().strftime('%Y.%m%d'):
+            changes_made = True
+            data['version'] = datetime.today().strftime('%Y.%m%d')
+            data['build'] = 0
+    elif sys.argv[1] == 'update':
+        changes_made = True
+        data['build'] += 1
+
     new_version = f'{data["version"]}.{data["build"]}'
 
     g = open('constants.py', 'r')
@@ -22,30 +33,9 @@ def write_update():
 
     f.seek(0)
     json.dump(data, f, indent=2)
-    return new_version
-
-
-def add_and_commit(version):
-    repo = Repo(os.getcwd())
-    repo.git.add('constants.py')
-    repo.git.add('counter.json')
-    repo.git.commit('-S', '-m', f'Updated to version {version}')
-
-
-changes_made = False
-with open('counter.json', 'r+') as f:
-    data = json.load(f)
-
-    if sys.argv[1] == 'startup':
-        if data['version'] != datetime.today().strftime('%Y.%m%d'):
-            changes_made = True
-            data['version'] = datetime.today().strftime('%Y.%m%d')
-            data['build'] = 0
-    elif sys.argv[1] == 'update':
-        changes_made = True
-        data['build'] += 1
-
-    current_version = write_update()
     f.truncate()
+
     if changes_made:
-        add_and_commit(current_version)
+        repo = Repo(os.getcwd())
+        repo.git.add('constants.py')
+        repo.git.add('counter.json')
