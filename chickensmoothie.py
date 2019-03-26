@@ -20,7 +20,7 @@ async def _get_web_data(link):  # Get web data from link
 
     headers = {  # HTTP request headers
         'User-Agent': 'CS Pound Discord Bot Agent ' + Constants.version,  # Connecting User-Agent
-        'From': 'cspoundbot@gmail.com'  # Contact email
+        'From':  Constants.contact_email
     }
     parameters = {}
     components = urlparse(link)
