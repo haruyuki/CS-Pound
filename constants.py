@@ -30,6 +30,7 @@ class Constants:
     autoremind_fetch_limit = 500  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
+    contact_email = 'jumpy12359@gmail.com'  # Contact email
     google_sheets_api = authorisation()
 
 
