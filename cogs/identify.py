@@ -46,7 +46,10 @@ class Identify:
     async def identify(self, ctx, link: str):
         if 'static' in link:
             components = urlparse(link)
-            pet_id = dict(parse_qsl(components.query))['k']
+            try:
+                pet_id = dict(parse_qsl(components.query))['k']
+            except KeyError:
+                return None
         else:
             pet_id = await self.get_system_pet_id(link)
 
@@ -54,11 +57,11 @@ class Identify:
         c = conn.cursor()
         c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE Pet_ID=?', (pet_id,))
         if pet_id in exceptions:
-            await ctx.send('This pet is not identifiable at this growth stage :frowning:')
+            await ctx.send('That pet is not identifiable at this growth stage :frowning:')
         elif pet_id == 'trans':
             await ctx.sned('Pets with items are unable to be identified :frowning:')
         elif pet_id is None:
-            await ctx.send('This pet cannot be identified :frowning:')
+            await ctx.send('That pet cannot be identified :frowning:')
         else:
             try:
                 data = c.fetchone()
