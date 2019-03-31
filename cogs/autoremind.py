@@ -39,7 +39,15 @@ class AutoRemind:
         else:  # If user is setting an Auto Remind
             time = re.findall(r'^(\d{1,2})m?$', args)  # Get the requested Auto Remind time
             if time != 0:  # If user provided a valid time
-                time = int(time[0])  # Convert the time into an integer
+                try:
+                    time = int(time[0])  # Convert the time into an integer
+                except IndexError:
+                    print('---------- SOME ERROR OCCURS HERE ---------')
+                    print(time)
+                    print(repr(time))
+                    print('---------- SOME ERROR OCCURS HERE ---------')
+                    await ctx.send('An error has occurred while setting the Auto Remind, please try again.')
+                    return
                 if time > 60:
                     await ctx.send('That time is too far!')
                 else:
