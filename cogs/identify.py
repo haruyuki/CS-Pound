@@ -37,7 +37,7 @@ class Identify:
         try:
             return dict(parse_qsl(components.query))['k']  # Pet ID
         except KeyError:
-            if 'trans' in link:
+            if 'trans' in pet_image_link:
                 return 'trans'
             else:
                 return None
@@ -59,8 +59,9 @@ class Identify:
         if pet_id in exceptions:
             await ctx.send('That pet is not identifiable at this growth stage :frowning:')
         elif pet_id == 'trans':
-            await ctx.sned('Pets with items are unable to be identified :frowning:')
+            await ctx.send('Pets with items are unable to be identified :frowning:')
         elif pet_id is None:
+            print(pet_id)
             await ctx.send('That pet cannot be identified :frowning:')
         else:
             try:
