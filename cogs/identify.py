@@ -61,7 +61,6 @@ class Identify:
         elif pet_id == 'trans':
             await ctx.send('Pets with items are unable to be identified :frowning:')
         elif pet_id is None:
-            print(pet_id)
             await ctx.send('That pet cannot be identified :frowning:')
         else:
             try:
