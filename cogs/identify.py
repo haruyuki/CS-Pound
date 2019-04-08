@@ -76,10 +76,13 @@ class Identify:
                     message = f'''\
                     The pet is a {year} {event} pet!
                     Archive Link: {archive_link}'''
-                message = textwrap.dedent(message)
-                await ctx.send(message)
+
             except TypeError:
-                await ctx.send('There is no data for this pet yet :frowning:')
+                message = f'''\
+                There is no data for this pet yet :frowning:
+                Please note that current year pets don't have data yet.'''
+            message = textwrap.dedent(message)
+            await ctx.send(message)
             conn.close()
 
     @identify.error  # On error with identify command
