@@ -37,7 +37,7 @@ class Statistics:
             bot_uptime = resolver((datetime.now() - start_time).total_seconds())  # The time the bot (script) has been running
             system_uptime = resolver(round(time.time() - psutil.boot_time()))  # The time the system has been running
 
-            description = f'''`Created by Tayo#5263. CS: haruyuki`
+            description = f'''`Created by Haru#5616. CS: haruyuki`
 
 **Owner ID:** `{Constants.owner_id}`
 **CS-Pound ID:** `{bot_id}`
