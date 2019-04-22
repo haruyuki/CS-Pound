@@ -46,6 +46,8 @@ class AutoRemind:
                     return
                 if time > 60:
                     await ctx.send('That time is too far!')
+                elif time < 0:
+                    await ctx.send('1 minute is the minimum!')
                 else:
                     cursor = collection.find({'user_id': str(ctx.author.id)})  # Get document of user
                     user_data = await cursor.to_list(length=1)
