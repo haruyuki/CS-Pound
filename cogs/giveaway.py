@@ -23,12 +23,8 @@ class NoWinnerFound(Exception):
 class Giveaway:
     def __init__(self, bot):  # Initialise some variables
         self.bot = bot
-        self.reaction_emoji = None
-        bot.loop.create_task(self.load_emoji())
+        self.emoji = u'\U0001F389'  # Reaction emoji
 
-    async def load_emoji(self):
-        await self.bot.wait_until_ready()
-        self.reaction_emoji = discord.utils.get(self.bot.emojis, name='pocky')  # Pocky emoji
 
     def has_permission():
         def predicate(ctx):
@@ -66,7 +62,7 @@ class Giveaway:
 
                 ends_at = ctx.message.created_at + datetime.timedelta(seconds=duration)
 
-                embed = discord.Embed(title=description, description=f'React with {self.reaction_emoji} to win!', colour=0x4ba139, timestamp=ends_at)
+                embed = discord.Embed(title=description, description=f'React with {self.emoji} to win!', colour=0x4ba139, timestamp=ends_at)
                 footer_text = (f'{winners} Winners | ' if winners > 1 else '') + 'Ends at'
                 embed.set_footer(text=footer_text)
 
@@ -79,7 +75,7 @@ class Giveaway:
                     message = await ctx.send(embed=embed)
 
                 until_end = float(ends_at.timestamp()) - datetime.datetime.utcnow().timestamp()
-                await message.add_reaction(self.reaction_emoji)
+                await message.add_reaction(self.emoji)
                 object_id = await collection.insert_one({'channel_id': str(message.channel.id), 'message_id': str(message.id)})
                 object_id = object_id.inserted_id
                 await asyncio.sleep(until_end)
@@ -142,6 +138,7 @@ class Giveaway:
             footer = embed.footer.text
         except IndexError:
             await ctx.send('An unknown error has occurred, please try again.')
+            return
 
         try:
             winners = [int(s) for s in footer.split() if s.isdigit()][0]
@@ -164,7 +161,7 @@ class Giveaway:
 
     async def roll_user(self, message: discord.Message, number_of_winners):
         try:
-            reaction = next(x for x in message.reactions if x.emoji == self.reaction_emoji)
+            reaction = next(x for x in message.reactions if x.emoji == self.emoji)
         except StopIteration:
             raise NoWinnerFound("Couldn't find giveaway emoji on specified message")
 
