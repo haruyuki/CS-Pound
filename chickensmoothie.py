@@ -217,12 +217,16 @@ async def get_pound_string():
     data = await _get_web_data('https://www.chickensmoothie.com/poundandlostandfound.php')  # Get web data
     if data[0]:  # If the data is valid
         text = data[1].xpath('//h2/text()')  # Get all H2 elements in the data
-        pound_type = text[0][4:]
-        try:
-            text = text[1]  # Try and get pound opening text
-            text = text.replace(f'Sorry, the {pound_type} is closed at the moment.', '').replace('\n', '').replace('\t', '') + '.'  # Remove extra formatting from text
-        except IndexError:  # If there isn't any pound opening text
-            text = Strings.pound_opened
+        if text[0] == "Pound & Lost and Found":
+            pound_type = text[0]
+            text = f'Sorry, both the {pound_type} is closed at the moment.'
+        else:
+            pound_type = text[0][4:]
+            try:
+                text = text[1]  # Try and get pound opening text
+                text = text.replace(f'Sorry, the {pound_type} is closed at the moment.', '').replace('\n', '').replace('\t', '') + '.'  # Remove extra formatting from text
+            except IndexError:  # If there isn't any pound opening text
+                text = Strings.pound_opened
 
         return pound_type, text
 
