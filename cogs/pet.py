@@ -30,6 +30,8 @@ class Pet:
                     elif key == 'owner':
                         value = f'[{pet["owner"]}]({pet["owner_link"]})'
                         embed.add_field(name=key.capitalize(), value=value, inline=False)
+                elif key == 'store_pet':
+                    pass
                 else:
                     if key == 'image' or key == 'owner_link' or key == 'given_link' or key == 'rarity_link':
                         pass
