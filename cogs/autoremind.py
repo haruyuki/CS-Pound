@@ -127,12 +127,10 @@ async def pound_countdown(bot):  # Background task to countdown to when the poun
                 channel_ids = await library.get_sending_channels(time)
                 print(f'Channel ID\'s that message needs to send to:\n{channel_ids}')
                 for channel in channel_ids:
-                    print(f'Sending to channel: {channel}')
+                    print(f'Sending to channel: {channel}. ', end="")
                     sending_channel = bot.get_channel(channel)
                     message = await library.prepare_message(channel, time)
-                    print(f'Message to send: {message}')
                     try:
-                        print('Sending message')
                         await sending_channel.send(message)
                         print('Message sent')
                     except (AttributeError, discord.errors.Forbidden):
