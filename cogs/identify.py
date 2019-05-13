@@ -89,6 +89,8 @@ class Identify:
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a valid link
             await ctx.send('That is not a valid pet link!')
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("You didn't provide a link!")
 
 
 def setup(bot):
