@@ -47,14 +47,24 @@ class Identify(commands.Cog):
     @commands.command(aliases=['id'])
     async def identify(self, ctx, link: str):
         if 'item' in link:
+            conn = self.create_connection(sqlite_database_items)
+
             components = urlparse(link)
             path = components.path[6:].split('&')
-            left = int(path[0])
-            right = [int(s) for s in re.findall(r'\b\d+\b', path[1])][0]
+            try:
+                left = int(path[0])
+                right = [int(s) for s in re.findall(r'\b\d+\b', path[1])][0]
 
-            conn = self.create_connection(sqlite_database_items)
-            c = conn.cursor()
-            c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
+                c = conn.cursor()
+                c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
+            except ValueError:
+                left = [int(s) for s in re.findall(r'\b\d+\b', path[0])][0]
+
+                c = conn.cursor()
+                c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=?', (left,))
+
+
+
             try:
                 data = c.fetchone()
                 year = data[0]
