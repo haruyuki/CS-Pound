@@ -14,7 +14,7 @@ from library import resolver
 start_time = datetime.now()  # The time the script started running
 
 
-class Statistics:
+class Statistics(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

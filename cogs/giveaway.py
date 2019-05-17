@@ -20,7 +20,7 @@ class NoWinnerFound(Exception):
     pass
 
 
-class Giveaway:
+class Giveaway(commands.Cog):
     def __init__(self, bot):  # Initialise some variables
         self.bot = bot
         self.emoji = u'\U0001F389'  # Reaction emoji
@@ -86,7 +86,7 @@ class Giveaway:
                     return
 
                 await collection.delete_one({'_id': object_id})
-                message = await message.channel.get_message(message.id)
+                message = await message.channel.fetch_message(message.id)
                 embed = message.embeds[0]
                 giveaway_title = embed.title
 
@@ -113,7 +113,7 @@ class Giveaway:
     @has_permission()
     async def giveaway_end(self, ctx, message_id):  # Giveaway command
         channel = ctx.channel
-        message = await channel.get_message(message_id)
+        message = await channel.fetch_message(message_id)
 
         cursor = collection.find({'channel_id': str(message.channel.id), 'message_id': str(message.id)})
         giveaway_data = await cursor.to_list(length=1)

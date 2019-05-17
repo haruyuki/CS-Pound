@@ -4,7 +4,7 @@ from discord.ext import commands
 from constants import Constants, Strings
 
 
-class Invite:
+class Invite(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

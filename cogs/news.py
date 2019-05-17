@@ -11,7 +11,7 @@ from PIL import Image
 import chickensmoothie as cs
 
 
-class News:
+class News(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

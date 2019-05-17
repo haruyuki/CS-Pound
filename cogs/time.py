@@ -4,7 +4,7 @@ from discord.ext import commands
 import chickensmoothie as cs
 
 
-class Time:
+class Time(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

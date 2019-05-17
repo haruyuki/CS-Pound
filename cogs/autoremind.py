@@ -14,7 +14,7 @@ database = mongo_client[Constants.database_name]
 collection = database[Constants.autoremind_collection_name]
 
 
-class AutoRemind:
+class AutoRemind(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

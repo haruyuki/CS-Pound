@@ -7,7 +7,7 @@ from constants import Strings
 from library import parse_time, resolver
 
 
-class RemindMe:
+class RemindMe(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
