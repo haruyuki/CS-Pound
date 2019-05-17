@@ -83,18 +83,6 @@
           "aliases": {
             "1": ",pound"
           }
-        },
-
-        "Trade": {
-          "usage": ",trade <link>",
-          "short": "~~Displays trade information~~ (***Under Development***)",
-          "description": "Displays the C$, Pets, and/or items being offered on each side. Make sure to use the sharing link or it won't work!",
-          "examples": {
-            "1": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73520120&userid=841634&signature=E_q5KzBvdwclqa5I0vx64Q",
-            "2": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73510216&userid=841634&signature=Bmkf6bFhCNBwgA32PoR-_g",
-            "3": ",trade https://www.chickensmoothie.com/trades/viewtrade.php?id=73233628&userid=841634&signature=EpJNgoMFtLk8VUccVDFZPA"
-          },
-          "aliases": {}
         }
       }
     },
@@ -146,13 +134,13 @@
         },
 
         "Help": {
-          "usage": ",help <command>",
+          "usage": ",help <command> [public]",
           "short": "Get more information about a command",
-          "description": "Gives you information on usage and examples of a command. If no command is provided, it will send you the command list with general descriptions of each command.",
+          "description": "Gives you information on usage and examples of a command. If no command is provided, it will send you the command list with general descriptions of each command. Adding 'public' to the end of the command will send the message to the channel rather than through PM",
           "examples": {
-            "1": ",help help",
+            "1": ",help public",
             "2": ",help autoremind",
-            "3": ",help remindme"
+            "3": ",help remindme public"
           },
           "aliases": {}
         },
