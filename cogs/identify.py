@@ -56,28 +56,39 @@ class Identify(commands.Cog):
                 right = [int(s) for s in re.findall(r'\b\d+\b', path[1])][0]
 
                 c = conn.cursor()
-                c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
+                c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
             except ValueError:
                 left = [int(s) for s in re.findall(r'\b\d+\b', path[0])][0]
 
                 c = conn.cursor()
-                c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=?', (left,))
+                c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=?', (left,))
 
 
 
             try:
                 data = c.fetchone()
-                year = data[0]
-                event = data[1]
-                archive_link = data[2]
-                if event in months:
-                    message = f'''\
-                    This item is a {event} {year} item!
-                    Archive Link: {archive_link}'''
+                name = data[0]
+                year = data[1]
+                event = data[2]
+                archive_link = data[3]
+                if name is None:
+                    if event in months:
+                        message = f'''\
+                        That item is a {event} {year} item!
+                        Archive Link: {archive_link}'''
+                    else:
+                        message = f'''\
+                        That item is a {year} {event} item!
+                        Archive Link: {archive_link}'''
                 else:
-                    message = f'''\
-                    This item is a {year} {event} item!
-                    Archive Link: {archive_link}'''
+                    if event in months:
+                        message = f'''\
+                        That item is '{name}' from {event} {year}!
+                        Archive Link: {archive_link}'''
+                    else:
+                        message = f'''\
+                        That item is '{name}' from the {year} {event}!
+                        Archive Link: {archive_link}'''
 
             except TypeError:
                 message = f'''\
@@ -113,11 +124,11 @@ class Identify(commands.Cog):
                     archive_link = data[2]
                     if event in months:
                         message = f'''\
-                        The pet is a {event} {year} pet!
+                        That pet is a {event} {year} pet!
                         Archive Link: {archive_link}'''
                     else:
                         message = f'''\
-                        The pet is a {year} {event} pet!
+                        That pet is a {year} {event} pet!
                         Archive Link: {archive_link}'''
 
                 except TypeError:
