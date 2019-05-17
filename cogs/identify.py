@@ -1,3 +1,4 @@
+import re
 import sqlite3
 import textwrap
 from urllib.parse import urlparse, parse_qsl
@@ -7,6 +8,7 @@ from discord.ext import commands
 import chickensmoothie as cs
 
 sqlite_database = 'cs_archive.sqlite3'
+sqlite_database_items = 'cs_item_archive.sqlite3'
 months = {'January', 'February', 'March', 'April', 'May', 'June',
           'July', 'August', 'September', 'October', 'November', 'December'}
 exceptions = {'3B46301A6C8B850D87A730DA365B0960', 'E5FEFE44A3070BC9FC176503EC1A603F',
@@ -44,25 +46,15 @@ class Identify(commands.Cog):
 
     @commands.command(aliases=['id'])
     async def identify(self, ctx, link: str):
-        if 'static' in link:
+        if 'item' in link:
             components = urlparse(link)
-            try:
-                pet_id = dict(parse_qsl(components.query))['k']
-            except KeyError:
-                return None
-        else:
-            pet_id = await self.get_system_pet_id(link)
+            path = components.path[6:].split('&')
+            left = int(path[0])
+            right = [int(s) for s in re.findall(r'\b\d+\b', path[1])][0]
 
-        conn = self.create_connection(sqlite_database)
-        c = conn.cursor()
-        c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE Pet_ID=?', (pet_id,))
-        if pet_id in exceptions:
-            await ctx.send('That pet is not identifiable at this growth stage :frowning:')
-        elif pet_id == 'trans':
-            await ctx.send('Pets with items are unable to be identified :frowning:')
-        elif pet_id is None:
-            await ctx.send('That pet cannot be identified :frowning:')
-        else:
+            conn = self.create_connection(sqlite_database_items)
+            c = conn.cursor()
+            c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
             try:
                 data = c.fetchone()
                 year = data[0]
@@ -70,20 +62,61 @@ class Identify(commands.Cog):
                 archive_link = data[2]
                 if event in months:
                     message = f'''\
-                    The pet is a {event} {year} pet!
+                    This item is a {event} {year} item!
                     Archive Link: {archive_link}'''
                 else:
                     message = f'''\
-                    The pet is a {year} {event} pet!
+                    This item is a {year} {event} item!
                     Archive Link: {archive_link}'''
 
             except TypeError:
                 message = f'''\
-                There is no data for this pet yet :frowning:
-                Please note that current year pets don't have data yet.'''
+                There is no data for this item yet :frowning:
+                Please note that current year items don't have data yet.'''
             message = textwrap.dedent(message)
             await ctx.send(message)
             conn.close()
+        else:
+            if 'static' in link:
+                components = urlparse(link)
+                try:
+                    pet_id = dict(parse_qsl(components.query))['k']
+                except KeyError:
+                    return None
+            else:
+                pet_id = await self.get_system_pet_id(link)
+
+            conn = self.create_connection(sqlite_database)
+            c = conn.cursor()
+            c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE Pet_ID=?', (pet_id,))
+            if pet_id in exceptions:
+                await ctx.send('That pet is not identifiable at this growth stage :frowning:')
+            elif pet_id == 'trans':
+                await ctx.send('Pets with items are unable to be identified :frowning:')
+            elif pet_id is None:
+                await ctx.send('That pet cannot be identified :frowning:')
+            else:
+                try:
+                    data = c.fetchone()
+                    year = data[0]
+                    event = data[1]
+                    archive_link = data[2]
+                    if event in months:
+                        message = f'''\
+                        The pet is a {event} {year} pet!
+                        Archive Link: {archive_link}'''
+                    else:
+                        message = f'''\
+                        The pet is a {year} {event} pet!
+                        Archive Link: {archive_link}'''
+
+                except TypeError:
+                    message = f'''\
+                    There is no data for this pet yet :frowning:
+                    Please note that current year pets don't have data yet.'''
+                message = textwrap.dedent(message)
+                await ctx.send(message)
+                conn.close()
 
     @identify.error  # On error with identify command
     async def command_error(self, ctx, error):

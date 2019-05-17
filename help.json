@@ -25,11 +25,11 @@
 
       	"Identify": {
           "usage": ",identify <Pet Link | Static Image link>",
-          "short": "Tells you the archive page where the pet is located",
-          "description": "Identifies the archive page where the pet you provided is located at. This command won't work for pets with items.",
+          "short": "Tells you the archive page where a pet or item is located",
+          "description": "Identifies the archive page where the pet or item you provided is located at. This command won't work for pets with items.",
           "examples": {
             "1": ",identify https://www.chickensmoothie.com/viewpet.php?id=149733321",
-            "2": ",id https://www.chickensmoothie.com/viewpet.php?id=5319635",
+            "2": ",id https://static.chickensmoothie.com/item/5270&p=19098.jpg",
             "3": ",id https://static.chickensmoothie.com/pic.php?k=CAD0977E70396057F7A7A78771A16FEC&bg=e6ebf2"
           },
           "aliases": {
