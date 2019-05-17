@@ -57,22 +57,26 @@ if __name__ == '__main__':
                 dom = lxml.html.fromstring(response.text)
             print(f'Finding items from "{link}" page')
 
-            image_links = dom.xpath('//img[@alt="item"]/@src')
+            items = dom.xpath('//li[@class="item"]')
 
             item_ids = set()
-            for image_link in image_links:
-                components = urlparse(image_link)
+            for item in items:
+                components = urlparse(item.xpath('img/@src')[0])
                 path = components.path[6:].split('&')
+                try:
+                	name = item.xpath('div/text()')[0]
+                except IndexError:
+                	name = None
                 left = int(path[0])
                 right = [int(s) for s in re.findall(r'\b\d+\b', path[1])][0]
-                item_ids.add((left, right))
+                item_ids.add((name, left, right))
 
             conn = create_connection('cs_item_archive.sqlite3')
             c = conn.cursor()
             counter = 0
             for item_id in item_ids:
                 try:
-                    c.execute('INSERT INTO ChickenSmoothie_Archive (ItemL_ID, ItemR_ID, Year, Event, Archive_Link) VALUES (?, ?, ?, ?, ?)', (item_id[0], item_id[1], year, event_title, link))
+                    c.execute('INSERT INTO ChickenSmoothie_Archive (ItemL_ID, ItemR_ID, Item_Name, Year, Event, Archive_Link) VALUES (?, ?, ?, ?, ?, ?)', (item_id[1], item_id[2], item_id[0], year, event_title, link))
                     counter += 1
                 except sqlite3.IntegrityError:
                     print(f'WARNING: Item ID combination {item_id} already exists in database.')
