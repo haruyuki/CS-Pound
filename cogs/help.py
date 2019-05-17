@@ -7,7 +7,7 @@ from constants import Strings
 from library import crc
 
 
-class Help:
+class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.current_crc = ''  # Current hash of help.json

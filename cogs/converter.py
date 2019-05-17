@@ -5,7 +5,7 @@ from discord.ext import commands
 from constants import Constants
 
 
-class Converter:
+class Converter(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.spreadsheet = Constants.google_sheets_api.open_by_key('1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc')  # Link to conversion spreadsheet

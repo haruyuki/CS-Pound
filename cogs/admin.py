@@ -11,7 +11,7 @@ from discord.ext import commands
 from constants import Constants
 
 
-class Admin:
+class Admin(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._last_result = None
@@ -62,8 +62,7 @@ class Admin:
         cog = Constants.cogs_dir + '.' + cog
 
         try:
-            self.bot.unload_extension(cog)
-            self.bot.load_extension(cog)
+            self.bot.reload_extension(cog)
         except Exception:
             await ctx.send(f'```py\n{traceback.format_exc()}\n```')
         else:

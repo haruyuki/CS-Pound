@@ -18,7 +18,7 @@ db = client['cs_pound']
 collection = db['osu_profiles']
 
 
-class Osu:
+class Osu(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.osu_emoji = None

@@ -16,7 +16,7 @@ exceptions = {'3B46301A6C8B850D87A730DA365B0960', 'E5FEFE44A3070BC9FC176503EC1A6
               '5651A6C10C4D375A1901142C49C5C70C', '8BED72498D055E55ABCA7AD29B180BF4'}
 
 
-class Identify:
+class Identify(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

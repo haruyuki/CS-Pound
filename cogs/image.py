@@ -5,7 +5,7 @@ import chickensmoothie as cs
 from constants import Strings
 
 
-class PetImage:
+class PetImage(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 

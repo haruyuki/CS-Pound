@@ -4,7 +4,7 @@ from discord.ext import commands
 from chickensmoothie import _get_web_data
 
 
-class Oekaki:
+class Oekaki(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
