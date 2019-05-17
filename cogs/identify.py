@@ -87,7 +87,7 @@ class Identify(commands.Cog):
                         Archive Link: {archive_link}'''
                     else:
                         message = f'''\
-                        That item is '{name}' from the {year} {event}!
+                        That item is '{name}' from {year} {event}!
                         Archive Link: {archive_link}'''
 
             except TypeError:
