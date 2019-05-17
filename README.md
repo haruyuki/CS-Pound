@@ -11,10 +11,11 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 
 | Command       | Description                                                               | Example                                                                       |
 |-------------  |-------------------------------------------------------------------------  |---------------------------------------------------------------------------    |
-| ,autoremind   | Setup an autoremind for when the pound opens                            | ,autoremind 5m                                                                |
+| ,announcement | Allows you to show or opt in to announcements on the Chicken Smoothie     | ,announcement latest                                                          |
+| ,autoremind   | Setup an autoremind for when the pound opens                              | ,autoremind 5m                                                                |
 | ,giveaway     | Create a giveaway                                                         | ,giveaway 10m 5w 10 pets from my non-existent group.                          |
 | ,help         | Displays the help message of all or a specific command.                   | ,help autoremind    OR  ,help                                                 |
-| ,identify     | Links you the archive page of the provided pet                            | ,identify <https://www.chickensmoothie.com/viewpet.php?id=109085729>          |
+| ,identify     | Tells you the archive page where a pet or item is located                 | ,identify <https://www.chickensmoothie.com/viewpet.php?id=109085729>          |
 | ,image        | Displays the pet as you would see it in "My Pets" group                   | ,image <http://www.chickensmoothie.com/viewpet.php?id=54685939>               |
 | ,oekaki       | Displays Oekaki drawing from the link                                     | ,oekaki <http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993>   |
 | ,pet          | Displays information about the pet from the link                          | ,pet <http://www.chickensmoothie.com/viewpet.php?id=54685939>                 |
