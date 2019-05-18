@@ -45,10 +45,67 @@ class Identify(commands.Cog):
                 return None
 
     @commands.command(aliases=['id'])
-    async def identify(self, ctx, link: str):
-        if 'item' in link:
-            conn = self.create_connection(sqlite_database_items)
+    async def identify(self, ctx, link: str = ''):
+        conn = self.create_connection(sqlite_database_items)
+        if link == '':
+            if ctx.message.attachments:
+                attachment_name = ctx.message.attachments[0].filename
 
+                if attachment_name == 'image0.png' or attachment_name == 'unknown.png':
+                    message = '''\
+                    That uploaded image cannot be identified :frowning:
+                    Please try again with the CS link instead.'''
+                    message = textwrap.dedent(message)
+                    await ctx.send(message)
+                    return
+                else:
+                    attachment_url = ctx.message.attachments[0].url
+
+                    components = urlparse(attachment_url)
+                    image_name = components.path.split('/')[-1].split('p')
+                    left = image_name[0]
+                    right = image_name[1]
+
+                    c = conn.cursor()
+                    c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
+            else:
+                await ctx.send("You didn't provide a link!")
+                return
+
+            try:
+                data = c.fetchone()
+                name = data[0]
+                year = data[1]
+                event = data[2]
+                archive_link = data[3]
+                if name is None:
+                    if event in months:
+                        message = f'''\
+                        That item is a {event} {year} item!
+                        Archive Link: {archive_link}'''
+                    else:
+                        message = f'''\
+                        That item is a {year} {event} item!
+                        Archive Link: {archive_link}'''
+                else:
+                    if event in months:
+                        message = f'''\
+                        That item is '{name}' from {event} {year}!
+                        Archive Link: {archive_link}'''
+                    else:
+                        message = f'''\
+                        That item is '{name}' from {year} {event}!
+                        Archive Link: {archive_link}'''
+
+            except TypeError:
+                message = f'''\
+                There is no data for this item yet :frowning:
+                Please note that current year items don't have data yet.'''
+            message = textwrap.dedent(message)
+            await ctx.send(message)
+            conn.close()
+
+        elif 'item' in link:
             components = urlparse(link)
             path = components.path[6:].split('&')
             try:
@@ -62,8 +119,6 @@ class Identify(commands.Cog):
 
                 c = conn.cursor()
                 c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=?', (left,))
-
-
 
             try:
                 data = c.fetchone()
@@ -143,8 +198,6 @@ class Identify(commands.Cog):
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a valid link
             await ctx.send('That is not a valid pet link!')
-        elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("You didn't provide a link!")
 
 
 def setup(bot):
