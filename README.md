@@ -25,7 +25,7 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,time         | Tells you how long before the pound opens                                 | ,time                                                                         |
 
 ## Usage
-I would prefer if you don't run an instance of my bot, but rather just use the already existing instance. Head to <https://haruyuki.moe/CS-Pound/> and click the button on the top right (or below the title if you're on mobile), to invite the bot to your server.
+I would prefer if you don't your own instance of my bot, but rather use the already existing instance. Head to <https://haruyuki.moe/CS-Pound/> and click the button on the top right (or below the title if you're on mobile), to invite the bot to your server.
 
 ## Contributors
 
@@ -35,6 +35,8 @@ I would prefer if you don't run an instance of my bot, but rather just use the a
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+All pet rarity images are property of [Chicken Smoothie](https://www.chickensmoothie.com).
 
 ## Development Status
 [![Build Status](https://img.shields.io/travis/com/haruyuki/CS-Pound.svg)](https://travis-ci.com/haruyuki/CS-Pound)
