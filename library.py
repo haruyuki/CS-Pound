@@ -143,8 +143,8 @@ async def get_sending_channels(time):
     return channel_ids
 
 
-async def prepare_message(channel_id, time):
-    message = f'{time} minute{"" if time == 1 else "s"} until pound opens!'
+async def prepare_message(channel_id, time, pound_type):
+    message = f'{time} minute{"" if time == 1 else "s"} until {pound_type} opens!'
     documents = await get_autoremind_documents(time)
 
     if documents is not None:
