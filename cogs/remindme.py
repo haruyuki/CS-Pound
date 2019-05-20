@@ -13,7 +13,17 @@ class RemindMe(commands.Cog):
 
     @commands.command(aliases=['rm'])
     @commands.guild_only()
-    async def remindme(self, ctx, amount: str):  # Remind Me command
+    async def remindme(self, ctx, *amount: str):  # Remind Me command
+        try:
+            temp = amount[0].split('m')
+            if len(temp) == 2 and temp[-1].isdigit():
+                temp[-1] = temp[-1] + 's'
+            temp[-2] = temp[-2] + 'm'
+            amount = temp
+        except IndexError:
+            pass
+        amount = ''.join(amount)
+
         total = parse_time(amount)  # Get formatted times
         if total == 0:  # If no time specified
             embed = discord.Embed(title='Remind Me', description=Strings.invalid_time, colour=0xff5252)  # Create embed
