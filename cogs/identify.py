@@ -34,7 +34,7 @@ class Identify(commands.Cog):
     @staticmethod
     async def get_system_pet_id(link):
         pet = await cs.pet(link)
-        pet_image_link = pet['image']
+        pet_image_link = pet.image
         components = urlparse(pet_image_link)
         try:
             return dict(parse_qsl(components.query))['k']  # Pet ID
@@ -58,6 +58,12 @@ class Identify(commands.Cog):
                     message = textwrap.dedent(message)
                     await ctx.send(message)
                     return
+                elif 'pic' in attachment_name:
+                    message = '''\
+                    Identify doesn't work with uploaded pet images :frowning:
+                    Please try again with the CS link instead.'''
+                    message = textwrap.dedent(message)
+                    await ctx.send(message)
                 else:
                     attachment_url = ctx.message.attachments[0].url
 
