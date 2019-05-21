@@ -64,6 +64,7 @@ class Identify(commands.Cog):
                     Please try again with the CS link instead.'''
                     message = textwrap.dedent(message)
                     await ctx.send(message)
+                    return
                 else:
                     attachment_url = ctx.message.attachments[0].url
 
