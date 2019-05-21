@@ -51,7 +51,7 @@ class Identify(commands.Cog):
             if ctx.message.attachments:
                 attachment_name = ctx.message.attachments[0].filename
 
-                if attachment_name == 'image0.png' or attachment_name == 'unknown.png':
+                if 'image0' in attachment_name or 'unknown' in attachment_name:
                     message = '''\
                     That uploaded image cannot be identified :frowning:
                     Please try again with the CS link instead.'''
