@@ -16,48 +16,26 @@ class Pet(commands.Cog):
         if pet is None:
             embed = discord.Embed(title='Pet', description=Strings.pet_unsuccessful, colour=0xff5252)  # Create embed
         else:
-            embed = discord.Embed(title=pet['owner'] + '\'s Pet', colour=0x4ba139)  # Create embed
-            embed.set_image(url=pet['image'])  # Set image
+            embed = discord.Embed(title=pet.owner_name + '\'s Pet', colour=0x4ba139)  # Create embed
+            embed.set_image(url=pet.image)  # Set image
 
-            initial = True
-            for key, value in pet.items():
-                if (key == 'owner' or key == 'pps') and initial:
-                    if key == 'pps':
-                        if not value:
-                            continue
-                        else:
-                            embed.add_field(name='PPS', value='[This pet has "PPS". What\'s that?](http://www.chickensmoothie.com/help/pets#pps)', inline=False)
-                    elif key == 'owner':
-                        value = f'[{pet["owner"]}]({pet["owner_link"]})'
-                        embed.add_field(name=key.capitalize(), value=value, inline=False)
-                elif key == 'store_pet':
-                    pass
-                else:
-                    if key == 'image' or key == 'owner_link' or key == 'given_link' or key == 'rarity_link':
-                        pass
-                    else:
-                        if key == 'id':
-                            key = 'Pet ID'
-                        elif key == 'name':
-                            if value == '':
-                                continue
-                            else:
-                                key = 'Pet\'s name'
-                        elif key == 'age':
-                            key = 'Age'
-                            if value == 0:
-                                value = 'Less than a day old'
-                            else:
-                                value = f'{value} days'
-                        elif key == 'given':
-                            if value == '':
-                                continue
-                            else:
-                                key = f'Given to {pet["owner"]} by'
-                                value = f'[{pet["given"]}]({pet["given_link"]})'
-                        else:
-                            key = key.capitalize()
-                        embed.add_field(name=key, value=value, inline=True)
+            if pet.pps:
+                embed.add_field(name='PPS', value='[This pet has "PPS". What\'s that?](http://www.chickensmoothie.com/help/pets#pps)', inline=False)
+            if pet.store_pet:
+                embed.add_field(name='Store', value='[This pet was sold in the store](https://www.chickensmoothie.com/store/)', inline=False)
+            embed.add_field(name='Owner', value=pet.owner(), inline=False)
+            embed.add_field(name='Pet ID', value=pet.id)
+            if pet.name is not None:
+                embed.add_field(name="Pet's name", value=pet.name)
+            embed.add_field(name='Adopted', value=pet.adoption_date)
+            if pet.age == 0:
+                embed.add_field(name='Age', value='Less than a day old')
+            else:
+                embed.add_field(name='Age', value=f'{pet.age} days')
+            embed.add_field(name='Growth', value=pet.growth)
+            embed.add_field(name='Rarity', value=pet.rarity)
+            if pet.given_name is not None:
+                embed.add_field(name=f'Given to {pet.owner_name} by', value=pet.given_by())
 
         await ctx.send(embed=embed)
 

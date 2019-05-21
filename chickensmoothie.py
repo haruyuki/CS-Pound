@@ -7,6 +7,7 @@ import aiohttp
 import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
+from classes.pet import Pet
 from constants import Constants, Strings
 import library
 
@@ -38,6 +39,8 @@ async def _get_web_data(link):  # Get web data from link
 
 
 async def pet(link):
+    pet_class = Pet()
+
     def key_process(string):
         string = string.lower()
         replacements = {
@@ -62,13 +65,13 @@ async def pet(link):
             'owner': '',
             'owner_link': '',
             'id': 0,
-            'name': '',
+            'name': None,
             'adopted': '',
             'age': 0,
             'growth': '',
             'rarity': '',
-            'given': '',
-            'given_link': ''
+            'given': None,
+            'given_link': None
         }
 
         table = data[1].xpath('//table[@class="spine"]/tr')
@@ -100,7 +103,6 @@ async def pet(link):
                 elif len(table) - index == 2 or len(table) - index == 1:
                     if key == 'rarity':
                         value = row.xpath('td[2]/img/@alt')[0]
-                        pet_data['rarity_link'] = 'rarities/' + row.xpath('td[2]/img/@src')[0][12:]
                     if key == 'growth':
                         value = row.xpath('td[2]/text()')[0]
                     if 'given' in key:
@@ -121,43 +123,55 @@ async def pet(link):
                         try:
                             value = int(re.findall(r'(\d*) days?', value)[0])  # Extract the age number
                         except (ValueError, IndexError):  # If no number found (i.e Pet is less than a day old)
-                            value = 'Less than a day old'
+                            value = 0
 
                 pet_data[key] = value
         if 'PPS' in keys:
             pet_data['pps'] = True
         if 'Store' in keys:
             pet_data['store_pet'] = True
-        return pet_data
+
+        pet_class.pps = pet_data['pps']
+        pet_class.store_pet = pet_data['store_pet']
+        pet_class.image = pet_data['image']
+        pet_class.owner_name = pet_data['owner']
+        pet_class.owner_link = pet_data['owner_link']
+        pet_class.id = pet_data['id']
+        pet_class.name = pet_data['name']
+        pet_class.adoption_date = pet_data['adopted']
+        pet_class.age = pet_data['age']
+        pet_class.growth = pet_data['growth']
+        pet_class.rarity = pet_data['rarity']
+        pet_class.given_name = pet_data['given']
+        pet_class.given_url = pet_data['given_link']
+
+        return pet_class
 
     else:
         return None
 
 
 async def image(link):
-    pet_data = await pet(link)
-    if pet_data is not None:
-        if '?1' in pet_data['rarity_link']:  # Very common rarity image link contains a '?1' at the end
-            pet_data['rarity_link'] = pet_data['rarity_link'].replace('?1', '')
-
+    pet_class = await pet(link)
+    if pet_class is not None:
         information = {
-            'name': pet_data['name'],
-            'adopted': pet_data['adopted'],
-            'rarity_link': pet_data['rarity_link']
+            'name': pet_class.name,
+            'adopted': pet_class.adoption_date,
+            'rarity_link': pet_class.rarity_link()
         }
 
-        if 'trans' in pet_data['image']:  # If pet image is transparent (i.e. Pet has items)
+        if 'trans' in pet_class.image:  # If pet image is transparent (i.e. Pet has items)
             transparent = True
             rgba = (225, 246, 179, 255)
         else:
-            hex_colour = parse_qs(pet_data['image'])['bg'][0]
+            hex_colour = parse_qs(pet_class.image)['bg'][0]
             rgb = [int(hex_colour[i:i + 2], 16) for i in (0, 2, 4)]
             rgb.append(255)
             rgba = tuple(rgb)
             transparent = False
 
         async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
-            async with session.get(pet_data['image']) as response:  # GET HTTP response of pet image link
+            async with session.get(pet_class.image) as response:  # GET HTTP response of pet image link
                 connection = await response.read()  # Read the response content
                 pet_image = io.BytesIO(connection)  # Convert the content into bytes
 
@@ -174,10 +188,13 @@ async def image(link):
         current_width = 0
 
         for _, value in information.items():  # For each item in information
-            if 'rarities/' in value:
-                temp_width = 106
-            else:
-                temp_width = temp_draw.textsize(value, font=font)[0]  # Width of text
+            try:
+                if 'rarities/' in value:
+                    temp_width = 106
+                else:
+                    temp_width = temp_draw.textsize(value, font=font)[0]  # Width of text
+            except TypeError:
+                continue
 
             if current_width < temp_width:  # If current width is less than width of texts
                 current_width = temp_width
