@@ -3,14 +3,14 @@ import re
 import motor.motor_asyncio as amotor
 from osuapi import OsuApi, AHConnector, enums
 
-from constants import Constants
+from constants import Constants, Osu
 
 mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client[Constants.database_name]
 
 
 async def get_user(user, mode):
-    osu_collection = database[Constants.osu_collection_name]
+    osu_collection = database[Osu.osu_collection_name]
 
     if isinstance(user, int):
         cursor = osu_collection.find({'user_id': str(user)})
@@ -42,7 +42,7 @@ async def get_user(user, mode):
     else:  # Set default gamemode
         gamemode = enums.OsuMode.osu
 
-    api = OsuApi(Constants.osu_key, connector=AHConnector())  # Connect to osu! API
+    api = OsuApi(Osu.osu_key, connector=AHConnector())  # Connect to osu! API
     result = await api.get_user(user, mode=gamemode)
     try:
         user_data = result[0]

@@ -9,13 +9,13 @@ import numpy as np
 import urllib.error
 import urllib.request
 
-from constants import Constants
+from constants import Constants, Osu
 from library import get_dominant_colour
 from osu import get_user
 
 client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
-db = client['cs_pound']
-collection = db['osu_profiles']
+db = client[Constants.database_name]
+collection = db[Osu.osu_collection_name]
 
 
 class Osu(commands.Cog):
