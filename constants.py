@@ -18,14 +18,12 @@ class Constants:
     owner_id = 277398425044123649  # User ID of bot owner
     discord_token = os.environ.get('discord', None)  # Discord bot token from environment variables
     discord_log_filename = 'discord.log'  # Name of logging file
-    osu_key = os.environ.get('osu', None)  # osu! API key from environment variables
     support_link = 'https://invite.gg/cspound'  # Link to support server
-    version = '2019.0522.0'  # Current version of bot
+    version = '2019.0523.0'  # Current version of bot
     invite_link = 'https://haruyuki.moe/CS-Pound'  # Link to invite the bot
     mongodb_uri = os.environ.get('mongodb', None)  # MongoDB connection URI from environment variables
     database_name = 'cs_pound'  # Name of MongoDB database
     giveaways_collection_name = 'giveaways'  # Collection name for giveaways
-    osu_collection_name = 'osu_profiles'  # Collection name for osu! user linking
     autoremind_collection_name = 'auto_remind'  # Collection name for Auto Remind users
     autoremind_fetch_limit = 500  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
@@ -33,6 +31,15 @@ class Constants:
     contact_email = 'jumpy12359@gmail.com'  # Contact email
     google_sheets_api = authorisation()
     pound_pets_group = 'https://www.chickensmoothie.com/accounts/viewgroup.php?userid=2887&groupid=5813'
+
+
+class Osu:
+    osu_key = os.environ.get('osu', None)  # osu! API key from environment variables
+    osu_collection_name = 'osu_profiles'  # Collection name for osu! user linking
+
+
+class Shibaface:
+    random_pet_url = 'https://sig.grumpybumpers.com/host/blufox.gif'
 
 
 class Variables:
