@@ -10,7 +10,6 @@
       "commands": {
       	"Announcement": {
           "usage": ",announcement <on | off | latest>",
-          "short": "Allows you to show or opt in to announcements on the Chicken Smoothie",
           "description": "Allows you to opt in a channel to automatically post new announcements on Chicken Smoothie, or to just show the latest announcement.",
           "examples": {
             "1": ",announcement on",
@@ -25,7 +24,6 @@
 
       	"Identify": {
           "usage": ",identify <Pet Link | Static Image link>",
-          "short": "Tells you the archive page where a pet or item is located",
           "description": "Identifies the archive page where the pet or item you provided is located at. This command won't work for pets with items.",
           "examples": {
             "1": ",identify https://www.chickensmoothie.com/viewpet.php?id=149733321",
@@ -39,7 +37,6 @@
 
         "Image": {
           "usage": ",image <link>",
-          "short": "Displays a 'screenshot' of your pet",
           "description": "Displays an image of how you would see the pet in your 'My Pets' groups.",
           "examples": {
             "1": ",image https://www.chickensmoothie.com/viewpet.php?id=11214536",
@@ -53,7 +50,6 @@
 
         "Oekaki": {
           "usage": ",oekaki <link>",
-          "short": "Displays Oekaki drawing",
           "description": "Displays Oekaki drawing, along with artist name and profile picture. Do not confuse this with dressup scenes! This command will not work with dressup scene links!",
           "examples": {
             "1": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=30&t=3843428",
@@ -65,7 +61,6 @@
 
         "Pet": {
           "usage": ",pet <link>",
-          "short": "Displays pet information",
           "description": "Displays information about the pet. Unlike the image command, this command shows all available information about the pet, such as ID, age, and who it's given by.",
           "examples": {
             "1": ",pet http://www.chickensmoothie.com/viewpet.php?id=54685939",
@@ -77,7 +72,6 @@
 
         "Time": {
           "usage": ",time",
-          "short": "Tells you how long before the pound opens",
           "description": "Tells you how long is left before the pound opens.",
           "examples": {},
           "aliases": {
@@ -92,7 +86,6 @@
       "commands": {
         "Auto Remind": {
           "usage": ",autoremind <time/off>",
-          "short": "Auto ping X minutes before the pound opens",
           "description": "Allows you to set an Auto Remind to ping you at a time you set before the pound opens. The furthest you can set an Auto Remind for at the moment is 60 minutes.",
           "examples": {
             "1": ",autoremind 5m",
@@ -104,7 +97,6 @@
 
         "RemindMe": {
           "usage": ",remindme <time>",
-          "short": "Pings you after specified amount of time",
           "description": "Pings you after a specified amount of time that you set. The maximum reminding time allowed is 24 hours.",
           "examples": {
             "1": ",remindme 1h6m23s",
@@ -123,7 +115,6 @@
       "commands": {
         "CS": {
           "usage": ",cs <amount>",
-          "short": "Get C$ exchange values to FR currency",
           "description": "Calculates the exchange rate for Flight Rising gems and treasure given the amount of C$",
           "examples": {
             "1": ",cs 1",
@@ -135,7 +126,6 @@
 
         "Help": {
           "usage": ",help <command> [public]",
-          "short": "Get more information about a command",
           "description": "Gives you information on usage and examples of a command. If no command is provided, it will send you the command list with general descriptions of each command. Adding 'public' to the end of the command will send the message to the channel rather than through PM",
           "examples": {
             "1": ",help public",
@@ -147,7 +137,6 @@
 
         "Gems": {
           "usage": ",gems <amount>",
-          "short": "Get gem exchange values to C$ and treasure",
           "description": "Calculates the exchange rate for Chicken Smoothie C$ and treasure given the amount of gems",
           "examples": {
             "1": ",gems 24",
@@ -161,16 +150,16 @@
 
         "Invite": {
           "usage": ",invite",
-          "short": "PM's you the website to get the bot invite link",
-          "description": "",
-          "examples": {},
+          "description": "PM's you the website to get the bot invite link",
+          "examples": {
+            "1": ",invite"
+          },
           "aliases": {}
         },
 
         "Statistics": {
           "usage": ",statistics",
-          "short": "Displays hardware information about the bot and system",
-          "description": "Displays information about the system and the bot. Useful to see the current version of the bot or how many servers/users are using this bot.",
+          "description": "Displays information about the system and the bot. Useful to see the current version of the bot or how many servers/users are using this bot",
           "examples": {},
           "aliases": {
             "1": ",stats"
@@ -179,15 +168,15 @@
 
         "Support": {
           "usage": ",support",
-          "short": "PM's you a link to the CS Pound Development Server",
-          "description": "Want to contribute to the bot development? This command will PM you a link to the CS Pound Development Server, where you can watch development take place.",
-          "examples": {},
+          "description": "PM's you a link to the CS Pound Development Server",
+          "examples": {
+            "1": ",support"
+          },
           "aliases": {}
         },
 
         "Treasure": {
           "usage": ",treasure <amount>",
-          "short": "Get treasure exchange values to C$ and gems",
           "description": "Calculates the exchange rate for Chicken Smoothie C$ and gems given the amount of treasure",
           "examples": {
             "1": ",treasure 1",
@@ -205,8 +194,7 @@
       "icon": "game_die",
       "commands": {
         "Osu": {
-          "usage": ",osu link <Username|ID|URL>\n,osu profile [Username|ID|URL]",
-          "short": "View user osu! stats",
+          "usage": ",osu",
           "description": "View user's osu! stats, and be able to link your own profile.",
           "examples": {
             "1": ",osu link Arita",
@@ -218,7 +206,6 @@
 
         "Giveaway": {
           "usage": ",giveaway <time> [winners] <description>",
-          "short": "Create a giveaway",
           "description": "Allows you to setup and create a giveaway for a specified time. If a pet link is provided a image of the pet is displayed.",
           "examples": {
             "1": ",giveaway 3h Just a normal giveaway with one winner",
@@ -226,7 +213,8 @@
             "3": ",giveaway 10m 5w 10 pets from my non-existent group."
           },
           "aliases": {
-            "1": ",g"
+            "1": ",g",
+            "2": ",gstart"
           }
         }
       }
