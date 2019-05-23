@@ -246,7 +246,7 @@ async def get_pound_string():
             except IndexError:  # If there isn't any pound opening text
                 text = f'''\
                 {pound_type} is currently open!
-                [Go {"claim an item" if pound_type == "Lost and Found" else "adopt a pet"} from the {pound_type} now!]((https://www.chickensmoothie.com/poundandlostandfound.php))'''
+                [Go {"claim an item" if pound_type == "Lost and Found" else "adopt a pet"} from the {pound_type}!](https://www.chickensmoothie.com/poundandlostandfound.php)'''
                 text = textwrap.dedent(text)
 
         return pound_type, text
