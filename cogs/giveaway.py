@@ -89,6 +89,7 @@ class Giveaway(commands.Cog):
                 message = await message.channel.fetch_message(message.id)
                 embed = message.embeds[0]
                 giveaway_title = embed.title
+                embed.colour = 0x36393f
 
                 try:
                     winners = await self.roll_user(message, winners)
@@ -136,6 +137,7 @@ class Giveaway(commands.Cog):
             embed = message.embeds[0]
             giveaway_title = embed.title
             footer = embed.footer.text
+            embed.colour = 0x36393f
         except IndexError:
             await ctx.send('An unknown error has occurred, please try again.')
             return
