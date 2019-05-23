@@ -1,6 +1,7 @@
 import io
 import math
 import re
+import textwrap
 from urllib.parse import urlparse, parse_qs, parse_qsl
 
 import aiohttp
@@ -243,7 +244,10 @@ async def get_pound_string():
                 text = text[1]  # Try and get pound opening text
                 text = text.replace(f'Sorry, the {pound_type} is closed at the moment.', '').replace('\n', '').replace('\t', '') + '.'  # Remove extra formatting from text
             except IndexError:  # If there isn't any pound opening text
-                text = Strings.pound_opened
+                text = f'''\
+                {pound_type} is currently open!
+                [Go {"claim an item" if pound_type == "Lost and Found" else "adopt a pet"} from the {pound_type} now!]((https://www.chickensmoothie.com/poundandlostandfound.php))'''
+                text = textwrap.dedent(text)
 
         return pound_type, text
 
