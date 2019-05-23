@@ -65,7 +65,5 @@ class Strings:
 
     pet_unsuccessful = 'An error has occurred while processing pet link.'
 
-    pound_opened = "Pound is currently open!"
-
     pm_successful = 'A PM has been sent to you!'
     pm_unsuccessful = "A PM couldn't be sent to you, it may be that you have 'Allow direct messages from server members' disabled in your privacy settings."
