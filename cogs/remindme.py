@@ -17,11 +17,9 @@ class RemindMe(commands.Cog):
         amount = ''.join(amount)
         try:
             temp = amount.split('m')
-            print(temp)
             if len(temp) == 2 and temp[-1].isdigit():
                 temp[-1] = temp[-1] + 's'
             temp[-2] = temp[-2] + 'm'
-            print(temp)
             amount = temp
         except IndexError:
             pass
