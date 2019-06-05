@@ -33,7 +33,7 @@ class Constants:
     pound_pets_group = 'https://www.chickensmoothie.com/accounts/viewgroup.php?userid=2887&groupid=5813'
 
 
-class Osu:
+class OsuC:
     osu_key = os.environ.get('osu', None)  # osu! API key from environment variables
     osu_collection_name = 'osu_profiles'  # Collection name for osu! user linking
 
