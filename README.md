@@ -25,7 +25,7 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,time         | Tells you how long before the pound opens                                 | ,time                                                                         |
 
 ## Usage
-I would prefer if you don't your own instance of my bot, but rather use the already existing instance. Head to <https://haruyuki.moe/CS-Pound/> and click the button on the top right (or below the title if you're on mobile), to invite the bot to your server.
+I would prefer if you don't your run own instance of my bot, but rather use the already existing instance. Head to <https://haruyuki.moe/CS-Pound/> and click the button on the top right (or below the title if you're on mobile), to invite the bot to your server.
 
 ## Contributors
 

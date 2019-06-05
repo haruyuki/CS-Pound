@@ -6,7 +6,7 @@ from discord.ext import commands
 from constants import Shibaface
 
 
-class Support(commands.Cog):
+class Shibaface(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -35,4 +35,4 @@ class Support(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Support(bot))
+    bot.add_cog(Shibaface(bot))
