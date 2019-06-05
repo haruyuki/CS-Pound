@@ -1,7 +1,7 @@
 import argparse
 import re
 import sqlite3
-from urllib.parse import urlparse, parse_qsl, unquote, quote
+from urllib.parse import urlparse, unquote, quote
 
 import lxml.html
 import requests
@@ -64,9 +64,9 @@ if __name__ == '__main__':
                 components = urlparse(item.xpath('img/@src')[0])
                 path = components.path[6:].split('&')
                 try:
-                	name = item.xpath('div/text()')[0]
+                    name = item.xpath('div/text()')[0]
                 except IndexError:
-                	name = None
+                    name = None
                 left = int(path[0])
                 right = [int(s) for s in re.findall(r'\b\d+\b', path[1])][0]
                 item_ids.add((name, left, right))

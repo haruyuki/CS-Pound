@@ -9,7 +9,7 @@ import lxml.html
 from PIL import Image, ImageFont, ImageDraw
 
 from classes.pet import Pet
-from constants import Constants, Strings
+from constants import Constants
 import library
 
 
