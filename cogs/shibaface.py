@@ -1,9 +1,9 @@
-import aiohttp
+import random
 
 import discord
 from discord.ext import commands
 
-from constants import Shibaface
+from constants import ShibafaceC
 
 
 class Shibaface(commands.Cog):
@@ -25,12 +25,8 @@ class Shibaface(commands.Cog):
         title = 'Shibaface!'
         description = '[http://www.shibaface.com](http://www.shibaface.com)'
 
-        async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
-            async with session.get(Shibaface.random_pet_url) as response:  # GET HTTP response of pet image link
-                pet_url = str(response.url)
-
         embed = discord.Embed(title=title, description=description, colour=0xFFE559)
-        embed.set_image(url=pet_url)
+        embed.set_image(url=random.choice(ShibafaceC.adopts))
         await ctx.send(embed=embed)
 
 
