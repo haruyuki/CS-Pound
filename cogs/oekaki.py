@@ -27,13 +27,10 @@ class Oekaki(commands.Cog):
                 artist_links = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/@href')  # Drawing information titles
                 artist_values = data[1].xpath('//table[@class="ok-drawing-info"]/tr')[0].xpath('td')[1].xpath('a/text()')  # Drawing information values
 
-            artist_text = '[' + artist_values[0] + '](' + base_link + artist_links[0][1:] + ') [' + artist_values[1] + '(' + base_link + artist_links[1][1:] + ')]'  # [Artist Name](Link to Artist) [gallery](Link to Artist gallery) | Formats to Artist Name [gallery]
-
             embed = discord.Embed(title=oekaki_title, colour=0x4ba139, url=link)  # Create embed
-            embed.add_field(name='Artist', value=artist_text)  # Add Artist field
             embed.set_footer(text=warning_text, icon_url="https://vignette.wikia.nocookie.net/pufflescp/images/6/68/Red_Warning_Triangle.png/revision/latest?cb=20160718024653&format=original")  # Add warning text to footer
             embed.set_image(url=image)  # Add drawing to embed
-            embed.set_thumbnail(url=user_icon)  # Set thumbnail as user profile picture
+            embed.set_author(name=artist_values[0], url=base_link + artist_links[0][1:], icon_url=user_icon)
 
             await ctx.send(embed=embed)  # Send embed
         else:  # If data is not valid
