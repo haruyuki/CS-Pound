@@ -93,11 +93,14 @@ class PoundPets(commands.Cog):
                     self.stage = 2
                     rare_plus_pets = []
                     for i in all_pets:
-                        pet = None
                         url = 'https://www.chickensmoothie.com' + i
                         self.parsed_pets += 1
-                        while pet is None:
+                        pet = None
+                        pet = await cs.pet(url)
+                        await asyncio.sleep(0.5)
+                        if pet is None:
                             pet = await cs.pet(url)
+                            await asyncio.sleep(1)
                         print(pet)
                         if pet.rarity == 'Rare' or pet.rarity == 'Very rare' or pet.rarity == 'OMG so rare!':
                             rare_plus_pets.append(pet)
