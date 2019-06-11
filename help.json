@@ -193,9 +193,20 @@
     "Fun": {
       "icon": "game_die",
       "commands": {
+        "Shibaface":  {
+          "usage": ",shibaface",
+          "description": "Commands for another virtual pet adoption site",
+          "examples": {
+            "1": ",sf random"
+          },
+          "aliases": {
+            "1": ",sf"
+          }
+        },
+
         "Osu": {
           "usage": ",osu",
-          "description": "View user's osu! stats, and be able to link your own profile.",
+          "description": "Commands for the rhythm game osu!",
           "examples": {
             "1": ",osu link Arita",
             "2": ",osu profile",
