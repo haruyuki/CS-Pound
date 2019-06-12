@@ -55,7 +55,7 @@ class PoundPets(commands.Cog):
             'From': Constants.contact_email
         }
 
-        if not self.generating_image:
+        if not self.generating_image and not self.regenerate:
             pound_data = await cs.get_pound_string()
             if pound_data[0] == 'Lost and Found' or pound_data[0] == 'Pound & Lost and Found':
                 await ctx.send('The next opening is not the Pound!')
@@ -65,7 +65,7 @@ class PoundPets(commands.Cog):
                 await ctx.send('An image has already been created! Use `,ppets` to display it!')
 
             else:
-                if not self.generating_image and not self.regenerate:
+                if not self.generating_image:
                     await ctx.send('Generating image... Enter the command again to check on the progress')
                     self.generating_image = True
                     pound_account = Constants.pound_pets_group
