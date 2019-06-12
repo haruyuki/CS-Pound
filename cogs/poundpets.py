@@ -76,6 +76,7 @@ class PoundPets(commands.Cog):
                                 dom = lxml.html.fromstring(connection)  # Convert into DOM
 
                     if not self.regenerate:
+                        print('First time running generate')
                         self.all_pets = 0
                         self.stage = 1
                         last_page = 'https://chickensmoothie.com' + dom.xpath('//div[@class="pages"]')[0].xpath('a/@href')[-2]
@@ -111,12 +112,20 @@ class PoundPets(commands.Cog):
                                 self.processed_rares = rare_plus_pets
                                 self.current_rare = i
                                 self.regenerate = True
+                                print('Errored...')
+                                print(f'Processed {self.parsed_pets}/{self.all_pets}')
+                                print(len(self.processed_rares))
+                                print(f'Stuck on rare: {self.current_rare}')
                                 return
                     else:
+                        print('Second time running generate')
                         self.regenerate = False
                         index = self.raw_all_pets.index(self.current_rare)
+                        print(f'Index number at: {index}')
                         pets_to_parse = self.raw_all_pets[index:]
+                        print(f'{len(pets_to_parse)} pets left to parse')
                         rare_plus_pets = self.processed_rares
+                        print(f'{len(rare_plus_pets)} rares already generated')
                         for i in pets_to_parse:
                             url = 'https://www.chickensmoothie.com' + i
                             pet = await cs.pet(url)
@@ -127,6 +136,7 @@ class PoundPets(commands.Cog):
                                     rare_plus_pets.append(pet)
                                 self.parsed_pets += 1
                             except AttributeError:
+                                print('Errored again second time')
                                 self.processed_rares = rare_plus_pets
                                 self.current_rare = i
                                 self.regenerate = True
