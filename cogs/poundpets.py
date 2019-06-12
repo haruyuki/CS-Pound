@@ -28,6 +28,11 @@ class PoundPets(commands.Cog):
         self.parsed_pets = 0
         self.stage = 0
 
+        self.raw_all_pets = []
+        self.processed_rares = []
+        self.current_rare = ''
+        self.regenerate = False
+
     @commands.group(aliases=['ppets', 'pound-pets'])
     @commands.guild_only()
     async def pound_pets(self, ctx):
@@ -52,8 +57,7 @@ class PoundPets(commands.Cog):
 
         if not self.generating_image:
             pound_data = await cs.get_pound_string()
-            pound_type = pound_data[0]
-            if pound_type == 'Lost and Found' or pound_type == 'Pound & Lost and Found':
+            if pound_data[0] == 'Lost and Found' or pound_data[0] == 'Pound & Lost and Found':
                 await ctx.send('The next opening is not the Pound!')
                 return
 
@@ -71,36 +75,62 @@ class PoundPets(commands.Cog):
                                 connection = await response.text()  # Get text HTML of site
                                 dom = lxml.html.fromstring(connection)  # Convert into DOM
 
-                    self.all_pets = 0
-                    self.stage = 1
-                    last_page = 'https://chickensmoothie.com' + dom.xpath('//div[@class="pages"]')[0].xpath('a/@href')[-2]
-                    pet_count = int(parse_qs(urlparse(last_page).query)['pageStart'][0])
-                    all_pets = []
-                    async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
-                        for i in range(10):
-                            page_start = pet_count - (20 * i)
-                            url = pound_account + '&pageStart=' + str(page_start)
-                            print(f'Parsing {url}')
-                            async with session.post(url, headers=headers) as response:  # POST the variables to the base php link
-                                if response.status == 200:  # If received response is OK
-                                    connection = await response.text()  # Get text HTML of site
-                                    dom = lxml.html.fromstring(connection)  # Convert into DOM
-                            pets = dom.xpath('//dl[@class="pet"]/dt/a/@href')
-                            all_pets.extend(pets)
-                    self.all_pets = len(all_pets)
+                    if not self.regenerate:
+                        self.all_pets = 0
+                        self.stage = 1
+                        last_page = 'https://chickensmoothie.com' + dom.xpath('//div[@class="pages"]')[0].xpath('a/@href')[-2]
+                        pet_count = int(parse_qs(urlparse(last_page).query)['pageStart'][0])
+                        all_pets = []
+                        async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+                            for i in range(10):
+                                page_start = pet_count - (20 * i)
+                                url = pound_account + '&pageStart=' + str(page_start)
+                                print(f'Parsing {url}')
+                                async with session.post(url, headers=headers) as response:  # POST the variables to the base php link
+                                    if response.status == 200:  # If received response is OK
+                                        connection = await response.text()  # Get text HTML of site
+                                        dom = lxml.html.fromstring(connection)  # Convert into DOM
+                                pets = dom.xpath('//dl[@class="pet"]/dt/a/@href')
+                                all_pets.extend(pets)
+                        self.all_pets = len(all_pets)
 
-                    self.parsed_pets = 0
-                    self.stage = 2
-                    rare_plus_pets = []
-                    for i in all_pets:
-                        url = 'https://www.chickensmoothie.com' + i
-                        self.parsed_pets += 1
-                        pet = None
-                        pet = await cs.pet(url)
-                        await asyncio.sleep(1)
-                        print(pet)
-                        if pet.rarity == 'Rare' or pet.rarity == 'Very rare' or pet.rarity == 'OMG so rare!':
-                            rare_plus_pets.append(pet)
+                        self.parsed_pets = 0
+                        self.stage = 2
+                        rare_plus_pets = []
+                        for i in all_pets:
+                            url = 'https://www.chickensmoothie.com' + i
+                            pet = await cs.pet(url)
+                            await asyncio.sleep(0.5)
+                            print(pet)
+                            try:
+                                if pet.rarity == 'Rare' or pet.rarity == 'Very rare' or pet.rarity == 'OMG so rare!':
+                                    rare_plus_pets.append(pet)
+                                self.parsed_pets += 1
+                            except AttributeError:
+                                self.raw_all_pets = all_pets
+                                self.processed_rares = rare_plus_pets
+                                self.current_rare = i
+                                self.regenerate = True
+                                return
+                    else:
+                        self.regenerate = False
+                        index = self.raw_all_pets.index(self.current_rare)
+                        pets_to_parse = self.raw_all_pets[index:]
+                        rare_plus_pets = self.processed_rares
+                        for i in pets_to_parse:
+                            url = 'https://www.chickensmoothie.com' + i
+                            pet = await cs.pet(url)
+                            await asyncio.sleep(0.5)
+                            print(pet)
+                            try:
+                                if pet.rarity == 'Rare' or pet.rarity == 'Very rare' or pet.rarity == 'OMG so rare!':
+                                    rare_plus_pets.append(pet)
+                                self.parsed_pets += 1
+                            except AttributeError:
+                                self.processed_rares = rare_plus_pets
+                                self.current_rare = i
+                                self.regenerate = True
+                                return
 
                     image_data = []
                     self.stage = 3
@@ -193,6 +223,7 @@ def generate_image(width, height, image_data, rare_plus_pets):
         current_width += paste_width
     total_height = y_offset + current_max_height + 31 + 15 + 30
     return canvas, total_height
+
 
 async def image_expiration_check(bot):
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
