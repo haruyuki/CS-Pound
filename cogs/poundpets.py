@@ -55,7 +55,7 @@ class PoundPets(commands.Cog):
             'From': Constants.contact_email
         }
 
-        if not self.generating_image and not self.regenerate:
+        if not self.generating_image:
             pound_data = await cs.get_pound_string()
             if pound_data[0] == 'Lost and Found' or pound_data[0] == 'Pound & Lost and Found':
                 await ctx.send('The next opening is not the Pound!')
@@ -90,6 +90,7 @@ class PoundPets(commands.Cog):
                                 async with session.post(url, headers=headers) as response:  # POST the variables to the base php link
                                     if response.status == 200:  # If received response is OK
                                         connection = await response.text()  # Get text HTML of site
+                                        await asyncio.sleep(0.5)
                                         dom = lxml.html.fromstring(connection)  # Convert into DOM
                                 pets = dom.xpath('//dl[@class="pet"]/dt/a/@href')
                                 all_pets.extend(pets)
@@ -112,6 +113,7 @@ class PoundPets(commands.Cog):
                                 self.processed_rares = rare_plus_pets
                                 self.current_rare = i
                                 self.regenerate = True
+                                self.generating_image = False
                                 print('Errored...')
                                 print(f'Processed {self.parsed_pets}/{self.all_pets}')
                                 print(len(self.processed_rares))
@@ -140,6 +142,7 @@ class PoundPets(commands.Cog):
                                 self.processed_rares = rare_plus_pets
                                 self.current_rare = i
                                 self.regenerate = True
+                                self.generating_image = False
                                 return
 
                     image_data = []
