@@ -65,7 +65,7 @@ class PoundPets(commands.Cog):
                 await ctx.send('An image has already been created! Use `,ppets` to display it!')
 
             else:
-                if not self.generating_image:
+                if not self.generating_image and not self.regenerate:
                     await ctx.send('Generating image... Enter the command again to check on the progress')
                     self.generating_image = True
                     pound_account = Constants.pound_pets_group
