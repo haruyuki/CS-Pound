@@ -32,6 +32,8 @@ class Constants:
     contact_email = 'jumpy12359@gmail.com'  # Contact email
     google_sheets_api = authorisation()
     pound_pets_group = 'https://www.chickensmoothie.com/accounts/viewgroup.php?userid=2887&groupid=5813'
+    username = 'haruyuki'
+    password = os.environ.get('password', None)
     image_exists = False  # Variable used in poundpets.py
 
 
