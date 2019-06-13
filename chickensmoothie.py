@@ -36,118 +36,14 @@ async def _get_web_data(link):  # Get web data from link
                 success = True
                 connection = await response.text()  # Get text HTML of site
                 dom = lxml.html.fromstring(connection)  # Convert into DOM
+                dom.make_links_absolute('https://www.chickensmoothie.com')
     return success, dom
 
 
 async def pet(link):
-    pet_class = Pet()
-
-    def key_process(string):
-        string = string.lower()
-        replacements = {
-            ':': '',
-            'pet ': '',
-            'pet\'s ': '',
-            '\t': '',
-            '\n': ''
-        }
-
-        sub_strings = sorted(replacements, key=len, reverse=True)
-        regexp = re.compile('|'.join(map(re.escape, sub_strings)))
-
-        return regexp.sub(lambda match: replacements[match.group(0)], string)
-
     data = await _get_web_data(link)
     if data[0]:
-        pet_data = {
-            'pps': False,
-            'store_pet': False,
-            'image': '',
-            'owner': '',
-            'owner_link': '',
-            'id': 0,
-            'name': None,
-            'adopted': '',
-            'age': 0,
-            'growth': '',
-            'rarity': '',
-            'given': None,
-            'given_link': None
-        }
-
-        table = data[1].xpath('//table[@class="spine"]/tr')
-        keys = []
-        for element in table:
-            temp = element.xpath('td[1]/text()')
-            if temp:
-                keys.append(temp[0])
-        keys = ' '.join(keys)
-
-        for index, row in enumerate(table):
-            if index == 0:
-                pet_data['image'] = row.xpath('td/img/@src')[0]
-                if 'trans' in pet_data['image']:
-                    pet_data['image'] = 'https://www.chickensmoothie.com' + pet_data['image']
-
-            else:
-                value = ''
-                key = key_process(row.xpath('td[1]/text()')[0])
-                if index == 1:
-                    if 'PPS' in keys:
-                        index += 1
-                    if 'Store' in keys:
-                        index += 1
-                    value = table[index].xpath('td[2]/a/text()')[0]
-                    link = 'https://www.chickensmoothie.com/' + table[index].xpath('td[2]/a/@href')[0]
-                    pet_data['owner_link'] = link
-
-                elif len(table) - index == 2 or len(table) - index == 1:
-                    if key == 'rarity':
-                        value = row.xpath('td[2]/img/@alt')[0]
-                    if key == 'growth':
-                        value = row.xpath('td[2]/text()')[0]
-                    if 'given' in key:
-                        key = 'given'
-                        value = row.xpath('td[2]/a/text()')[0]
-                        pet_data[key] = value
-                        key = 'given_link'
-                        value = 'https://www.chickensmoothie.com/' + row.xpath('td[2]/a/@href')[0]
-                else:
-                    if index == 2 and 'Store' in keys:
-                        continue
-                    value = row.xpath('td[2]/text()')[0]
-                    if key == 'owner':
-                        value = row.xpath('td[2]/a/text()')[0]
-                    elif key == 'id':
-                        value = int(value)
-                    elif key == 'age':
-                        try:
-                            value = int(re.findall(r'(\d*) days?', value)[0])  # Extract the age number
-                        except (ValueError, IndexError):  # If no number found (i.e Pet is less than a day old)
-                            value = 0
-
-                pet_data[key] = value
-        if 'PPS' in keys:
-            pet_data['pps'] = True
-        if 'Store' in keys:
-            pet_data['store_pet'] = True
-
-        pet_class.pps = pet_data['pps']
-        pet_class.store_pet = pet_data['store_pet']
-        pet_class.image = pet_data['image']
-        pet_class.owner_name = pet_data['owner']
-        pet_class.owner_link = pet_data['owner_link']
-        pet_class.id = pet_data['id']
-        pet_class.name = pet_data['name']
-        pet_class.adoption_date = pet_data['adopted']
-        pet_class.age = pet_data['age']
-        pet_class.growth = pet_data['growth']
-        pet_class.rarity = pet_data['rarity']
-        pet_class.given_name = pet_data['given']
-        pet_class.given_url = pet_data['given_link']
-
-        return pet_class
-
+        return Pet(data[1])
     else:
         return None
 
@@ -161,18 +57,18 @@ async def image(link):
             'rarity_link': pet_class.rarity_link()
         }
 
-        if 'trans' in pet_class.image:  # If pet image is transparent (i.e. Pet has items)
+        if 'trans' in pet_class.image_url:  # If pet image is transparent (i.e. Pet has items)
             transparent = True
             rgba = (225, 246, 179, 255)
         else:
-            hex_colour = parse_qs(pet_class.image)['bg'][0]
+            hex_colour = parse_qs(pet_class.image_url)['bg'][0]
             rgb = [int(hex_colour[i:i + 2], 16) for i in (0, 2, 4)]
             rgb.append(255)
             rgba = tuple(rgb)
             transparent = False
 
         async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
-            async with session.get(pet_class.image) as response:  # GET HTTP response of pet image link
+            async with session.get(pet_class.image_url) as response:  # GET HTTP response of pet image link
                 connection = await response.read()  # Read the response content
                 pet_image = io.BytesIO(connection)  # Convert the content into bytes
 
