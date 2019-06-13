@@ -1,6 +1,5 @@
 import io
 import math
-import re
 import textwrap
 from urllib.parse import urlparse, parse_qs, parse_qsl
 
