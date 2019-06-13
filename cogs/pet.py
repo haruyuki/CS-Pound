@@ -17,7 +17,7 @@ class Pet(commands.Cog):
             embed = discord.Embed(title='Pet', description=Strings.pet_unsuccessful, colour=0xff5252)  # Create embed
         else:
             embed = discord.Embed(title=pet.owner_name + '\'s Pet', colour=0x4ba139)  # Create embed
-            embed.set_image(url=pet.image)  # Set image
+            embed.set_image(url=pet.image_url)  # Set image
 
             if pet.pps:
                 embed.add_field(name='PPS', value='[This pet has "PPS". What\'s that?](http://www.chickensmoothie.com/help/pets#pps)', inline=False)
