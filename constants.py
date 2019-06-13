@@ -214,7 +214,7 @@ class ShibafaceC:
         "http://www.shibaface.com//simple.php?a=30&v=1734467225&.jpg",
         "http://www.shibaface.com//simple.php?a=30&v=45464398&.jpg",
         "http://www.shibaface.com//simple.php?a=30&v=3440276724&.jpg",
-        
+
         "http://www.shibaface.com/simple.php?a=31&v=2380739611&.jpg",
         "http://www.shibaface.com/simple.php?a=31&v=1773326409&.jpg",
         "http://www.shibaface.com//simple.php?a=31&v=3607785200&.jpg",
