@@ -157,6 +157,17 @@
           "aliases": {}
         },
 
+        "Progeny": {
+          "usage": ",progeny <dragon1> <dragon2> <multiplier>",
+          "description": "Feel like seeing only 4 offspring at once isn't enough? Increase the multiplier up to 10 times to see be able to see a maximum of 40 offspring outcomes! Dragon1 and dragon2 can either be links or ID's or a mix of them",
+          "examples": {
+            "1": ",progeny http://flightrising.com/main.php?p=lair&id=430187&tab=dragon&did=52627778 http://flightrising.com/main.php?p=lair&id=430187&tab=dragon&did=52638150 10",
+            "2": ",progeny 52133221 47924166 3",
+            "3": ",progeny 52548928 http://flightrising.com/main.php?p=lair&id=430187&tab=dragon&did=52515035"
+          },
+          "aliases": {}
+        },
+
         "Statistics": {
           "usage": ",statistics",
           "description": "Displays information about the system and the bot. Useful to see the current version of the bot or how many servers/users are using this bot",
@@ -190,7 +201,7 @@
       }
     },
 
-    "Fun": {
+    "Other": {
       "icon": "game_die",
       "commands": {
         "Shibaface":  {
