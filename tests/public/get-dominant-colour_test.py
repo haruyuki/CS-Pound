@@ -6,7 +6,7 @@ main_colour = (175, 40, 205)
 secondary_colour = (251, 230, 124)
 
 # Multiple values to account for k-means entropy
-image_1_colours = {(58, 71, 70)}
+image_1_colours = {(58, 71, 70), (58, 69, 69)}
 image_2_colours = {(202, 196, 185), (202, 195, 184), (202, 196, 184)}
 image_3_colours = {(241, 236, 235)}
 
