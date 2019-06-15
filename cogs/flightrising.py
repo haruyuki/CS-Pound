@@ -1,11 +1,16 @@
+import io
 import textwrap
 
+import aiohttp
+import discord
 from discord.ext import commands
+from PIL import Image
 
 from constants import Constants
+import flightrising as fr
 
 
-class Converter(commands.Cog):
+class FlightRising(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.spreadsheet = Constants.google_sheets_api.open_by_key('1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc')  # Link to conversion spreadsheet
@@ -88,6 +93,40 @@ class Converter(commands.Cog):
         message = textwrap.dedent(message)
         await ctx.send(message)
 
+    @commands.command()
+    async def progeny(self, ctx, dragon1, dragon2, multiplier=1):
+        if multiplier > 5:
+            await ctx.send('The maximum multiplier is 5!')
+            return
+
+        if dragon1.isdigit():
+            pass
+        else:
+            dragon1 = fr.extract_dragon_id(dragon1)
+
+        if dragon2.isdigit():
+            pass
+        else:
+            dragon2 = fr.extract_dragon_id(dragon2)
+
+        outcomes = await fr.get_progeny(dragon1, dragon2, multiplier)
+
+        image_data = []
+        async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+            for image in outcomes:
+                async with session.get(image) as response:
+                    if response.status == 200:
+                        content = await response.read()
+                content = io.BytesIO(content)
+                image_data.append(content)
+
+        image = generate_image(image_data, multiplier)
+        output_buffer = io.BytesIO()  # Convert the PIL output into bytes
+        image.save(output_buffer, 'png')  # Save the bytes as a PNG format
+        output_buffer.seek(0)
+        await ctx.send(file=discord.File(fp=output_buffer, filename='pet.png'))
+
+
     @cs.error  # On error with cs command
     @gems.error  # On error with gems command
     @treasure.error  # On error with treasure command
@@ -97,4 +136,23 @@ class Converter(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(Converter(bot))
+    bot.add_cog(FlightRising(bot))
+
+
+def generate_image(image_data, multiplier):
+    pil_images = list(map(Image.open, image_data))
+    max_width = 700
+    max_height = 175 * multiplier
+    canvas = Image.new('RGBA', (max_width, max_height), (255, 0, 0, 0))
+
+    current_width = 0
+    y_offset = 0
+    for i in pil_images:
+        if current_width >= max_width:
+            current_width = 0
+            y_offset += 175
+
+        canvas.paste(i, (current_width, y_offset))
+        current_width += 175
+
+    return canvas
