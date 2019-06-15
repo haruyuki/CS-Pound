@@ -19,7 +19,7 @@ class Constants:
     discord_token = os.environ.get('discord', None)  # Discord bot token from environment variables
     discord_log_filename = 'discord.log'  # Name of logging file
     support_link = 'https://invite.gg/cspound'  # Link to support server
-    version = '2019.0613.2'  # Current version of bot
+    version = '2019.0615.0'  # Current version of bot
     invite_link = 'https://haruyuki.moe/CS-Pound'  # Link to invite the bot
     mongodb_uri = os.environ.get('mongodb', None)  # MongoDB connection URI from environment variables
     database_name = 'cs_pound'  # Name of MongoDB database
@@ -221,6 +221,10 @@ class ShibafaceC:
         "http://www.shibaface.com//simple.php?a=31&v=1467018893&.jpg",
         "http://www.shibaface.com//simple.php?a=31&v=3897315764&.jpg"
     ]
+
+
+class FlightRisingC:
+    progeny_url = 'http://flightrising.com/includes/ol/scryer_progeny.php'
 
 
 class Variables:
