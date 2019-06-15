@@ -34,7 +34,7 @@ class Identify(commands.Cog):
     @staticmethod
     async def get_system_pet_id(link):
         pet = await cs.pet(link)
-        pet_image_link = pet.image
+        pet_image_link = pet.image_url
         components = urlparse(pet_image_link)
         try:
             return dict(parse_qsl(components.query))['k']  # Pet ID
