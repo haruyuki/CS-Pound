@@ -95,8 +95,8 @@ class FlightRising(commands.Cog):
 
     @commands.command()
     async def progeny(self, ctx, dragon1, dragon2, multiplier=1):
-        if multiplier > 5:
-            await ctx.send('The maximum multiplier is 5!')
+        if multiplier > 10:
+            await ctx.send('The maximum multiplier is 10!')
             return
 
         if dragon1.isdigit():
@@ -141,8 +141,12 @@ def setup(bot):
 
 def generate_image(image_data, multiplier):
     pil_images = list(map(Image.open, image_data))
-    max_width = 700
-    max_height = 175 * multiplier
+    if multiplier > 5:
+        max_width = 1400
+        max_height = 175 * 5
+    else:
+        max_width = 700
+        max_height = 175 * multiplier
     canvas = Image.new('RGBA', (max_width, max_height), (255, 0, 0, 0))
 
     current_width = 0
