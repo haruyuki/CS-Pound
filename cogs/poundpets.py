@@ -86,7 +86,7 @@ class PoundPets(commands.Cog):
                 pet_count = int(parse_qs(urlparse(last_page).query)['pageStart'][0])
                 all_pets = []
 
-                for i in range(10):
+                for i in range(30):
                     page_start = pet_count - (20 * i)
                     url = pound_account + '&pageStart=' + str(page_start)
                     print(f'Parsing {url}')
@@ -135,7 +135,6 @@ class PoundPets(commands.Cog):
                 Constants.image_exists = True
 
         else:  # The command is currently generating the image
-            print('Image already being generated')
             message = 'Another user already ran this command!\nCurrent status: '
             if self.stage == 1:
                 message += 'Collecting pets to check...'
