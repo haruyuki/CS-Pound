@@ -7,7 +7,7 @@ import lxml.html
 from constants import Constants, FlightRisingC
 
 
-async def _get_web_data(link : str):  # Get web data from link
+async def _get_web_data(link: str):  # Get web data from link
     success = False
     dom = None
 
