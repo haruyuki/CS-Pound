@@ -1,3 +1,4 @@
+import asyncio
 import re
 from urllib.parse import urlparse, parse_qsl, urlencode
 
@@ -54,5 +55,6 @@ async def get_progeny(dragon_id1, dragon_id2, multiplier):
             outcomes.extend(image_links)
         else:
             pass
+        await asyncio.sleep(0.1)
 
     return outcomes
