@@ -168,13 +168,13 @@ def generate_image(width, height, image_data, rare_plus_pets):
     current_max_height = 0
     y_offset = 0
     for i in pil_images:
-        if i.height > current_max_height:
-            current_max_height = i.height
-
-        if current_width + i.width >= max_width:
+        if current_width + i.width >= max_width:  # If pasting an image will cause it to go off canvas
             current_width = 0
             y_offset += current_max_height + 31 + 15
             current_max_height = 0
+
+        if i.height > current_max_height:
+            current_max_height = i.height
 
         if i.width < 106:
             paste_width = 106
