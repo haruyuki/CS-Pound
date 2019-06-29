@@ -133,6 +133,8 @@ class FlightRising(commands.Cog):
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a number
             await ctx.send('That is not a valid number!')
+        elif isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(f'The command is on cooldown! Please try again after {int(error.retry_after)} seconds.')
 
 
 def setup(bot):
