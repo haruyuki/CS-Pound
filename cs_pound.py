@@ -49,6 +49,8 @@ async def on_ready():  # When Client is loaded
 async def on_command_error(_, error):
     if isinstance(error, commands.CommandNotFound):
         return
+    elif isinstance(error, commands.CommandOnCooldown):
+        return
     raise error
 
 bot.run(Constants.discord_token, bot=True, reconnect=True)
