@@ -61,17 +61,22 @@ class PoundPets(commands.Cog):
                     'User-Agent': 'CS Pound Discord Bot Agent ' + Constants.version,  # Connecting User-Agent
                     'From': Constants.contact_email
                 }
+                login_url = 'https://www.chickensmoothie.com/Forum/ucp.php?mode=login'
+                payload = {
+                    'username': Constants.username,
+                    'password': Constants.password,
+                    'redirect': 'index.php',
+                    'sid': '',
+                    'login': 'Login'
+                }
                 if self.session is None:
                     self.session = aiohttp.ClientSession(headers=headers)
-                    login_url = 'https://www.chickensmoothie.com/Forum/ucp.php?mode=login'
-                    payload = {
-                        'username': Constants.username,
-                        'password': Constants.password,
-                        'redirect': 'index.php',
-                        'sid': '',
-                        'login': 'Login'
-                    }
                     await self.session.post(login_url, data=payload)
+                else:
+                    link = 'https://www.chickensmoothie.com'
+                    data = self.session.get(link)
+                    if 'Logout [ haruyuki ]' not in data.text:
+                        await self.session.post(login_url, data=payload)
 
                 pound_account = Constants.pound_pets_group
                 async with aiohttp.ClientSession(headers=headers) as session:
