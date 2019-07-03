@@ -111,25 +111,36 @@ class FlightRising(commands.Cog):
 
         outcomes = await fr.get_progeny(dragon1, dragon2, multiplier)
 
-        image_data = []
-        async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
-            for image in outcomes:
-                async with session.get(image) as response:
-                    if response.status == 200:
-                        content = await response.read()
-                content = io.BytesIO(content)
-                image_data.append(content)
+        if isinstance(outcomes, str):
+            await ctx.send(outcomes)
 
-        image = generate_image(image_data, multiplier)
-        output_buffer = io.BytesIO()  # Convert the PIL output into bytes
-        image.save(output_buffer, 'png')  # Save the bytes as a PNG format
-        output_buffer.seek(0)
-        await ctx.send(file=discord.File(fp=output_buffer, filename='pet.png'))
+        else:
+            image_data = []
+            async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+                for image in outcomes:
+                    async with session.get(image) as response:
+                        if response.status == 200:
+                            content = await response.read()
+                    content = io.BytesIO(content)
+                    image_data.append(content)
 
+            image = generate_image(image_data, multiplier)
+            output_buffer = io.BytesIO()  # Convert the PIL output into bytes
+            image.save(output_buffer, 'png')  # Save the bytes as a PNG format
+            output_buffer.seek(0)
+            await ctx.send(file=discord.File(fp=output_buffer, filename='pet.png'))
+
+    @commands.command()
+    @commands.cooldown(1, 10, commands.BucketType.user)
+    async def cprogeny(self, ctx, dragon1, *, stats: str = None):
+        print(dragon1)
+        print(stats)
+        #  \((.*?)\)\s*(\w+)
 
     @cs.error  # On error with cs command
     @gems.error  # On error with gems command
     @treasure.error  # On error with treasure command
+    @cprogeny.error  # On error with cprogeny command
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a number
             await ctx.send('That is not a valid number!')

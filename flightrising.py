@@ -51,8 +51,14 @@ async def get_progeny(dragon_id1, dragon_id2, multiplier):
     for i in range(multiplier):
         data = await _get_web_data(link)
         if data[0]:
-            image_links = data[1].xpath('//img/@src')
-            outcomes.extend(image_links)
+            if data[1].xpath('//img/@src'):
+                image_links = data[1].xpath('//img/@src')
+                outcomes.extend(image_links)
+            else:
+                text = data[1].text_content()
+                text = text.replace('\n', '')
+                text = text.replace('\t', '')
+                return str(text)
         else:
             pass
         await asyncio.sleep(0.1)
