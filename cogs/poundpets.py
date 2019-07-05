@@ -69,14 +69,9 @@ class PoundPets(commands.Cog):
                     'sid': '',
                     'login': 'Login'
                 }
-                if self.session is None:
-                    self.session = aiohttp.ClientSession(headers=headers)
-                    await self.session.post(login_url, data=payload)
-                else:
-                    link = 'https://www.chickensmoothie.com'
-                    data = self.session.get(link)
-                    if 'Logout [ haruyuki ]' not in data.text:
-                        await self.session.post(login_url, data=payload)
+
+                self.session = aiohttp.ClientSession(headers=headers)
+                await self.session.post(login_url, data=payload)
 
                 pound_account = Constants.pound_pets_group
                 async with aiohttp.ClientSession(headers=headers) as session:
