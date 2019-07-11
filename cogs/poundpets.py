@@ -51,7 +51,7 @@ class PoundPets(commands.Cog):
             if pound_data[0] == 'Lost and Found' or pound_data[0] == 'Pound & Lost and Found':
                 await ctx.send('The next opening is not the Pound!')
 
-            elif pound_data[0] == 'Pound' and 'open' in pound_data[1]:
+            elif pound_data[0] == 'Pound' and 'Pound is currently open!' in pound_data[1]:
                 await ctx.send('An image cannot be generated while the pound is still open!')
 
             elif Constants.image_exists:
