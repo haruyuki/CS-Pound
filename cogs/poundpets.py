@@ -106,7 +106,11 @@ class PoundPets(commands.Cog):
                 for pet in all_pets:
                     image_url = pet.xpath('dt//img/@src')[0]
                     rarity = pet.xpath('dd[last()]//img/@alt')[0]
-                    adoption_date = pet.xpath('dd/span/text()')[0]
+                    try:
+                        adoption_date = pet.xpath('dd/span/text()')[0]
+                    except IndexError:
+                        print("RAN INTO ERROR")
+                        adoption_date = ""
                     if rarity == 'Rare' or rarity == 'Very rare' or rarity == 'OMG so rare!':
                         rare_plus_pets.append((image_url, rarity, adoption_date))
                 self.all_rare_pets = len(rare_plus_pets)
@@ -186,7 +190,8 @@ def generate_image(width, height, image_data, rare_plus_pets):
             paste_width = 106
             canvas.paste(i, (math.floor(current_width + ((106 - i.width) / 2)), y_offset))
 
-            draw.text((current_width, i.height + y_offset), rare_plus_pets[pil_images.index(i)][2], fill=(0, 0, 0), font=font)
+            text_centre_offset_x = math.floor((106 - draw.textsize(rare_plus_pets[pil_images.index(i)][2], font=font)[0]) / 2)
+            draw.text((current_width + text_centre_offset_x, i.height + y_offset), rare_plus_pets[pil_images.index(i)][2], fill=(0, 0, 0), font=font)
             pet_rarity = rare_plus_pets[pil_images.index(i)][1]
             if pet_rarity == 'Rare':
                 canvas.paste(rare, (current_width, i.height + y_offset + 15), rare)
