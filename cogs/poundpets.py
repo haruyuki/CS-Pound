@@ -9,7 +9,7 @@ import discord
 from discord.ext import commands
 import lxml.html
 import motor.motor_asyncio as amotor
-from PIL import Image
+from PIL import Image, ImageFont, ImageDraw
 from urllib.parse import urlparse, parse_qs
 
 import chickensmoothie as cs
@@ -106,15 +106,16 @@ class PoundPets(commands.Cog):
                 for pet in all_pets:
                     image_url = pet.xpath('dt//img/@src')[0]
                     rarity = pet.xpath('dd[last()]//img/@alt')[0]
+                    adoption_date = pet.xpath('dd/span/text()')[0]
                     if rarity == 'Rare' or rarity == 'Very rare' or rarity == 'OMG so rare!':
-                        rare_plus_pets.append((image_url, rarity))
+                        rare_plus_pets.append((image_url, rarity, adoption_date))
                 self.all_rare_pets = len(rare_plus_pets)
 
                 self.stage = 2
                 self.parsed_pets = 0
                 image_data = []
                 async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
-                    for (image, _) in rare_plus_pets:
+                    for (image, _, _) in rare_plus_pets:
                         print(image)
                         async with session.post(image, headers=headers) as response:
                             if response.status == 200:
@@ -161,7 +162,9 @@ def generate_image(width, height, image_data, rare_plus_pets):
 
     pil_images = list(map(Image.open, image_data))
     max_width = width
+    font = ImageFont.truetype('../Verdana.ttf', 12)  # Verdana font size 15
     canvas = Image.new('RGBA', (max_width, height), rgba)
+    draw = ImageDraw.Draw(canvas)  # Draw the image to PIL
 
     rare = Image.open('rarities/rare.png')
     very_rare = Image.open('rarities/veryrare.png')
@@ -176,13 +179,14 @@ def generate_image(width, height, image_data, rare_plus_pets):
             y_offset += current_max_height + 31 + 15
             current_max_height = 0
 
-        if i.height > current_max_height:
+        if i.height > current_max_height:  # If pet is taller than current top height in row
             current_max_height = i.height
 
         if i.width < 106:
             paste_width = 106
             canvas.paste(i, (math.floor(current_width + ((106 - i.width) / 2)), y_offset))
 
+            draw.text((current_width, i.height + y_offset), rare_plus_pets[pil_images.index(i)][2], fill=(0, 0, 0), font=font)
             pet_rarity = rare_plus_pets[pil_images.index(i)][1]
             if pet_rarity == 'Rare':
                 canvas.paste(rare, (current_width, i.height + y_offset + 15), rare)
@@ -196,6 +200,8 @@ def generate_image(width, height, image_data, rare_plus_pets):
 
             pet_rarity = rare_plus_pets[pil_images.index(i)][1]
             pasting_width = math.floor((i.width - 106) / 2)
+            text_centre_offset_x = math.floor((106 - draw.textsize(rare_plus_pets[pil_images.index(i)][2], font=font)[0]) / 2)
+            draw.text((current_width + pasting_width + text_centre_offset_x, i.height + y_offset), rare_plus_pets[pil_images.index(i)][2], fill=(0, 0, 0), font=font)
             if pet_rarity == 'Rare':
                 canvas.paste(rare, (current_width + pasting_width, i.height + y_offset + 15), rare)
             elif pet_rarity == 'Very rare':
