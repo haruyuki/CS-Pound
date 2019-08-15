@@ -162,7 +162,7 @@ def generate_image(width, height, image_data, rare_plus_pets):
 
     pil_images = list(map(Image.open, image_data))
     max_width = width
-    font = ImageFont.truetype('../Verdana.ttf', 12)  # Verdana font size 15
+    font = ImageFont.truetype('Verdana.ttf', 12)  # Verdana font size 15
     canvas = Image.new('RGBA', (max_width, height), rgba)
     draw = ImageDraw.Draw(canvas)  # Draw the image to PIL
 
