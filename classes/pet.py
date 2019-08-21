@@ -6,16 +6,12 @@ class Pet:
         self.pps = self._get_pps(html_data)
         self.store_pet = self._get_store_pet(html_data)
         self.image_url = self._get_image_url(html_data)
-        self.owner_name = ''
-        self.owner_link = ''
         self.id = self._get_id(html_data)
         self.name = self._get_name(html_data)
         self.adoption_date = self._get_adoption_date(html_data)
         self.age = self._get_age(html_data)
         self.growth = self._get_growth(html_data)
         self.rarity = self._get_rarity(html_data)
-        self.given_name = ''
-        self.given_url = ''
 
         self._get_owner(html_data)
         self._get_given(html_data)
