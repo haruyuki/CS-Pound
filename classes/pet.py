@@ -1,3 +1,6 @@
+from library import multi_replace
+
+
 class Pet:
     def __init__(self, html_data):
         self.pps = self._get_pps(html_data)
@@ -103,5 +106,5 @@ class Pet:
             return f'[{self.given_name}]({self.given_url})'
 
     def rarity_link(self):
-        filename = self.rarity.replace('!', '').replace(' ', '').lower() + '.png'
+        filename = multi_replace(self.rarity.lower(), {'!': '', ' ': ''}) + '.png'
         return f'rarities/{filename}'

@@ -6,6 +6,7 @@ import aiohttp
 import lxml.html
 
 from constants import Constants, FlightRisingC
+from library import multi_replace
 
 
 async def _get_web_data(link: str):  # Get web data from link
@@ -46,8 +47,8 @@ def extract_dragon_id(link):
 async def get_progeny(dragon_id1, dragon_id2, multiplier):
     parameters = {'id1': dragon_id1, 'id2': dragon_id2}
     link = FlightRisingC.progeny_url + '?' + urlencode(parameters)
-
     outcomes = []
+
     for i in range(multiplier):
         data = await _get_web_data(link)
         if data[0]:
@@ -55,12 +56,8 @@ async def get_progeny(dragon_id1, dragon_id2, multiplier):
                 image_links = data[1].xpath('//img/@src')
                 outcomes.extend(image_links)
             else:
-                text = data[1].text_content()
-                text = text.replace('\n', '')
-                text = text.replace('\t', '')
+                text = multi_replace(data[1].text_content(), {'\n': '', '\t': ''})
                 return str(text)
-        else:
-            pass
         await asyncio.sleep(0.1)
 
     return outcomes

@@ -112,6 +112,13 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
     return list(dominant_colour)
 
 
+def multi_replace(string, replacements):
+    # Taken from https://gist.github.com/bgusach/a967e0587d6e01e889fd1d776c5f3729Z
+    substrs = sorted(replacements, key=len, reverse=True)
+    regexp = re.compile('|'.join(map(re.escape, substrs)))
+    return regexp.sub(lambda match: replacements[match.group(0)], string)
+
+
 async def update_autoremind_times():
     Variables.autoremind_times = set()
     autoremind_collection = database[Constants.autoremind_collection_name]
