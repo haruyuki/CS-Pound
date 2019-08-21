@@ -1,0 +1,7 @@
+exclude:
+- /tests/.*
+- .*/counter\.py
+- .*/constants\.py
+- .*/cs_pound\.py
+- .*/database\.py
+- .*/database_items\.py
