@@ -136,8 +136,7 @@ async def get_pound_string():
         else:
             pound_type = text[0][4:]
             try:
-                text = text[1]  # Try and get pound opening text
-                text = text.replace(f'Sorry, the {pound_type} is closed at the moment.', '').replace('\n', '').replace('\t', '') + '.'  # Remove extra formatting from text
+                text = library.multi_replace(text[1], {f'Sorry, the {pound_type.lower()} is closed at the moment.': '', '\n': '', '\t': ''}) + '.'  # Get opening text and remove extra formatting
             except IndexError:  # If there isn't any pound opening text
                 text = f'''\
                 {pound_type} is currently open!
