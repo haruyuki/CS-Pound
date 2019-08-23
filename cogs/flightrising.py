@@ -93,7 +93,7 @@ class FlightRising(commands.Cog):
         message = textwrap.dedent(message)
         await ctx.send(message)
 
-    @commands.command()
+    @commands.command(aliases=['prog'])
     async def progeny(self, ctx, dragon1, dragon2, multiplier=10):
         if multiplier > 10:
             await ctx.send('The maximum multiplier is 10!')
