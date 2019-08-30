@@ -89,7 +89,7 @@ class PoundPets(commands.Cog):
                 pet_count = int(parse_qs(urlparse(last_page).query)['pageStart'][0])
                 all_pets = []
 
-                for i in range(30):
+                for i in range(40):
                     page_start = pet_count - (20 * i)
                     url = pound_account + '&pageStart=' + str(page_start)
                     print(f'Parsing {url}')
