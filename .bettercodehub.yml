@@ -1,5 +1,4 @@
 exclude:
-- /tests/.*
 - .*/counter\.py
 - .*/constants\.py
 - .*/cs_pound\.py
