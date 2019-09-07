@@ -13,7 +13,6 @@ class TestClass:
     def test_pps_pet(self):
         pet_class = loop.run_until_complete(pet('https://www.chickensmoothie.com/viewpet.php?id=277461516'))
 
-        assert pet.__repr__() == "<Pet id=277461516 name='{self.name}'>"
         assert pet_class.pps is True
         assert pet_class.store_pet is False
         assert 'https://static.chickensmoothie.com/pic.php?k=1D52FCF41D529B10FF7A82D698E38610' in pet_class.image_url  # The hex colour background parameter changes depending on site events
