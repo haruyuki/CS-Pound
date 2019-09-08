@@ -132,7 +132,7 @@ async def get_pound_string():
         text = data[1].xpath('//h2/text()')  # Get all H2 elements in the data
         if text[0] == "Pound & Lost and Found":
             pound_type = text[0]
-            text = f'Sorry, both the {pound_type} is closed at the moment.'
+            text = f'Sorry, both the {pound_type} are closed at the moment.'
         else:
             pound_type = text[0][4:]
             try:
