@@ -61,16 +61,22 @@ class Giveaway(commands.Cog):
 
                 ends_at = ctx.message.created_at + datetime.timedelta(seconds=duration)
 
+                pet_link = re.findall('https?://(?:www\\.)chickensmoothie\\.[a-z]{2,6}/viewpet.php\\?id=[0-9]*', description)
+                if pet_link:
+                    description_list = description.split()
+                    description_list.remove(pet_link[0])
+                    description = ' '.join(description_list)
+
                 embed = discord.Embed(title=description, description=f'React with {self.emoji} to win!', colour=0x4ba139, timestamp=ends_at)
                 footer_text = (f'{winners} Winners | ' if winners > 1 else '') + 'Ends at'
                 embed.set_footer(text=footer_text)
 
-                pet_link = re.findall('https?://(?:www\\.)chickensmoothie\\.[a-z]{2,6}/viewpet.php\\?id=[0-9]*', description)
                 if pet_link:
                     image = await cs.image(pet_link[0])
                     file = discord.File(image, filename='image.png')
                     message = await ctx.send(file=file, embed=embed)
                 else:
+                    print('NOT FOUND')
                     message = await ctx.send(embed=embed)
 
                 until_end = float(ends_at.timestamp()) - datetime.datetime.utcnow().timestamp()
