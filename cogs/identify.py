@@ -74,7 +74,7 @@ class Identify(commands.Cog):
                     right = image_name[1]
 
                     c = conn.cursor()
-                    c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
+                    c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Item_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
             else:
                 await ctx.send("You didn't provide a link!")
                 return
@@ -120,12 +120,12 @@ class Identify(commands.Cog):
                 right = [int(s) for s in re.findall(r'\b\d+\b', path[1])][0]
 
                 c = conn.cursor()
-                c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
+                c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Item_Archive WHERE ItemL_ID=? AND ItemR_ID=?', (left, right,))
             except ValueError:
                 left = [int(s) for s in re.findall(r'\b\d+\b', path[0])][0]
 
                 c = conn.cursor()
-                c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE ItemL_ID=?', (left,))
+                c.execute('SELECT Item_Name, Year, Event, Archive_Link FROM ChickenSmoothie_Item_Archive WHERE ItemL_ID=?', (left,))
 
             try:
                 data = c.fetchone()
