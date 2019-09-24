@@ -17,9 +17,9 @@ database = mongo_client[Constants.database_name]
 
 
 # -------------------- FUNCTIONS --------------------
-def parse_time(timestr):  # A function to parse short time formats (1d, 2h, 3m, 4s) into seconds
-    timestr = timestr.lower()
-    times = re.findall(r'(\d{1,8}[smhd]?)', timestr)
+def parse_time(time_string):  # A function to parse short time formats (1d, 2h, 3m, 4s) into seconds
+    time_string = time_string.lower()
+    times = re.findall(r'(\d{1,8}[smhd]?)', time_string)
     total = 0
     for time in times:
         if time.isdigit():
