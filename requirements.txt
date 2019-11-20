@@ -1,5 +1,5 @@
 aiohttp>=3.4.4
-discord.py
+discord.py.=1.2.5
 dnspython
 google-api-python-client
 html2text
