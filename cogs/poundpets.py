@@ -159,7 +159,7 @@ def setup(bot):
 
 
 def generate_image(width, height, image_data, rare_plus_pets):
-    hex_colour = 'e6ebf2'
+    hex_colour = 'e0f6b2'
     rgb = [int(hex_colour[i:i + 2], 16) for i in (0, 2, 4)]
     rgb.append(255)
     rgba = tuple(rgb)
