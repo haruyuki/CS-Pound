@@ -1,5 +1,6 @@
 aiohttp<3.6.0,>=3.3.0
 discord.py>=1.2.5
+dnspython
 google-api-python-client
 html2text
 lxml
