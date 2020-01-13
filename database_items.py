@@ -76,7 +76,7 @@ if __name__ == '__main__':
             counter = 0
             for item_id in item_ids:
                 try:
-                    c.execute('INSERT INTO ChickenSmoothie_Archive (ItemL_ID, ItemR_ID, Item_Name, Year, Event, Archive_Link) VALUES (?, ?, ?, ?, ?, ?)', (item_id[1], item_id[2], item_id[0], year, event_title, link))
+                    c.execute('INSERT INTO ChickenSmoothie_Item_Archive (ItemL_ID, ItemR_ID, Item_Name, Year, Event, Archive_Link) VALUES (?, ?, ?, ?, ?, ?)', (item_id[1], item_id[2], item_id[0], year, event_title, link))
                     counter += 1
                 except sqlite3.IntegrityError:
                     print(f'WARNING: Item ID combination {item_id} already exists in database.')
@@ -89,13 +89,13 @@ if __name__ == '__main__':
 
     conn = create_connection('cs_item_archive.sqlite3')
     c = conn.cursor()
-    c.execute('UPDATE ChickenSmoothie_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/Valentine%27s%20Day/Items/', f'https://www.chickensmoothie.com/archive/{year}/Valentine%2527s%20Day/Items/'))
-    c.execute('UPDATE ChickenSmoothie_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/Valentine%27s/Items/', f'https://www.chickensmoothie.com/archive/{year}/Valentine%2527s/Items/'))
-    c.execute('UPDATE ChickenSmoothie_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/April%20Fool%27s/Items/', f'https://www.chickensmoothie.com/archive/{year}/April%20Fool%2527s/Items/'))
-    c.execute('UPDATE ChickenSmoothie_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/St.%20Patrick%27s%20Day/Items/', f'https://www.chickensmoothie.com/archive/{year}/St.%20Patrick%2527s%20Day/Items/'))
-    c.execute('UPDATE ChickenSmoothie_Archive SET Event=? WHERE Event=?', ("April Fool's", 'April Fool%27s'))
-    c.execute('UPDATE ChickenSmoothie_Archive SET Event=? WHERE Event=?', ("Valentine's Day", 'Valentine%27s Day'))
-    c.execute('UPDATE ChickenSmoothie_Archive SET Event=? WHERE Event=?', ("Valentine's", 'Valentine%27s'))
-    c.execute('UPDATE ChickenSmoothie_Archive SET Event=? WHERE Event=?', ("St. Patrick's Day", 'St. Patrick%27s Day'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/Valentine%27s%20Day/Items/', f'https://www.chickensmoothie.com/archive/{year}/Valentine%2527s%20Day/Items/'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/Valentine%27s/Items/', f'https://www.chickensmoothie.com/archive/{year}/Valentine%2527s/Items/'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/April%20Fool%27s/Items/', f'https://www.chickensmoothie.com/archive/{year}/April%20Fool%2527s/Items/'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Archive_Link=? WHERE Archive_Link=?', (f'https://www.chickensmoothie.com/archive/{year}/St.%20Patrick%27s%20Day/Items/', f'https://www.chickensmoothie.com/archive/{year}/St.%20Patrick%2527s%20Day/Items/'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Event=? WHERE Event=?', ("April Fool's", 'April Fool%27s'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Event=? WHERE Event=?', ("Valentine's Day", 'Valentine%27s Day'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Event=? WHERE Event=?', ("Valentine's", 'Valentine%27s'))
+    c.execute('UPDATE ChickenSmoothie_Item_Archive SET Event=? WHERE Event=?', ("St. Patrick's Day", 'St. Patrick%27s Day'))
     conn.commit()
     conn.close()
