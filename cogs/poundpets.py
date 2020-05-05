@@ -107,7 +107,7 @@ class PoundPets(commands.Cog):
                     image_url = pet.xpath('dt//img/@src')[0]
                     rarity = pet.xpath('dd[last()]//img/@alt')[0]
                     try:
-                        adoption_date = pet.xpath('dd/span/text()')[0]
+                        adoption_date = pet.xpath('dd/span/span/text()')[0]
                     except IndexError:
                         print("RAN INTO ERROR")
                         adoption_date = ""
