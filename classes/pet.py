@@ -60,7 +60,7 @@ class Pet:
 
     @staticmethod
     def _get_adoption_date(data):
-        adoption_date = data.xpath('//table[@class="spine"]/tr[td/text() = "Adopted"]/td[last()]/text()')[0]
+        adoption_date = data.xpath('//span[@class="pet-adoption-date"]/text()')[0]
         return adoption_date
 
     @staticmethod
