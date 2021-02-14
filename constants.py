@@ -39,6 +39,9 @@ class Constants:
 class FlightRisingC:
     progeny_url = 'http://flightrising.com/includes/ol/scryer_progeny.php'
 
+class OsuC:
+    osu_collection_name = 'osu_profiles'
+
 
 class Variables:
     cooldown = False
