@@ -41,6 +41,7 @@ class FlightRisingC:
 
 class OsuC:
     osu_collection_name = 'osu_profiles'
+    osu_key = os.environ.get('osu')
 
 
 class Variables:
