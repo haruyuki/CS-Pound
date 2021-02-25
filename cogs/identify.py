@@ -1,3 +1,4 @@
+import aiohttp
 import re
 import sqlite3
 import textwrap
@@ -167,8 +168,11 @@ class Identify(commands.Cog):
                 except KeyError:
                     return None
             else:
-                pet_id = await self.get_system_pet_id(link)
-
+                try:
+                    pet_id = await self.get_system_pet_id(link)
+                except aiohttp.client_exceptions.InvalidURL:
+                    await ctx.send('There was an error parsing the link you provided, are you sure you are providing a valid link?')
+                    return None
             conn = self.create_connection(sqlite_database)
             c = conn.cursor()
             c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE Pet_ID=?', (pet_id,))
