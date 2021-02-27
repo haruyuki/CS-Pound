@@ -5,7 +5,7 @@ html2text
 lxml
 motor
 numpy
-python3-opencv
+opencv-python
 osuapi
 Pillow
 psutil
