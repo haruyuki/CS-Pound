@@ -16,7 +16,7 @@ class Oekaki(commands.Cog):
             base_link = 'http://www.chickensmoothie.com/Forum/'
 
             oekaki_title = data[1].xpath('//h3[@class="first"]/a/text()')[0]  # Title of drawing
-            image = 'https://www.chickensmoothie.com' + data[1].xpath('//li[@class="ok-topic-head-image large"]/img/@src')[0]  # Image of drawing
+            image = 'https://www.chickensmoothie.com' + data[1].xpath('//li[@class="ok-topic-head-image large"]/a/img/@src')[0]  # Image of drawing
             user_icon = base_link[:-1] + data[1].xpath('//dl[@class="postprofile"]')[0].xpath('dt/a/img/@src')[0][1:]  # The profile picture of the artist
             warning_text = 'Reminder!! Copying another person\'s art without permission to reproduce their work is a form of art-theft!'  # General warning text regarding Oekaki art
 
