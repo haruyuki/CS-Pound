@@ -33,7 +33,6 @@ class Statistics(commands.Cog):
             bot_memory = f'{round(psutil.Process(os.getpid()).memory_info().rss / 1024**2)} MB'
             cogs_loaded = f'{len(self.bot.cogs)} commands loaded'
             ping = f'{round(self.bot.latency * 1000)}ms'
-            user_count = f'{len(set(self.bot.get_all_members()))} unique users'
             bot_uptime = resolver((datetime.now() - start_time).total_seconds())  # The time the bot (script) has been running
             system_uptime = resolver(round(time.time() - psutil.boot_time()))  # The time the system has been running
 
@@ -43,7 +42,6 @@ class Statistics(commands.Cog):
 **CS-Pound ID:** `{bot_id}`
 
 **Running on:** `{guild_count}`
-**Serving:** `{user_count}`
 
 **OS:** `{operating_system}`
 **Commands:** `{cogs_loaded}`
