@@ -1,10 +1,11 @@
+chardet==3.0.4
 discord.py
 dnspython
 google-api-python-client
 html2text
 lxml
 motor
-numpy
+numpy=1.20.1
 opencv-python-headless
 osuapi
 Pillow
