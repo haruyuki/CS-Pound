@@ -48,17 +48,6 @@
           }
         },
 
-        "Oekaki": {
-          "usage": ",oekaki <link>",
-          "description": "Displays Oekaki drawing, along with artist name and profile picture. Do not confuse this with dressup scenes! This command will not work with dressup scene links!",
-          "examples": {
-            "1": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=30&t=3843428",
-            "2": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993",
-            "3": ",oekaki https://www.chickensmoothie.com/Forum/viewtopic.php?f=74&t=2918702"
-          },
-          "aliases": {}
-        },
-
         "Pet": {
           "usage": ",pet <link>",
           "description": "Displays information about the pet. Unlike the image command, this command shows all available information about the pet, such as ID, age, and who it's given by.",
@@ -165,7 +154,9 @@
             "2": ",progeny 52133221 47924166 3",
             "3": ",progeny 52548928 http://flightrising.com/main.php?p=lair&id=430187&tab=dragon&did=52515035"
           },
-          "aliases": {}
+          "aliases": {
+            "1": ",prog"
+          }
         },
 
         "Statistics": {
