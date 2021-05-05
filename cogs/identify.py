@@ -209,7 +209,8 @@ class Identify(commands.Cog):
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a valid link
             await ctx.send('That is not a valid pet link!')
-
+        if isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
+            await ctx.send('There was an error parsing the link you provided, are you sure you are providing a valid link?')
 
 def setup(bot):
     bot.add_cog(Identify(bot))

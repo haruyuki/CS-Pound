@@ -46,10 +46,21 @@ async def on_ready():  # When Client is loaded
 
 
 @bot.event
-async def on_command_error(_, error):
+async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
+        print(f"Someone tried to run \"{ctx.invoked_with}\" a command that didn't exist")
         return
     elif isinstance(error, commands.CommandOnCooldown):
+        print(f'Someone tried to run "{ctx.invoked_with}" while it was still on cooldown')
+        return
+    elif isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
+        print(f'Someone tried to run "{ctx.invoked_with}" with a missing argument')
+        return
+    elif isinstance(error, discord.ext.commands.errors.NoPrivateMessage):
+        print(f"Someone tried to run \"{ctx.invoked_with}\" in a PM when it can't be used in a PM")
+        return
+    elif isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
+        print(f'Someone tried to run "{ctx.invoked_with}" with an invalid URL')
         return
     raise error
 
