@@ -19,7 +19,6 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,image        | Displays the pet as you would see it in "My Pets" group                            | ,image <http://www.chickensmoothie.com/viewpet.php?id=54685939>               |
 | ,invite       | Sends you a link to where you can invite CS Pound to your Discord server           | ,invite                                                                       |
 | ,news         | Allows you to show or opt in to announcements on the Chicken Smoothie              | ,news on<br>,news off<br>,news latest                                         |
-| ,oekaki       | Displays Oekaki drawing from the link                                              | ,oekaki <http://www.chickensmoothie.com/Forum/viewtopic.php?f=34&t=3664993>   |
 | ,osu          | Commands related to osu!, the circle-clicking rhythm game                          | ,osu link 7109858<br>,osu profile                                             |
 | ,pet          | Displays information about the pet from the link                                   | ,pet <http://www.chickensmoothie.com/viewpet.php?id=54685939>                 |
 | ,poundpets    | Searches through the pound account for rare pets and display them all in an image  | ,poundpets<br>,poundpets get                                                  |

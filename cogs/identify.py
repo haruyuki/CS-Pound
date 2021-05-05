@@ -171,7 +171,7 @@ class Identify(commands.Cog):
                 try:
                     pet_id = await self.get_system_pet_id(link)
                 except aiohttp.client_exceptions.InvalidURL:
-                    await ctx.send('There was an error parsing the link you provided, are you sure you are providing a valid link?')
+                    await ctx.send('There was an error parsing the link you provided, are you sure you provided a valid link?')
                     return None
             conn = self.create_connection(sqlite_database)
             c = conn.cursor()
