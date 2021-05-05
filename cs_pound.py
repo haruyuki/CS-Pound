@@ -1,3 +1,4 @@
+import aiohttp
 import logging.handlers
 import os
 from os.path import isfile, join
