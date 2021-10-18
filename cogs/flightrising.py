@@ -147,6 +147,13 @@ class FlightRising(commands.Cog):
         elif isinstance(error, commands.CommandOnCooldown):
             await ctx.send(f'The command is on cooldown! Please try again after {int(error.retry_after)} seconds.')
 
+    @progeny.error # On error with progeny command
+    async def progeny_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
+            await ctx.send("You're missing another dragon link/ID!")
+
+
+
 
 def setup(bot):
     bot.add_cog(FlightRising(bot))
