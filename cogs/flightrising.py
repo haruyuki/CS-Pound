@@ -152,9 +152,6 @@ class FlightRising(commands.Cog):
         if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
             await ctx.send("You're missing another dragon link/ID!")
 
-
-
-
 def setup(bot):
     bot.add_cog(FlightRising(bot))
 

@@ -1,3 +1,4 @@
+import aiohttp
 import re
 import sqlite3
 import textwrap
@@ -172,7 +173,6 @@ class Identify(commands.Cog):
                 except aiohttp.client_exceptions.InvalidURL:
                     await ctx.send('There was an error parsing the link you provided, are you sure you provided a valid link?')
                     return None
-
             conn = self.create_connection(sqlite_database)
             c = conn.cursor()
             c.execute('SELECT Year, Event, Archive_Link FROM ChickenSmoothie_Archive WHERE Pet_ID=?', (pet_id,))
@@ -209,7 +209,8 @@ class Identify(commands.Cog):
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a valid link
             await ctx.send('That is not a valid pet link!')
-
+        if isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
+            await ctx.send('There was an error parsing the link you provided, are you sure you are providing a valid link?')
 
 def setup(bot):
     bot.add_cog(Identify(bot))
