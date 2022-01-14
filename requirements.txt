@@ -1,4 +1,3 @@
-chardet==3.0.4
 discord.py
 dnspython
 google-api-python-client
