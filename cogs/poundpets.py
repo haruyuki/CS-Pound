@@ -43,7 +43,7 @@ class PoundPets(commands.Cog):
             else:
                 await ctx.send('No image has been generated yet! Type `,ppets get` to start generating')
 
-    @pound_pets.command(aliases=['generate'])
+    @pound_pets.command(aliases=['generate', 'gen'])
     @commands.guild_only()
     async def get(self, ctx):
         if not self.generating_image:
