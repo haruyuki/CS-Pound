@@ -43,7 +43,7 @@ class PoundPets(commands.Cog):
             else:
                 await ctx.send('No image has been generated yet! Type `,ppets get` to start generating')
 
-    @pound_pets.command(aliases=['generate'])
+    @pound_pets.command(aliases=['generate', 'gen'])
     @commands.guild_only()
     async def get(self, ctx):
         if not self.generating_image:
@@ -121,7 +121,7 @@ class PoundPets(commands.Cog):
                 async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
                     for (image, _, _) in rare_plus_pets:
                         print(image)
-                        async with session.post(image, headers=headers) as response:
+                        async with session.get(image, headers=headers) as response:
                             if response.status == 200:
                                 content = await response.read()
                         content = io.BytesIO(content)

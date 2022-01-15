@@ -1,10 +1,6 @@
 from flightrising import extract_dragon_id
 
 
-def test_results():
-    assert extract_dragon_id('http://flightrising.com/main.php?p=lair&id=430187&tab=dragon&did=52548928') == '52548928'
-
-
 class TestClass:
     def test_valid_link(self):
         assert extract_dragon_id('http://flightrising.com/main.php?p=lair&id=430187&tab=dragon&did=52548928') == '52548928'
