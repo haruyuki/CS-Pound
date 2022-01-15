@@ -26,7 +26,7 @@ class Constants:
     giveaways_collection_name = 'giveaways'  # Collection name for giveaways
     other_collection_name = 'other'  # Collection name for any other singular data
     autoremind_collection_name = 'auto_remind'  # Collection name for Auto Remind users
-    autoremind_fetch_limit = 1000  # Amount of documents to buffer. Should update as collection gets bigger
+    autoremind_fetch_limit = 1500  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
     contact_email = 'jumpy12359@gmail.com'  # Contact email
