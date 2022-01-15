@@ -19,14 +19,14 @@ class Constants:
     discord_token = os.environ.get('discord', None)  # Discord bot token from environment variables
     discord_log_filename = 'discord.log'  # Name of logging file
     support_link = 'https://invite.gg/cspound'  # Link to support server
-    version = '2021.1018.0'  # Current version of bot
+    version = '2022.0115.0'  # Current version of bot
     invite_link = 'https://haruyuki.moe/CS-Pound'  # Link to invite the bot
     mongodb_uri = os.environ.get('mongodb', None)  # MongoDB connection URI from environment variables
     database_name = 'cs_pound'  # Name of MongoDB database
     giveaways_collection_name = 'giveaways'  # Collection name for giveaways
     other_collection_name = 'other'  # Collection name for any other singular data
     autoremind_collection_name = 'auto_remind'  # Collection name for Auto Remind users
-    autoremind_fetch_limit = 1000  # Amount of documents to buffer. Should update as collection gets bigger
+    autoremind_fetch_limit = 1500  # Amount of documents to buffer. Should update as collection gets bigger
     cogs_dir = 'cogs'  # Directory where cogs are placed
     playing_text = ',help | CS: haruyuki'  # Bot playing text
     contact_email = 'jumpy12359@gmail.com'  # Contact email
