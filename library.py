@@ -115,7 +115,7 @@ def multi_replace(string, replacements):
 async def update_autoremind_times():
     Variables.autoremind_times = set()
     autoremind_collection = database[Constants.autoremind_collection_name]
-    Variables.autoremind_times = set(autoremind_collection.distinct("remind_time"))
+    Variables.autoremind_times = set(await autoremind_collection.distinct("remind_time"))
     return Variables.autoremind_times
 
 
