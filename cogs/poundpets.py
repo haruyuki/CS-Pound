@@ -92,7 +92,6 @@ class PoundPets(commands.Cog):
                 for i in range(30):
                     page_start = pet_count - (20 * i)
                     url = pound_account + '&pageStart=' + str(page_start)
-                    print(f'Parsing {url}')
                     async with self.session.get(url) as response:  # POST the variables to the base php link
                         if response.status == 200:  # If received response is OK
                             connection = await response.text()  # Get text HTML of site
@@ -120,7 +119,6 @@ class PoundPets(commands.Cog):
                 image_data = []
                 async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
                     for (image, _, _) in rare_plus_pets:
-                        print(image)
                         async with session.get(image, headers=headers) as response:
                             if response.status == 200:
                                 content = await response.read()
