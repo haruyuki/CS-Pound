@@ -25,9 +25,9 @@ with open("counter.json", "r+") as f:
     g.close()
 
     with open("constants.py", "w") as g:
-        version = re.findall(r"\d{1,4}\.\d{1,4}\.\d{1,3}", lines[21])
+        version = re.findall(r"\d{1,4}\.\d{1,4}\.\d{1,3}", lines[30])
         if version:
-            lines[21] = lines[21].replace(version[0], new_version)
+            lines[30] = lines[30].replace(version[0], new_version)
         for line in lines:
             g.write(line)
 

@@ -10,8 +10,7 @@ def authorisation():
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive",
     )  # The scopes the bot requires (Spreadsheets and Google Drive)
-    credentials_raw = os.environ.get(
-        "GOOGLE_APPLICATION_CREDENTIALS", "{}"
+    credentials_raw = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "{}"
     )  # Get the login credentials from environment variables
     service_account_info = json.loads(credentials_raw)
     credentials = service_account.Credentials.from_service_account_info(
@@ -28,7 +27,7 @@ class Constants:
     )  # Discord bot token from environment variables
     discord_log_filename = "discord.log"  # Name of logging file
     support_link = "https://invite.gg/cspound"  # Link to support server
-    version = "2022.0115.0"  # Current version of bot
+    version = "2022.0119.0"  # Current version of bot
     invite_link = "https://haruyuki.moe/CS-Pound"  # Link to invite the bot
     mongodb_uri = os.environ.get(
         "mongodb", None
