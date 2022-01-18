@@ -42,17 +42,21 @@ class Pet:
 
     def _get_owner(self, data):
         owner_data = data.xpath('//table[@class="spine"]/tr[td/text() = "Owner"]')[0]
-        self.owner_name = owner_data.xpath('.//a/text()')[0]
-        self.owner_link = owner_data.xpath('.//a/@href')[0]
+        self.owner_name = owner_data.xpath(".//a/text()")[0]
+        self.owner_link = owner_data.xpath(".//a/@href")[0]
 
     @staticmethod
     def _get_id(data):
-        pet_id = data.xpath('//table[@class="spine"]/tr[td/text() = "Pet ID"]/td[last()]/text()')[0]
+        pet_id = data.xpath(
+            '//table[@class="spine"]/tr[td/text() = "Pet ID"]/td[last()]/text()'
+        )[0]
         return int(pet_id)
 
     @staticmethod
     def _get_name(data):
-        name = data.xpath('//table[@class="spine"]/tr[td/text() = "Pet\'s name"]/td[last()]/text()')
+        name = data.xpath(
+            '//table[@class="spine"]/tr[td/text() = "Pet\'s name"]/td[last()]/text()'
+        )
         if name:
             return name[0]
         else:
@@ -65,7 +69,9 @@ class Pet:
 
     @staticmethod
     def _get_age(data):
-        age_string = data.xpath('//table[@class="spine"]/tr[td/text() = "Age"]/td[last()]/text()')[0]
+        age_string = data.xpath(
+            '//table[@class="spine"]/tr[td/text() = "Age"]/td[last()]/text()'
+        )[0]
         try:
             age = age_string.split()[0]
         except IndexError:  # If no number found (i.e Pet is less than a day old)
@@ -74,12 +80,16 @@ class Pet:
 
     @staticmethod
     def _get_growth(data):
-        growth = data.xpath('//table[@class="spine"]/tr[td/text() = "Growth"]/td[last()]/text()')[0]
+        growth = data.xpath(
+            '//table[@class="spine"]/tr[td/text() = "Growth"]/td[last()]/text()'
+        )[0]
         return growth
 
     @staticmethod
     def _get_rarity(data):
-        rarity = data.xpath('//table[@class="spine"]/tr[td/text() = "Rarity"]//img/@alt')[0]
+        rarity = data.xpath(
+            '//table[@class="spine"]/tr[td/text() = "Rarity"]//img/@alt'
+        )[0]
         return rarity
 
     def _get_given(self, data):
@@ -89,18 +99,18 @@ class Pet:
             self.given_name = None
             self.given_url = None
         else:
-            self.given_name = given_xpath.xpath('.//a/text()')[0]
-            self.given_url = given_xpath.xpath('.//a/@href')[0]
+            self.given_name = given_xpath.xpath(".//a/text()")[0]
+            self.given_url = given_xpath.xpath(".//a/@href")[0]
 
     def owner(self):
-        return f'[{self.owner_name}]({self.owner_link})'
+        return f"[{self.owner_name}]({self.owner_link})"
 
     def given_by(self):
         if self.given_name is None or self.given_url is None:
             return None
         else:
-            return f'[{self.given_name}]({self.given_url})'
+            return f"[{self.given_name}]({self.given_url})"
 
     def rarity_link(self):
-        filename = multi_replace(self.rarity.lower(), {'!': '', ' ': ''}) + '.png'
-        return f'rarities/{filename}'
+        filename = multi_replace(self.rarity.lower(), {"!": "", " ": ""}) + ".png"
+        return f"rarities/{filename}"

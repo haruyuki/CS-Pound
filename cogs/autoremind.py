@@ -18,76 +18,133 @@ class AutoRemind(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=['ar'])
+    @commands.command(aliases=["ar"])
     @commands.guild_only()  # Command can only be run in guilds
-    async def autoremind(self, ctx, args=''):
-        if args == 'off' or args == 'cancel':  # If user is turning off Auto Remind
-            cursor = collection.find({'user_id': str(ctx.author.id)})  # Get document of user
+    async def autoremind(self, ctx, args=""):
+        if args == "off" or args == "cancel":  # If user is turning off Auto Remind
+            cursor = collection.find(
+                {"user_id": str(ctx.author.id)}
+            )  # Get document of user
             user_data = await cursor.to_list(length=1)
             try:
                 user_data = user_data[0]
-                user_object_id = user_data['_id']
+                user_object_id = user_data["_id"]
             except IndexError:
                 user_data = None
                 user_object_id = None
 
             if user_data is not None:
-                await collection.delete_one({'_id': user_object_id})
+                await collection.delete_one({"_id": user_object_id})
                 await ctx.send(Strings.autoremind_off_successful)
             else:
                 await ctx.send(Strings.autoremind_not_set)
         else:  # If user is setting an Auto Remind
-            time = re.findall(r'^(\d{1,2})m?$', args)  # Get the requested Auto Remind time
+            time = re.findall(
+                r"^(\d{1,2})m?$", args
+            )  # Get the requested Auto Remind time
             if time != 0:  # If user provided a valid time
                 try:
                     time = int(time[0])  # Convert the time into an integer
                 except IndexError:
-                    await ctx.send('An error has occurred while setting the Auto Remind, please try again.')
+                    await ctx.send(
+                        "An error has occurred while setting the Auto Remind, please try again."
+                    )
                     return
                 if time > 60:
-                    await ctx.send('That time is too far!')
+                    await ctx.send("That time is too far!")
                 elif time <= 0:
-                    await ctx.send('1 minute is the minimum!')
+                    await ctx.send("1 minute is the minimum!")
                 else:
-                    cursor = collection.find({'user_id': str(ctx.author.id)})  # Get document of user
+                    cursor = collection.find(
+                        {"user_id": str(ctx.author.id)}
+                    )  # Get document of user
                     user_data = await cursor.to_list(length=1)
                     try:
                         user_data = user_data[0]
-                        user_object_id = user_data['_id']
+                        user_object_id = user_data["_id"]
                     except IndexError:
                         user_data = None
 
                     if user_data is not None:
-                        if int(user_data['channel_id']) == ctx.channel.id:
-                            old_time = user_data['remind_time']
-                            await collection.update_one({'_id': user_object_id}, {'$set': {'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'remind_time': time}})
-                            await ctx.send(f'Your Auto Remind has been updated from {old_time} minute{"" if old_time == 1 else "s"} to {time} minute{"" if time == 1 else "s"}!')
+                        if int(user_data["channel_id"]) == ctx.channel.id:
+                            old_time = user_data["remind_time"]
+                            await collection.update_one(
+                                {"_id": user_object_id},
+                                {
+                                    "$set": {
+                                        "server_id": str(ctx.guild.id),
+                                        "channel_id": str(ctx.channel.id),
+                                        "remind_time": time,
+                                    }
+                                },
+                            )
+                            await ctx.send(
+                                f'Your Auto Remind has been updated from {old_time} minute{"" if old_time == 1 else "s"} to {time} minute{"" if time == 1 else "s"}!'
+                            )
 
                         else:
-                            description = (f'You already have a {user_data["remind_time"]} minute Auto Remind setup at <#{user_data["channel_id"]}>!\n'  # You already have a X minute Auto Remind setup at #channel!
-                                           'Are you sure you want to overwrite it to this channel? (yes/no) (No `,` prefix needed!)')
-                            embed = discord.Embed(title='Auto Remind', description=description, colour=0xff5252)
+                            description = (
+                                f'You already have a {user_data["remind_time"]} minute Auto Remind setup at <#{user_data["channel_id"]}>!\n'  # You already have a X minute Auto Remind setup at #channel!
+                                "Are you sure you want to overwrite it to this channel? (yes/no) (No `,` prefix needed!)"
+                            )
+                            embed = discord.Embed(
+                                title="Auto Remind",
+                                description=description,
+                                colour=0xFF5252,
+                            )
                             await ctx.send(embed=embed)
 
                             def predicate(m):
-                                return m.author == ctx.author and m.channel == ctx.channel
+                                return (
+                                    m.author == ctx.author and m.channel == ctx.channel
+                                )
 
                             try:
-                                msg = await self.bot.wait_for('message', check=predicate, timeout=30.0)
+                                msg = await self.bot.wait_for(
+                                    "message", check=predicate, timeout=30.0
+                                )
                             except asyncio.TimeoutError:
                                 await ctx.send(Strings.autoremind_update_timeout)
                             else:
                                 lowered = msg.content.lower()
-                                if lowered in ('yes', 'y', 'true', 't', '1', 'enable', 'on'):
-                                    await collection.update_one({'_id': user_object_id}, {'$set': {'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'remind_time': time}})
-                                    await ctx.send(f'Will remind you {time} minute{"" if time == 1 else "s"} before the pound opens!')
+                                if lowered in (
+                                    "yes",
+                                    "y",
+                                    "true",
+                                    "t",
+                                    "1",
+                                    "enable",
+                                    "on",
+                                ):
+                                    await collection.update_one(
+                                        {"_id": user_object_id},
+                                        {
+                                            "$set": {
+                                                "server_id": str(ctx.guild.id),
+                                                "channel_id": str(ctx.channel.id),
+                                                "remind_time": time,
+                                            }
+                                        },
+                                    )
+                                    await ctx.send(
+                                        f'Will remind you {time} minute{"" if time == 1 else "s"} before the pound opens!'
+                                    )
                                 else:
                                     await ctx.send(Strings.autoremind_update_cancel)
                     else:
-                        await collection.insert_one({'server_id': str(ctx.guild.id), 'channel_id': str(ctx.channel.id), 'user_id': str(ctx.author.id), 'remind_time': time})
-                        await ctx.send(f'Your Auto Remind has been set for {time} minute{"" if time == 1 else "s"}!')
+                        await collection.insert_one(
+                            {
+                                "server_id": str(ctx.guild.id),
+                                "channel_id": str(ctx.channel.id),
+                                "user_id": str(ctx.author.id),
+                                "remind_time": time,
+                            }
+                        )
+                        await ctx.send(
+                            f'Your Auto Remind has been set for {time} minute{"" if time == 1 else "s"}!'
+                        )
                     await library.update_autoremind_times()
-            elif args == '':  # If no arguments provided
+            elif args == "":  # If no arguments provided
                 await ctx.send(Strings.no_time)
             else:
                 await ctx.send(Strings.invalid_time)

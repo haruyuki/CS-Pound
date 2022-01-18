@@ -13,42 +13,58 @@ import flightrising as fr
 class FlightRising(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.spreadsheet = Constants.google_sheets_api.open_by_key('1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc')  # Link to conversion spreadsheet
+        self.spreadsheet = Constants.google_sheets_api.open_by_key(
+            "1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc"
+        )  # Link to conversion spreadsheet
 
-    def calculate_cs_to_gems(self, cs):  # Function to calculate exchange rate from C$ to gems
+    def calculate_cs_to_gems(
+        self, cs
+    ):  # Function to calculate exchange rate from C$ to gems
         worksheet = self.spreadsheet.sheet1
-        cs_exchange_rate = float(worksheet.get_value('E10'))
-        gem_exchange_rate = float(worksheet.get_value('F10'))
+        cs_exchange_rate = float(worksheet.get_value("E10"))
+        gem_exchange_rate = float(worksheet.get_value("F10"))
         return (cs / cs_exchange_rate) * gem_exchange_rate
 
-    def calculate_cs_to_treasure(self, cs):  # Function to calculate exchange rate from C$ to treasure
+    def calculate_cs_to_treasure(
+        self, cs
+    ):  # Function to calculate exchange rate from C$ to treasure
         worksheet = self.spreadsheet.sheet1
-        cs_exchange_rate = float(worksheet.get_value('E10'))
-        gem_exchange_rate = float(worksheet.get_value('F10'))
-        treasure_exchange_rate = float(worksheet.get_value('G10'))
+        cs_exchange_rate = float(worksheet.get_value("E10"))
+        gem_exchange_rate = float(worksheet.get_value("F10"))
+        treasure_exchange_rate = float(worksheet.get_value("G10"))
         return ((cs / cs_exchange_rate) * gem_exchange_rate) * treasure_exchange_rate
 
-    def calculate_gems_to_cs(self, gems):  # Function to calculate exchange rate from gems to C$
+    def calculate_gems_to_cs(
+        self, gems
+    ):  # Function to calculate exchange rate from gems to C$
         worksheet = self.spreadsheet.sheet1
-        gem_exchange_rate = float(worksheet.get_value('F10'))
-        cs_exchange_rate = float(worksheet.get_value('E10'))
+        gem_exchange_rate = float(worksheet.get_value("F10"))
+        cs_exchange_rate = float(worksheet.get_value("E10"))
         return (gems / gem_exchange_rate) * cs_exchange_rate
 
-    def calculate_gems_to_treasure(self, gems):  # Function to calculate exchange rate from gems to treasure
+    def calculate_gems_to_treasure(
+        self, gems
+    ):  # Function to calculate exchange rate from gems to treasure
         worksheet = self.spreadsheet.sheet1
-        treasure_exchange_rate = float(worksheet.get_value('G10'))
+        treasure_exchange_rate = float(worksheet.get_value("G10"))
         return gems * treasure_exchange_rate
 
-    def calculate_treasure_to_cs(self, treasure):  # Function to calculate exchange rate from treasure to C$
+    def calculate_treasure_to_cs(
+        self, treasure
+    ):  # Function to calculate exchange rate from treasure to C$
         worksheet = self.spreadsheet.sheet1
-        treasure_exchange_rate = float(worksheet.get_value('G10'))
-        gem_exchange_rate = float(worksheet.get_value('F10'))
-        cs_exchange_rate = float(worksheet.get_value('E10'))
-        return ((treasure / treasure_exchange_rate) / gem_exchange_rate) * cs_exchange_rate
+        treasure_exchange_rate = float(worksheet.get_value("G10"))
+        gem_exchange_rate = float(worksheet.get_value("F10"))
+        cs_exchange_rate = float(worksheet.get_value("E10"))
+        return (
+            (treasure / treasure_exchange_rate) / gem_exchange_rate
+        ) * cs_exchange_rate
 
-    def calculate_treasure_to_gems(self, treasure):  # Function to calculate exchange rate from treasure to gems
+    def calculate_treasure_to_gems(
+        self, treasure
+    ):  # Function to calculate exchange rate from treasure to gems
         worksheet = self.spreadsheet.sheet1
-        treasure_exchange_rate = float(worksheet.get_value('G10'))
+        treasure_exchange_rate = float(worksheet.get_value("G10"))
         return treasure / treasure_exchange_rate
 
     @commands.command()
@@ -58,45 +74,45 @@ class FlightRising(commands.Cog):
 
         gems = self.calculate_cs_to_gems(amount)
         treasure = self.calculate_cs_to_treasure(amount)
-        message = f'''\
+        message = f"""\
         {amount}C$ equates to approximately:
         {round(gems, 2)} gems
-        {round(treasure, 2)} treasure'''
+        {round(treasure, 2)} treasure"""
         message = textwrap.dedent(message)
         await ctx.send(message)
 
-    @commands.command(aliases=['fr'])
+    @commands.command(aliases=["fr"])
     async def gems(self, ctx, amount: float):
         if amount.is_integer():  # Converts float into integer if decimal is 0
             amount = int(amount)
 
         cs = self.calculate_gems_to_cs(amount)
         treasure = self.calculate_gems_to_treasure(amount)
-        message = f'''\
+        message = f"""\
         {amount} gems equates to approximately:
         {round(cs, 2)}C$
-        {round(treasure, 2)} treasure'''
+        {round(treasure, 2)} treasure"""
         message = textwrap.dedent(message)
         await ctx.send(message)
 
-    @commands.command(aliases=['tr'])
+    @commands.command(aliases=["tr"])
     async def treasure(self, ctx, amount: float):
         if amount.is_integer():  # Converts float into integer if decimal is 0
             amount = int(amount)
 
         cs = self.calculate_treasure_to_cs(amount)
         gems = self.calculate_treasure_to_gems(amount)
-        message = f'''\
+        message = f"""\
         {amount} treasure equates to approximately:
         {round(cs, 2)}C$
-        {round(gems, 2)} gems'''
+        {round(gems, 2)} gems"""
         message = textwrap.dedent(message)
         await ctx.send(message)
 
-    @commands.command(aliases=['prog'])
+    @commands.command(aliases=["prog"])
     async def progeny(self, ctx, dragon1, dragon2, multiplier=10):
         if multiplier > 10:
-            await ctx.send('The maximum multiplier is 10!')
+            await ctx.send("The maximum multiplier is 10!")
             return
 
         if dragon1.isdigit():
@@ -126,9 +142,9 @@ class FlightRising(commands.Cog):
 
             image = generate_image(image_data, multiplier)
             output_buffer = io.BytesIO()  # Convert the PIL output into bytes
-            image.save(output_buffer, 'png')  # Save the bytes as a PNG format
+            image.save(output_buffer, "png")  # Save the bytes as a PNG format
             output_buffer.seek(0)
-            await ctx.send(file=discord.File(fp=output_buffer, filename='pet.png'))
+            await ctx.send(file=discord.File(fp=output_buffer, filename="pet.png"))
 
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -143,14 +159,17 @@ class FlightRising(commands.Cog):
     @cprogeny.error  # On error with cprogeny command
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a number
-            await ctx.send('That is not a valid number!')
+            await ctx.send("That is not a valid number!")
         elif isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(f'The command is on cooldown! Please try again after {int(error.retry_after)} seconds.')
+            await ctx.send(
+                f"The command is on cooldown! Please try again after {int(error.retry_after)} seconds."
+            )
 
-    @progeny.error # On error with progeny command
+    @progeny.error  # On error with progeny command
     async def progeny_error(self, ctx, error):
         if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
             await ctx.send("You're missing another dragon link/ID!")
+
 
 def setup(bot):
     bot.add_cog(FlightRising(bot))
@@ -164,7 +183,7 @@ def generate_image(image_data, multiplier):
     else:
         max_width = 700
         max_height = 175 * multiplier
-    canvas = Image.new('RGBA', (max_width, max_height), (255, 0, 0, 0))
+    canvas = Image.new("RGBA", (max_width, max_height), (255, 0, 0, 0))
 
     current_width = 0
     y_offset = 0

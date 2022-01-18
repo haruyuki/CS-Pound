@@ -17,21 +17,27 @@ database = mongo_client[Constants.database_name]
 
 
 # -------------------- FUNCTIONS --------------------
-def parse_time(time_string):  # A function to parse short time formats (1d, 2h, 3m, 4s) into seconds
+def parse_time(
+    time_string,
+):  # A function to parse short time formats (1d, 2h, 3m, 4s) into seconds
     time_string = time_string.lower()
-    times = re.findall(r'(\d{1,8}[smhd]?)', time_string)
+    times = re.findall(r"(\d{1,8}[smhd]?)", time_string)
     total = 0
     for time in times:
         if time.isdigit():
-            time += 'm'
+            time += "m"
         total += int(time[:-1]) * seconds_per_unit[time[-1]]
     return total
 
 
-def formatter(day, hour, minute, second):  # Pretty format time layout given days, hours, minutes and seconds
-    def pluralise(string, value, and_placement=''):  # Correctly prefix or suffix ',' or 'and' placements
+def formatter(
+    day, hour, minute, second
+):  # Pretty format time layout given days, hours, minutes and seconds
+    def pluralise(
+        string, value, and_placement=""
+    ):  # Correctly prefix or suffix ',' or 'and' placements
         if value == 0:  # If given time has no value
-            return ''
+            return ""
         else:  # If given time has value
             return f'{" and " if and_placement == "pre" else ""}{value} {string}{"s" if value > 1 else ""}{" and " if and_placement == "suf" else ""}{", " if and_placement == "com" else ""}'
             # If 'and_placement' is set to prefix add 'and' otherwise leave blank
@@ -51,7 +57,9 @@ def formatter(day, hour, minute, second):  # Pretty format time layout given day
             suffix = True
         elif minute == 0 and second == 0:  # If there are no minutes or seconds
             suffix = True
-        elif hour != 0 and minute != 0 and second != 0:  # If there are hours and minutes and seconds
+        elif (
+            hour != 0 and minute != 0 and second != 0
+        ):  # If there are hours and minutes and seconds
             comma = True
         elif hour != 0 and minute == 0:  # If there are hours but no minutes
             comma = True
@@ -61,26 +69,38 @@ def formatter(day, hour, minute, second):  # Pretty format time layout given day
             comma = True
 
     if suffix:
-        day_section = pluralise('day', day, 'suf')  # Pluralise the day section with a suffixed 'and' placement
+        day_section = pluralise(
+            "day", day, "suf"
+        )  # Pluralise the day section with a suffixed 'and' placement
     elif comma:
-        day_section = pluralise('day', day, 'com')  # Pluralise the day section with a suffixed ',' placement
+        day_section = pluralise(
+            "day", day, "com"
+        )  # Pluralise the day section with a suffixed ',' placement
     else:
-        day_section = pluralise('day', day, '')  # Pluralise the day section with no placements
+        day_section = pluralise(
+            "day", day, ""
+        )  # Pluralise the day section with no placements
 
     if minute == 0:  # If there are no minutes
-        hour_section = pluralise('hour', hour)  # Pluralise the hour section
+        hour_section = pluralise("hour", hour)  # Pluralise the hour section
     elif minute != 0 and second == 0:  # If there are minute(s) but no seconds
-        hour_section = pluralise('hour', hour, 'suf')  # Pluralise the hour section with a suffixed 'and' placement
+        hour_section = pluralise(
+            "hour", hour, "suf"
+        )  # Pluralise the hour section with a suffixed 'and' placement
     else:  # If there are minute(s) and second(s)
-        hour_section = pluralise('hour', hour, 'com')  # Pluralise the hour section with a suffixed ',' placement
+        hour_section = pluralise(
+            "hour", hour, "com"
+        )  # Pluralise the hour section with a suffixed ',' placement
 
-    minute_section = pluralise('minute', minute)  # Pluralise the minute section
+    minute_section = pluralise("minute", minute)  # Pluralise the minute section
 
     if hour != 0 or minute != 0:  # If there are hour(s) or minute(s)
-        second_section = pluralise('second', second, 'pre')  # Pluralise the second section with a prefixed 'and' placement
+        second_section = pluralise(
+            "second", second, "pre"
+        )  # Pluralise the second section with a prefixed 'and' placement
     else:  # If there are no hours or minutes
-        second_section = pluralise('second', second)  # Pluralise the second section
-    return f'{day_section}{hour_section}{minute_section}{second_section}'  # Return the formatted text
+        second_section = pluralise("second", second)  # Pluralise the second section
+    return f"{day_section}{hour_section}{minute_section}{second_section}"  # Return the formatted text
 
 
 def resolver(seconds):  # Pretty format time given seconds
@@ -96,11 +116,15 @@ def resolver(seconds):  # Pretty format time given seconds
 def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
     # Slightly modified from https://adamspannbauer.github.io/2018/03/02/app-icon-dominant-colors/
     image = cv2.resize(image, (64, 64), interpolation=cv2.INTER_CUBIC)  # Resize image
-    image = image.reshape((image.shape[0] * image.shape[1], 3))  # Reshape image a list of pixels
+    image = image.reshape(
+        (image.shape[0] * image.shape[1], 3)
+    )  # Reshape image a list of pixels
     clt = KMeans(n_clusters=3)
     labels = clt.fit_predict(image)  # Cluster and assign labels to pixels
     label_counts = Counter(labels)  # Count labels to find most popular
-    dominant_colour = clt.cluster_centers_[label_counts.most_common(1)[0][0]]  # Subset out most popular centroid
+    dominant_colour = clt.cluster_centers_[
+        label_counts.most_common(1)[0][0]
+    ]  # Subset out most popular centroid
     dominant_colour = [int(colour) for colour in dominant_colour]
     return list(dominant_colour)
 
@@ -108,21 +132,25 @@ def get_dominant_colour(image):  # Get the RGB of the dominant colour in an imag
 def multi_replace(string, replacements):
     # Taken from https://gist.github.com/bgusach/a967e0587d6e01e889fd1d776c5f3729Z
     substrs = sorted(replacements, key=len, reverse=True)
-    regexp = re.compile('|'.join(map(re.escape, substrs)))
+    regexp = re.compile("|".join(map(re.escape, substrs)))
     return regexp.sub(lambda match: replacements[match.group(0)], string)
 
 
 async def update_autoremind_times():
     Variables.autoremind_times = set()
     autoremind_collection = database[Constants.autoremind_collection_name]
-    Variables.autoremind_times = set(await autoremind_collection.distinct("remind_time"))
+    Variables.autoremind_times = set(
+        await autoremind_collection.distinct("remind_time")
+    )
     return Variables.autoremind_times
 
 
-async def get_autoremind_documents(time):  # Get documents of users with specified Auto Remind time
+async def get_autoremind_documents(
+    time,
+):  # Get documents of users with specified Auto Remind time
     documents = []
     autoremind_collection = database[Constants.autoremind_collection_name]
-    cursor = autoremind_collection.find({'remind_time': time})
+    cursor = autoremind_collection.find({"remind_time": time})
     for document in await cursor.to_list(length=Constants.autoremind_fetch_limit):
         documents.append(document)
 
@@ -137,7 +165,7 @@ async def get_sending_channels(time):
     documents = await get_autoremind_documents(time)
     if documents is not None:
         for document in documents:
-            channel_ids.add(int(document['channel_id']))
+            channel_ids.add(int(document["channel_id"]))
     return channel_ids
 
 
@@ -148,14 +176,14 @@ async def prepare_message(channel_id, time, pound_type):
     documents = await get_autoremind_documents(time)
     if documents is not None:
         for document in documents:
-            if int(document['channel_id']) == channel_id:
+            if int(document["channel_id"]) == channel_id:
                 message_to_send = message + f' <@{document["user_id"]}>'
                 if len(message_to_send) + offset > 2000:
-                        message_group.append(message)
-                        message = f'{time} minute{"" if time == 1 else "s"} until {pound_type} opens!'
-                        offset = 1
+                    message_group.append(message)
+                    message = f'{time} minute{"" if time == 1 else "s"} until {pound_type} opens!'
+                    offset = 1
                 else:
-                        offset += 1
+                    offset += 1
                 message += f' <@{document["user_id"]}>'
         message_group.append(message)
         return message_group
@@ -175,7 +203,9 @@ def calculate_sleep_amount(seconds):
             Variables.cooldown = False  # Put command off cooldown
             sleep_amount = 3600  # Sleep for 1 hour
     else:  # If command not on cooldown
-        if seconds <= 0 or seconds >= 36000:  # If no times (i.e. Pound currently open or not opening anytime soon) or 10 hours
+        if (
+            seconds <= 0 or seconds >= 36000
+        ):  # If no times (i.e. Pound currently open or not opening anytime soon) or 10 hours
             sleep_amount = 3600  # Sleep for 1 hour
         elif seconds >= 7200:  # If over 2 hours remain
             sleep_amount = seconds - 7200  # Sleep until 2 hours remain
@@ -186,4 +216,8 @@ def calculate_sleep_amount(seconds):
         elif seconds < 3600:  # If less than 1 hour remaining
             Variables.cooldown = True  # Put command on cooldown
 
-    return seconds, sleep_amount, send_msg  # Return seconds remaining, sleep amount, whether sending message is needed
+    return (
+        seconds,
+        sleep_amount,
+        send_msg,
+    )  # Return seconds remaining, sleep amount, whether sending message is needed

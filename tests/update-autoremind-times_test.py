@@ -10,11 +10,21 @@ mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
 database = mongo_client[Constants.database_name]
 collection = database[Constants.autoremind_collection_name]
 
+
 def test_results():
-    objectid = loop.run_until_complete(collection.insert_one({'server_id': 'Travis CI Py.test', 'channel_id': 'Testing update_autoremind_times function', 'user_id': 'Haruyuki', 'remind_time': 0}))
+    objectid = loop.run_until_complete(
+        collection.insert_one(
+            {
+                "server_id": "Travis CI Py.test",
+                "channel_id": "Testing update_autoremind_times function",
+                "user_id": "Haruyuki",
+                "remind_time": 0,
+            }
+        )
+    )
     times = loop.run_until_complete(update_autoremind_times())
     assert 0 in times
 
-    loop.run_until_complete(collection.delete_one({'_id': objectid.inserted_id}))
+    loop.run_until_complete(collection.delete_one({"_id": objectid.inserted_id}))
     times = loop.run_until_complete(update_autoremind_times())
     assert 0 not in times

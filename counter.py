@@ -6,26 +6,26 @@ import re
 import sys
 
 changes_made = False
-with open('counter.json', 'r+') as f:
+with open("counter.json", "r+") as f:
     data = json.load(f)
 
-    if sys.argv[1] == 'startup':
-        if data['version'] != datetime.today().strftime('%Y.%m%d'):
+    if sys.argv[1] == "startup":
+        if data["version"] != datetime.today().strftime("%Y.%m%d"):
             changes_made = True
-            data['version'] = datetime.today().strftime('%Y.%m%d')
-            data['build'] = 0
-    elif sys.argv[1] == 'update':
+            data["version"] = datetime.today().strftime("%Y.%m%d")
+            data["build"] = 0
+    elif sys.argv[1] == "update":
         changes_made = True
-        data['build'] += 1
+        data["build"] += 1
 
     new_version = f'{data["version"]}.{data["build"]}'
 
-    g = open('constants.py', 'r')
+    g = open("constants.py", "r")
     lines = g.readlines()
     g.close()
 
-    with open('constants.py', 'w') as g:
-        version = re.findall(r'\d{1,4}\.\d{1,4}\.\d{1,3}', lines[21])
+    with open("constants.py", "w") as g:
+        version = re.findall(r"\d{1,4}\.\d{1,4}\.\d{1,3}", lines[21])
         if version:
             lines[21] = lines[21].replace(version[0], new_version)
         for line in lines:
@@ -37,5 +37,5 @@ with open('counter.json', 'r+') as f:
 
     if changes_made:
         repo = Repo(os.getcwd())
-        repo.git.add('constants.py')
-        repo.git.add('counter.json')
+        repo.git.add("constants.py")
+        repo.git.add("counter.json")

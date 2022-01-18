@@ -11,12 +11,18 @@ class Support(commands.Cog):
     @commands.command()
     async def support(self, ctx):
         try:
-            await ctx.author.send(Constants.support_link)  # PM Discord link to the CS-Pound Development Server to user
-            embed = discord.Embed(title='Support', description=Strings.pm_successful, colour=0x4ba139)  # Create embed
+            await ctx.author.send(
+                Constants.support_link
+            )  # PM Discord link to the CS-Pound Development Server to user
+            embed = discord.Embed(
+                title="Support", description=Strings.pm_successful, colour=0x4BA139
+            )  # Create embed
             if ctx.message.guild is not None:
                 await ctx.send(embed=embed)  # Send embed
         except discord.errors.Forbidden:  # If cannot send PM to user
-            embed = discord.Embed(title='Support', description=Strings.pm_unsuccessful, colour=0xff5252)  # Create embed
+            embed = discord.Embed(
+                title="Support", description=Strings.pm_unsuccessful, colour=0xFF5252
+            )  # Create embed
             await ctx.send(embed=embed)  # Send embed
 
 
