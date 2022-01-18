@@ -6,7 +6,6 @@ lxml
 motor
 numpy
 opencv-python-headless
-osuapi
 Pillow
 psutil
 pygsheets

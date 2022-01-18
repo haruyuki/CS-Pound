@@ -20,11 +20,9 @@ A Discord bot for the virtual pet adoption website [Chicken Smoothie](https://ww
 | ,image        | Displays the pet as you would see it in "My Pets" group                            | ,image <http://www.chickensmoothie.com/viewpet.php?id=54685939>               |
 | ,invite       | Sends you a link to where you can invite CS Pound to your Discord server           | ,invite                                                                       |
 | ,news         | Allows you to show or opt in to announcements on the Chicken Smoothie              | ,news on<br>,news off<br>,news latest                                         |
-| ,osu          | Commands related to osu!, the circle-clicking rhythm game                          | ,osu link 7109858<br>,osu profile                                             |
 | ,pet          | Displays information about the pet from the link                                   | ,pet <http://www.chickensmoothie.com/viewpet.php?id=54685939>                 |
 | ,poundpets    | Searches through the pound account for rare pets and display them all in an image  | ,poundpets<br>,poundpets get                                                  |
 | ,remindme     | Pings you after specified amount of time. Maximum reminding time is 24h            | ,remindme 1h6m23s<br>,remindme 12m<br>,remindme 1h10s                         |
-| ,shibaface    | Commands related to Shibaface, another online pet adoption website                 | ,shibaface random                                                             |
 | ,statistics   | Displays CS Pound bot statistics                                                   | ,statistics                                                                   |
 | ,support      | PM's you the link to the CS Pound Development Server                               | ,support                                                                      |
 | ,time         | Tells you how long before the pound opens                                          | ,time                                                                         |

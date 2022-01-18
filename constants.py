@@ -10,7 +10,8 @@ def authorisation():
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive",
     )  # The scopes the bot requires (Spreadsheets and Google Drive)
-    credentials_raw = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "{}"
+    credentials_raw = os.environ.get(
+        "GOOGLE_APPLICATION_CREDENTIALS", "{}"
     )  # Get the login credentials from environment variables
     service_account_info = json.loads(credentials_raw)
     credentials = service_account.Credentials.from_service_account_info(
@@ -51,11 +52,6 @@ class Constants:
 
 class FlightRisingC:
     progeny_url = "http://flightrising.com/includes/ol/scryer_progeny.php"
-
-
-class OsuC:
-    osu_collection_name = "osu_profiles"
-    osu_key = os.environ.get("osu")
 
 
 class Variables:
