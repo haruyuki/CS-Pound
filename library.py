@@ -146,16 +146,16 @@ async def prepare_message(channel_id, time, pound_type):
     offset = 0
     message = f'{time} minute{"" if time == 1 else "s"} until {pound_type} opens!'
     documents = await get_autoremind_documents(time)
-
     if documents is not None:
         for document in documents:
             if int(document['channel_id']) == channel_id:
                 message_to_send = message + f' <@{document["user_id"]}>'
-                offset += 1
-                if len(message_to_send + offset) > 500:
+                if len(message_to_send) + offset > 2000:
                         message_group.append(message)
                         message = f'{time} minute{"" if time == 1 else "s"} until {pound_type} opens!'
                         offset = 1
+                else:
+                        offset += 1
                 message += f' <@{document["user_id"]}>'
         message_group.append(message)
         return message_group
