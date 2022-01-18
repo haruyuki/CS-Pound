@@ -44,7 +44,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 All pet rarity images are property of [Chicken Smoothie](https://www.chickensmoothie.com).
 
 ## Development Status
-[![Build Status](https://img.shields.io/travis/com/haruyuki/CS-Pound.svg)](https://travis-ci.com/haruyuki/CS-Pound)
+[![Build Status](https://app.travis-ci.com/haruyuki/CS-Pound.svg?branch=master)](https://app.travis-ci.com/haruyuki/CS-Pound)
 [![Coverage Status](https://img.shields.io/codecov/c/github/haruyuki/CS-Pound.svg)](https://codecov.io/gh/haruyuki/CS-Pound)
-[![Requirements Status](https://img.shields.io/requires/github/haruyuki/CS-Pound.svg)](https://requires.io/github/haruyuki/CS-Pound/requirements/?branch=master)
+[![Requirements Status](https://img.shields.io/requires/github/haruyuki/CS-Pound.svg)](https://requires.io/github/haruyuki/CS-Pound/requirements/?branch=main)
 [![Maintainability](https://api.codeclimate.com/v1/badges/e1711e225711d4f33ec7/maintainability)](https://codeclimate.com/github/haruyuki/CS-Pound/maintainability)
