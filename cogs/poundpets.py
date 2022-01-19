@@ -318,4 +318,4 @@ async def image_expiration_check(bot):
             else:
                 Constants.image_exists = True
 
-        await asyncio.sleep(3600)  # Sleep for 1 hour
+        await asyncio.sleep(900)  # Sleep for 15 minutes
