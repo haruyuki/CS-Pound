@@ -94,37 +94,27 @@ class PoundPets(commands.Cog):
                 self.session = aiohttp.ClientSession(headers=headers)
                 await self.session.post(login_url, data=payload)
 
+                self.stage = 1
+                all_pets = []
+
                 pound_account = Constants.pound_pets_group
-                async with aiohttp.ClientSession(headers=headers) as session:
+                async with self.session as session:
                     async with session.get(pound_account) as response:
                         if response.status == 200:
                             connection = await response.text()
                             dom = lxml.html.fromstring(connection)
                             dom.make_links_absolute("https://www.chickensmoothie.com")
+                            all_pets = dom.xpath('//dl[@class="pet"]')
 
                 self.stage = 1
-                last_page = dom.xpath('//div[@class="pages"]')[0].xpath("a/@href")[-2]
-                pet_count = int(parse_qs(urlparse(last_page).query)["pageStart"][0])
-                all_pets = []
-
-                for i in range(30):
-                    page_start = pet_count - (20 * i)
-                    url = pound_account + "&pageStart=" + str(page_start)
-                    async with self.session.get(
-                        url
-                    ) as response:  # POST the variables to the base php link
-                        if response.status == 200:  # If received response is OK
-                            connection = await response.text()  # Get text HTML of site
-                            await asyncio.sleep(0.5)
-                            dom = lxml.html.fromstring(connection)  # Convert into DOM
-                    pets = dom.xpath('//dl[@class="pet"]')
-                    all_pets.extend(pets)
-
                 self.all_rare_pets = 0
                 rare_plus_pets = []
                 for pet in all_pets:
                     image_url = pet.xpath("dt//img/@src")[0]
-                    rarity = pet.xpath("dd[last()]//img/@alt")[0]
+                    try:
+                        rarity = pet.xpath("dd[last()]//img/@alt")[0]
+                    except IndexError:  # Pet does not have rarity (Still growing)
+                        rarity = "Unknown"
                     try:
                         adoption_date = pet.xpath("dd/span/span/text()")[0]
                     except IndexError:
