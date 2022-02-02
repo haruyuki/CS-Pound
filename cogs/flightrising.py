@@ -149,7 +149,6 @@ class FlightRising(commands.Cog):
             output_buffer.seek(0)
             await ctx.send(file=discord.File(fp=output_buffer, filename="pet.png"))
 
-    @commands.command()
     @commands.command(aliases=["cprog"])
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def cprogeny(self, ctx, dragon1, dragon2, element="shadow"):
