@@ -1,12 +1,15 @@
-import io
-import textwrap
-
 import aiohttp
+import io
+from PIL import Image
+import textwrap
+from urllib.parse import urlparse, parse_qsl, urlencode
+import json
+import math
+
 import discord
 from discord.ext import commands
-from PIL import Image
 
-from constants import Constants
+from constants import Constants, FlightRisingC
 import flightrising as fr
 
 
@@ -148,10 +151,68 @@ class FlightRising(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def cprogeny(self, ctx, dragon1, *, stats: str = None):
-        print(dragon1)
-        print(stats)
-        #  \((.*?)\)\s*(\w+)
+    async def cprogeny(self, ctx, dragon1, dragon2, element="shadow"):
+        elements = {
+            "earth": "1",
+            "plague": "2",
+            "wind": "3",
+            "water": "4",
+            "lightning": "5",
+            "ice": "6",
+            "shadow": "7",
+            "light": "8",
+            "arcane": "9",
+            "nature": "10",
+            "fire": "11",
+        }
+        element = elements[element.lower()]
+
+        if dragon1.isdigit():
+            pass
+        else:
+            dragon1 = fr.extract_dragon_id(dragon1)
+
+        if dragon2.isdigit():
+            pass
+        else:
+            dragon2 = fr.extract_dragon_id(dragon2)
+
+        outcomes = await fr.get_progeny(dragon1, dragon2, 5)
+
+        image_data = []
+        async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
+            links = []
+            for dragon in outcomes:
+                components = urlparse(dragon)
+                parameters = dict(parse_qsl(components.query))
+                del parameters["auth"]
+                del parameters["dummyext"]
+                parameters["age"] = "0"
+                parameters["element"] = element
+                parameters["_token"] = FlightRisingC.token
+
+                async with session.post(
+                    FlightRisingC.cprogeny_url, data=parameters
+                ) as response:
+                    if response.status == 200:
+                        content = await response.read()
+                        content = json.loads(content)
+                        links.append(
+                            "https://www1.flightrising.com" + content["dragon_url"]
+                        )
+
+            for link in links:
+                async with session.get(link) as response:
+                    if response.status == 200:
+                        content = await response.read()
+                content = io.BytesIO(content)
+                image_data.append(content)
+
+        image = generate_image(image_data, 5)
+        output_buffer = io.BytesIO()  # Convert the PIL output into bytes
+        image.save(output_buffer, "png")  # Save the bytes as a PNG format
+        output_buffer.seek(0)
+        await ctx.send(file=discord.File(fp=output_buffer, filename="pet.png"))
 
     @cs.error  # On error with cs command
     @gems.error  # On error with gems command
@@ -170,6 +231,13 @@ class FlightRising(commands.Cog):
         if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
             await ctx.send("You're missing another dragon link/ID!")
 
+    @cprogeny.error  # On error with cprogeny command
+    async def progeny_error(self, ctx, error):
+        if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
+            await ctx.send("You're missing another dragon link/ID!")
+        if isinstance(error, discord.ext.commands.errors.CommandInvokeError):
+            await ctx.send("You didn't provide a valid flight!")
+
 
 def setup(bot):
     bot.add_cog(FlightRising(bot))
@@ -178,11 +246,19 @@ def setup(bot):
 def generate_image(image_data, multiplier):
     pil_images = list(map(Image.open, image_data))
     if multiplier > 5:
-        max_width = 1400
-        max_height = 175 * 5
+        if pil_images[0].width == 350:
+            max_width = 2800
+            max_height = 350 * 5
+        else:
+            max_width = 1400
+            max_height = 175 * 5
     else:
-        max_width = 700
-        max_height = 175 * multiplier
+        if pil_images[0].width == 350:
+            max_width = 1400
+            max_height = 350 * multiplier
+        else:
+            max_width = 700
+            max_height = 175 * multiplier
     canvas = Image.new("RGBA", (max_width, max_height), (255, 0, 0, 0))
 
     current_width = 0
@@ -190,9 +266,32 @@ def generate_image(image_data, multiplier):
     for i in pil_images:
         if current_width >= max_width:
             current_width = 0
-            y_offset += 175
+            y_offset += i.width
 
         canvas.paste(i, (current_width, y_offset))
-        current_width += 175
+        current_width += i.width
+
+    return canvas
+
+
+def generate_image2(image_data, multiplier):
+    pil_images = list(map(Image.open, image_data))
+    if multiplier > 5:
+        max_width = 2800
+        max_height = 350 * 5
+    else:
+        max_width = 1400
+        max_height = 350 * multiplier
+    canvas = Image.new("RGBA", (max_width, max_height), (255, 0, 0, 0))
+
+    current_width = 0
+    y_offset = 0
+    for i in pil_images:
+        if current_width >= max_width:
+            current_width = 0
+            y_offset += 350
+
+        canvas.paste(i, (current_width, y_offset))
+        current_width += 350
 
     return canvas

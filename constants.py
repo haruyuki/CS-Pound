@@ -52,6 +52,8 @@ class Constants:
 
 class FlightRisingC:
     progeny_url = "http://flightrising.com/includes/ol/scryer_progeny.php"
+    cprogeny_url = "https://www1.flightrising.com/scrying/ajax-predict"
+    token = os.environ.get("flightrising_token", None)
 
 
 class Variables:
