@@ -19,6 +19,11 @@ class FlightRising(commands.Cog):
         self.spreadsheet = Constants.google_sheets_api.open_by_key(
             "1fmcwLdExvnPRME64Ylzpx1o0bA8qUeqX8HwyQzz1hGc"
         )  # Link to conversion spreadsheet
+        self.headers = {  # HTTP request headers
+            "User-Agent": "CS Pound Discord Bot Agent "
+            + Constants.version,  # Connecting User-Agent
+            "From": Constants.contact_email,
+        }
 
     def calculate_cs_to_gems(
         self, cs
@@ -137,7 +142,7 @@ class FlightRising(commands.Cog):
             image_data = []
             async with aiohttp.ClientSession() as session:  # Create an AIOHTTP session
                 for image in outcomes:
-                    async with session.get(image) as response:
+                    async with session.get(image, headers=self.headers) as response:
                         if response.status == 200:
                             content = await response.read()
                     content = io.BytesIO(content)
@@ -192,7 +197,7 @@ class FlightRising(commands.Cog):
                 parameters["_token"] = FlightRisingC.token
 
                 async with session.post(
-                    FlightRisingC.cprogeny_url, data=parameters
+                    FlightRisingC.cprogeny_url, data=parameters, headers=self.headers
                 ) as response:
                     if response.status == 200:
                         content = await response.read()
@@ -202,7 +207,7 @@ class FlightRising(commands.Cog):
                         )
 
             for link in links:
-                async with session.get(link) as response:
+                async with session.get(link, headers=self.headers) as response:
                     if response.status == 200:
                         content = await response.read()
                 content = io.BytesIO(content)
