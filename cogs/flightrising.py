@@ -222,14 +222,9 @@ class FlightRising(commands.Cog):
     @cs.error  # On error with cs command
     @gems.error  # On error with gems command
     @treasure.error  # On error with treasure command
-    @cprogeny.error  # On error with cprogeny command
     async def command_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):  # If user didn't pass a number
             await ctx.send("That is not a valid number!")
-        elif isinstance(error, commands.CommandOnCooldown):
-            await ctx.send(
-                f"The command is on cooldown! Please try again after {int(error.retry_after)} seconds."
-            )
 
     @progeny.error  # On error with progeny command
     async def progeny_error(self, ctx, error):
@@ -237,11 +232,15 @@ class FlightRising(commands.Cog):
             await ctx.send("You're missing another dragon link/ID!")
 
     @cprogeny.error  # On error with cprogeny command
-    async def progeny_error(self, ctx, error):
+    async def cprogeny_error(self, ctx, error):
         if isinstance(error, discord.ext.commands.errors.MissingRequiredArgument):
             await ctx.send("You're missing another dragon link/ID!")
         if isinstance(error, discord.ext.commands.errors.CommandInvokeError):
             await ctx.send("You didn't provide a valid flight!")
+        if isinstance(error, commands.CommandOnCooldown):
+            await ctx.send(
+                f"The command is on cooldown! Please try again after {int(error.retry_after)} seconds."
+            )
 
 
 def setup(bot):
