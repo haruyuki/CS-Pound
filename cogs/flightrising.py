@@ -276,26 +276,3 @@ def generate_image(image_data, multiplier):
         current_width += i.width
 
     return canvas
-
-
-def generate_image2(image_data, multiplier):
-    pil_images = list(map(Image.open, image_data))
-    if multiplier > 5:
-        max_width = 2800
-        max_height = 350 * 5
-    else:
-        max_width = 1400
-        max_height = 350 * multiplier
-    canvas = Image.new("RGBA", (max_width, max_height), (255, 0, 0, 0))
-
-    current_width = 0
-    y_offset = 0
-    for i in pil_images:
-        if current_width >= max_width:
-            current_width = 0
-            y_offset += 350
-
-        canvas.paste(i, (current_width, y_offset))
-        current_width += 350
-
-    return canvas
