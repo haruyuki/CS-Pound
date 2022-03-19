@@ -149,7 +149,7 @@ class PoundPets(commands.Cog):
                 canvas.save(output_buffer, "png")  # Save the bytes as a PNG format
                 base64_string = base64.b64encode(output_buffer.getvalue())
                 expiration_date = datetime.datetime.now() + datetime.timedelta(
-                    hours=1, seconds=cs.get_pound_time(pound_data[1])
+                    minutes=30, seconds=cs.get_pound_time(pound_data[1])
                 )
                 await collection.insert_one(
                     {
@@ -292,6 +292,7 @@ def generate_image(width, height, image_data, rare_plus_pets):
 
 async def image_expiration_check(bot):
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
+    print("PoundPets bot is ready")
     while not bot.is_closed():  # While bot is still running
         cursor = collection.find(
             {"generated": True}
@@ -307,5 +308,7 @@ async def image_expiration_check(bot):
                 Constants.image_exists = False
             else:
                 Constants.image_exists = True
-
-        await asyncio.sleep(900)  # Sleep for 15 minutes
+        print("Sleeping for 10 minutes")
+        await asyncio.sleep(600)  # Sleep for 10 minutes
+        print("Slept for 10 minutes, running again")
+        
