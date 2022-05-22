@@ -84,6 +84,10 @@ async def on_command_error(ctx, error):
     elif isinstance(error, aiohttp.client_exceptions.ClientConnectorError):
         print(f'Someone tried to run "{ctx.invoked_with}" with an invalid URL')
         return
+    elif isinstance(error, discord.errors.Forbidden):
+        print(
+            f'Someone tried to run "{ctx.invoked_with}" in a channel where the bot doesn\'t have permissions to send message'
+        )
     raise error
 
 
