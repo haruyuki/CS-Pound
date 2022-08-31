@@ -195,7 +195,7 @@ class Identify(commands.Cog):
             await ctx.send(message)
             conn.close()
         else:
-            if "static" in link:
+            if "static.chickensmoothie.com" in link or "pic.chickencdn.com" in link:
                 components = urlparse(link)
                 try:
                     pet_id = dict(parse_qsl(components.query))["k"]
