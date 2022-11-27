@@ -1,0 +1,6 @@
+app = "cs-pound"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]

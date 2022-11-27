@@ -173,8 +173,8 @@ class PoundPets(commands.Cog):
             await ctx.send(message)
 
 
-def setup(bot):
-    bot.add_cog(PoundPets(bot))
+async def setup(bot):
+    await bot.add_cog(PoundPets(bot))
     bot.loop.create_task(image_expiration_check(bot))
 
 
@@ -311,4 +311,3 @@ async def image_expiration_check(bot):
         print("Sleeping for 10 minutes")
         await asyncio.sleep(600)  # Sleep for 10 minutes
         print("Slept for 10 minutes, running again")
-        

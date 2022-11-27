@@ -11,5 +11,5 @@ psutil
 pygsheets
 PyOpenSSL
 scipy
-sklearn
+scikit-learn
 uvloop

@@ -24,5 +24,5 @@ class Invite(commands.Cog):
         await ctx.send(embed=embed)  # Send embed
 
 
-def setup(bot):
-    bot.add_cog(Invite(bot))
+async def setup(bot):
+    await bot.add_cog(Invite(bot))

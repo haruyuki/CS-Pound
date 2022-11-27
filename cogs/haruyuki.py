@@ -12,5 +12,5 @@ class Haruyuki(commands.Cog):
         await ctx.send("Use it!")
 
 
-def setup(bot):
-    bot.add_cog(Haruyuki(bot))
+async def setup(bot):
+    await bot.add_cog(Haruyuki(bot))

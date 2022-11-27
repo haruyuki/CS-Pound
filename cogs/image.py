@@ -24,5 +24,5 @@ class PetImage(commands.Cog):
             await ctx.send(embed=embed)  # Send embed
 
 
-def setup(bot):
-    bot.add_cog(PetImage(bot))
+async def setup(bot):
+    await bot.add_cog(PetImage(bot))

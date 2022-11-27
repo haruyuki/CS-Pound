@@ -243,8 +243,8 @@ class FlightRising(commands.Cog):
             )
 
 
-def setup(bot):
-    bot.add_cog(FlightRising(bot))
+async def setup(bot):
+    await bot.add_cog(FlightRising(bot))
 
 
 def generate_image(image_data, multiplier):

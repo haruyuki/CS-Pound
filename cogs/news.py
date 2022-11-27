@@ -183,5 +183,5 @@ class News(commands.Cog):
             await ctx.send(embed=embed)  # Send message
 
 
-def setup(bot):
-    bot.add_cog(News(bot))
+async def setup(bot):
+    await bot.add_cog(News(bot))

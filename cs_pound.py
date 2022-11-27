@@ -1,4 +1,5 @@
 import aiohttp
+import asyncio
 import logging.handlers
 import os
 from os.path import isfile, join
@@ -16,6 +17,7 @@ bot = commands.Bot(
     description="The Discord bot for all your ChickenSmoothie needs.",
     pm_help=False,
     case_insensitive=True,
+    intents=discord.Intents.default(),
 )
 bot.remove_command("help")  # Remove default help command to add custom one
 
@@ -29,14 +31,15 @@ handler.setFormatter(
 )  # Set logging format
 logger.addHandler(handler)
 
-if __name__ == "__main__":
+
+async def load_extensions():
     for extension in [
         f.replace(".py", "")
         for f in os.listdir(Constants.cogs_dir)
         if isfile(join(Constants.cogs_dir, f))
     ]:
         try:
-            bot.load_extension(f"{Constants.cogs_dir}.{extension}")
+            await bot.load_extension(f"{Constants.cogs_dir}.{extension}")
         except (discord.ClientException, ModuleNotFoundError):
             if extension == ".DS_Store":
                 pass
@@ -91,4 +94,10 @@ async def on_command_error(ctx, error):
     raise error
 
 
-bot.run(Constants.discord_token, bot=True, reconnect=True)
+async def main():
+    async with bot:
+        await load_extensions()
+        await bot.start(Constants.discord_token, reconnect=True)
+
+
+asyncio.run(main())

@@ -51,5 +51,5 @@ class RemindMe(commands.Cog):
             await ctx.send(after_message)  # Send message
 
 
-def setup(bot):
-    bot.add_cog(RemindMe(bot))
+async def setup(bot):
+    await bot.add_cog(RemindMe(bot))
