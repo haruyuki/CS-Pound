@@ -182,7 +182,7 @@ class PoundPets(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(PoundPets(bot))
-    bot.loop.create_task(image_expiration_check(bot))
+    # bot.loop.create_task(image_expiration_check(bot))
 
 
 # def generate_image(width, height, image_data, rare_plus_pets):
