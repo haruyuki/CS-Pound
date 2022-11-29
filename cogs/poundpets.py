@@ -1,23 +1,24 @@
-import asyncio
-import base64
-import datetime
-import io
-import math
+# import asyncio
+# import base64
+# import datetime
+# import io
+# import math
 
 import aiohttp
 import discord
 from discord.ext import commands
-import lxml.html
-import motor.motor_asyncio as amotor
-from PIL import Image, ImageFont, ImageDraw
-from urllib.parse import urlparse, parse_qs
 
-import chickensmoothie as cs
-from constants import Constants
+# import lxml.html
+# import motor.motor_asyncio as amotor
+# from PIL import Image, ImageFont, ImageDraw
+# from urllib.parse import urlparse, parse_qs
 
-mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
-database = mongo_client[Constants.database_name]
-collection = database[Constants.other_collection_name]
+# import chickensmoothie as cs
+# from constants import Constants
+
+# mongo_client = amotor.AsyncIOMotorClient(Constants.mongodb_uri)
+# database = mongo_client[Constants.database_name]
+# collection = database[Constants.other_collection_name]
 
 
 class PoundPets(commands.Cog):
