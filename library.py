@@ -200,7 +200,7 @@ def calculate_sleep_amount(seconds):
         sleep_amount = 3600  # Sleep for 1 hour
     elif seconds >= 7200:  # If over 2 hours remain
         sleep_amount = seconds - 7200  # Sleep until 2 hours remain
-    elif seconds >= 3600:  # If over 1 hour but less than 2 hours remain
+    elif seconds > 3600:  # If over 1 hour but less than 2 hours remain
         sleep_amount = seconds - 3600  # Sleep until 1 hour remains
         # Variables.cooldown = True  # Put command on cooldown
         seconds = 3600  # Set countdown to begin exactly at 1 hour
