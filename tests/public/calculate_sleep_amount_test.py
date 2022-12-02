@@ -24,7 +24,7 @@ class TestClass:
         Variables.cooldown = False
         assert calculate_sleep_amount(3601) == (3600, 1, False)
         Variables.cooldown = False
-        assert calculate_sleep_amount(3600) == (3600, 0, False)
+        assert calculate_sleep_amount(3600) == (3540, 0, False)
 
     def test_off_cooldown_less_than_1_hour(self):
         Variables.cooldown = False
