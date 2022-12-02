@@ -57,7 +57,6 @@ class FlightRisingC:
 
 
 class Variables:
-    cooldown = False
     autoremind_times = set()
 
 
