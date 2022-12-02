@@ -194,27 +194,22 @@ async def prepare_message(channel_id, time, pound_type):
 def calculate_sleep_amount(seconds):
     send_msg = False  # Assume no message needs to be sent
     sleep_amount = 0
-    if Variables.cooldown:  # If command on cooldown
-        if 0 < seconds <= 3600:  # If less than an hour remains
-            send_msg = True
-            seconds -= 60
-            sleep_amount = 60  # Sleep for 1 minute
-        else:  # If no time remains
-            Variables.cooldown = False  # Put command off cooldown
-            sleep_amount = 3600  # Sleep for 1 hour
-    else:  # If command not on cooldown
-        if (
-            seconds <= 0 or seconds >= 36000
-        ):  # If no times (i.e. Pound currently open or not opening anytime soon) or 10 hours
-            sleep_amount = 3600  # Sleep for 1 hour
-        elif seconds >= 7200:  # If over 2 hours remain
-            sleep_amount = seconds - 7200  # Sleep until 2 hours remain
-        elif seconds >= 3600:  # If over 1 hour but less than 2 hours remain
-            sleep_amount = seconds - 3600  # Sleep until 1 hour remains
-            Variables.cooldown = True  # Put command on cooldown
-            seconds = 3600  # Set countdown to begin exactly at 1 hour
-        elif seconds < 3600:  # If less than 1 hour remaining
-            Variables.cooldown = True  # Put command on cooldown
+    if (
+        seconds <= 0 or seconds >= 36000
+    ):  # If no times (i.e. Pound currently open or not opening anytime soon) or 10 hours
+        sleep_amount = 3600  # Sleep for 1 hour
+    elif seconds >= 7200:  # If over 2 hours remain
+        sleep_amount = seconds - 7200  # Sleep until 2 hours remain
+    elif seconds >= 3600:  # If over 1 hour but less than 2 hours remain
+        sleep_amount = seconds - 3600  # Sleep until 1 hour remains
+        # Variables.cooldown = True  # Put command on cooldown
+        seconds = 3600  # Set countdown to begin exactly at 1 hour
+    elif 0 < seconds <= 3600:  # If less than an hour remains
+        send_msg = True
+        seconds -= 60
+        sleep_amount = 60  # Sleep for 1 minute
+    else:  # If no time remains
+        sleep_amount = 3600  # Sleep for 1 hour
 
     return (
         seconds,
