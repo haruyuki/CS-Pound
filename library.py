@@ -3,9 +3,7 @@ from collections import Counter
 import re
 import zlib
 
-import cv2
 import motor.motor_asyncio as amotor
-from sklearn.cluster import KMeans
 import uvloop
 
 from constants import Constants, Variables
@@ -111,22 +109,6 @@ def resolver(seconds):  # Pretty format time given seconds
 
     formatted_string = formatter(day, hour, minute, second)
     return formatted_string
-
-
-def get_dominant_colour(image):  # Get the RGB of the dominant colour in an image.
-    # Slightly modified from https://adamspannbauer.github.io/2018/03/02/app-icon-dominant-colors/
-    image = cv2.resize(image, (64, 64), interpolation=cv2.INTER_CUBIC)  # Resize image
-    image = image.reshape(
-        (image.shape[0] * image.shape[1], 3)
-    )  # Reshape image a list of pixels
-    clt = KMeans(n_clusters=3)
-    labels = clt.fit_predict(image)  # Cluster and assign labels to pixels
-    label_counts = Counter(labels)  # Count labels to find most popular
-    dominant_colour = clt.cluster_centers_[
-        label_counts.most_common(1)[0][0]
-    ]  # Subset out most popular centroid
-    dominant_colour = [int(colour) for colour in dominant_colour]
-    return list(dominant_colour)
 
 
 def multi_replace(string, replacements):

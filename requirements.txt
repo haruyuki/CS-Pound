@@ -4,12 +4,8 @@ google-api-python-client
 html2text
 lxml
 motor
-numpy
-opencv-python-headless
 Pillow
 psutil
 pygsheets
 PyOpenSSL
-scipy
-scikit-learn
 uvloop
