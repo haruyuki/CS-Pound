@@ -1,9 +1,0 @@
-hooks/
-tests/
-.travis.yml
-counter.json
-counter.py
-LICENSE
-README.md
-setup.cfg
-setup_pr.cfg
