@@ -3,7 +3,9 @@ import os
 
 from google.oauth2 import service_account
 import pygsheets
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def authorisation():
     scopes = (
@@ -58,6 +60,7 @@ class FlightRisingC:
 
 class Variables:
     autoremind_times = set()
+    cooldown = False
 
 
 class Strings:

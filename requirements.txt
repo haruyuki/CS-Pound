@@ -8,4 +8,5 @@ Pillow
 psutil
 pygsheets
 PyOpenSSL
+python-dotenv
 uvloop
