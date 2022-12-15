@@ -158,10 +158,11 @@ async def setup(bot):
 async def pound_countdown(bot):  # Background task to countdown to when the pound opens
     await bot.wait_until_ready()  # Wait until bot has loaded before starting background task
     while not bot.is_closed():  # While bot is still running
-        data = await cs.get_pound_string()  # Get pound text
-        pound_type = data[0]
-        string = data[1]
-        seconds = cs.get_pound_time(string)  # Extract total seconds
+        if not Variables.cooldown:
+            data = await cs.get_pound_string()  # Get pound text
+            pound_type = data[0]
+            string = data[1]
+            seconds = cs.get_pound_time(string)  # Extract total seconds
 
         seconds, sleep_amount, send_msg = library.calculate_sleep_amount(seconds)
 

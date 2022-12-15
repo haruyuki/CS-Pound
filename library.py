@@ -184,17 +184,19 @@ def calculate_sleep_amount(seconds):
         sleep_amount = seconds - 7200  # Sleep until 2 hours remain
     elif seconds > 3600:  # If over 1 hour but less than 2 hours remain
         sleep_amount = seconds - 3600  # Sleep until 1 hour remains
-        # Variables.cooldown = True  # Put command on cooldown
+        Variables.cooldown = True  # Put command on cooldown
         seconds = 3600  # Set countdown to begin exactly at 1 hour
     elif 0 < seconds <= 3600:  # If less than an hour remains
         send_msg = True
         seconds -= 60
         sleep_amount = 60  # Sleep for 1 minute
+        Variables.cooldown = True
     else:  # If no time remains
         sleep_amount = 3600  # Sleep for 1 hour
+        Variables.cooldown = False
 
     return (
         seconds,
         sleep_amount,
         send_msg,
-    )  # Return seconds remaining, sleep amount, whether sending message is needed
+    )  # Return seconds remaining, sleep amount, whether sending message is needed, whether to start self timer
