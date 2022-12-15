@@ -16,7 +16,7 @@ class TestClass:
 
     def test_between_1_and_2_hours(self):
         assert calculate_sleep_amount(3601) == (3600, 1, False)
-        assert calculate_sleep_amount(7199) == (7199, 1, False)
+        assert calculate_sleep_amount(7199) == (7199, 3599, False)
 
     def test_less_than_1_hour(self):
         assert calculate_sleep_amount(1) == (-59, 60, True)
