@@ -41,7 +41,7 @@ class Admin(commands.Cog):
         cog = Constants.cogs_dir + "." + cog
 
         try:
-            self.bot.load_extension(cog)
+            await self.bot.load_extension(cog)
         except Exception:
             await ctx.send(f"```py\n{traceback.format_exc()}\n```")
         else:
@@ -53,7 +53,7 @@ class Admin(commands.Cog):
         cog = Constants.cogs_dir + "." + cog
 
         try:
-            self.bot.unload_extension(cog)
+            await self.bot.unload_extension(cog)
         except Exception:
             await ctx.send(f"```py\n{traceback.format_exc()}\n```")
         else:
@@ -65,7 +65,7 @@ class Admin(commands.Cog):
         cog = Constants.cogs_dir + "." + cog
 
         try:
-            self.bot.reload_extension(cog)
+            await self.bot.reload_extension(cog)
         except Exception:
             await ctx.send(f"```py\n{traceback.format_exc()}\n```")
         else:
