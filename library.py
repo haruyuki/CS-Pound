@@ -180,6 +180,7 @@ def calculate_sleep_amount(seconds):
         seconds <= 0 or seconds >= 36000
     ):  # If no times (i.e. Pound currently open or not opening anytime soon) or 10 hours
         sleep_amount = 3600  # Sleep for 1 hour
+        Variables.cooldown = False
     elif seconds >= 7200:  # If over 2 hours remain
         sleep_amount = seconds - 7200  # Sleep until 2 hours remain
     elif seconds > 3600:  # If over 1 hour but less than 2 hours remain
