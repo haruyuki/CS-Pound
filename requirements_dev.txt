@@ -1,6 +1,7 @@
 black
 codecov
 gitpython
+py
 pytest
 pytest-codestyle
 pytest-cov
