@@ -30,7 +30,7 @@ class Constants:
     )  # Discord bot token from environment variables
     discord_log_filename = "discord.log"  # Name of logging file
     support_link = "https://invite.gg/cspound"  # Link to support server
-    version = "2022.1203.0"  # Current version of bot
+    version = "2022.1217.0"  # Current version of bot
     invite_link = "https://haruyuki.moe/CS-Pound"  # Link to invite the bot
     mongodb_uri = os.environ.get(
         "mongodb", None
